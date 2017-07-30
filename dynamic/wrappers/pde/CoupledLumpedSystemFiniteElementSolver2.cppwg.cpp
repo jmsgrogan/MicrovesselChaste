@@ -1,5 +1,8 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <petsc/private/vecimpl.h>
+#include <petsc/private/matimpl.h>
+#include <petsc/private/tsimpl.h>
 #include <set>
 #include <vector>
 #include <string>
@@ -15,6 +18,9 @@
 namespace py = pybind11;
 typedef CoupledLumpedSystemFiniteElementSolver<2 > CoupledLumpedSystemFiniteElementSolver2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+PYBIND11_MAKE_OPAQUE(Vec);
+PYBIND11_MAKE_OPAQUE(Mat);
+PYBIND11_MAKE_OPAQUE(TS);
 
 class CoupledLumpedSystemFiniteElementSolver2_Overloads : public CoupledLumpedSystemFiniteElementSolver2{
     public:

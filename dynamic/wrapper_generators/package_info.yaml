@@ -154,13 +154,43 @@ modules:
     - GetRGBoundaryConditions
   - name: SimpleLinearEllipticFiniteDifferenceSolver
   - name: SimpleNonLinearEllipticFiniteDifferenceSolver
+    source_includes:
+    - <petsc/private/vecimpl.h> # forward decl
+    - <petsc/private/matimpl.h> # forward decl
+    prefix_code:
+    - PYBIND11_MAKE_OPAQUE(Vec); 
+    - PYBIND11_MAKE_OPAQUE(Mat); 
   - name: AbstractFiniteElementSolverBase
   - name: SimpleLinearEllipticFiniteElementSolver
   - name: SimpleNonLinearEllipticFiniteElementSolver
   - name: SimpleParabolicFiniteElementSolver
   - name: SimpleParabolicFiniteDifferenceSolver
+    source_includes:
+    - <petsc/private/vecimpl.h> # forward decl
+    - <petsc/private/matimpl.h> # forward decl
+    - <petsc/private/tsimpl.h> # forward decl
+    prefix_code:
+    - PYBIND11_MAKE_OPAQUE(Vec); 
+    - PYBIND11_MAKE_OPAQUE(Mat); 
+    - PYBIND11_MAKE_OPAQUE(TS); 
   - name: CoupledLumpedSystemFiniteElementSolver
+    source_includes:
+    - <petsc/private/vecimpl.h> # forward decl
+    - <petsc/private/matimpl.h> # forward decl
+    - <petsc/private/tsimpl.h> # forward decl
+    prefix_code:
+    - PYBIND11_MAKE_OPAQUE(Vec); 
+    - PYBIND11_MAKE_OPAQUE(Mat); 
+    - PYBIND11_MAKE_OPAQUE(TS); 
   - name: CoupledLumpedSystemFiniteDifferenceSolver
+    source_includes:
+    - <petsc/private/vecimpl.h> # forward decl
+    - <petsc/private/matimpl.h> # forward decl
+    - <petsc/private/tsimpl.h> # forward decl
+    prefix_code:
+    - PYBIND11_MAKE_OPAQUE(Vec); 
+    - PYBIND11_MAKE_OPAQUE(Mat); 
+    - PYBIND11_MAKE_OPAQUE(TS); 
   - name: FunctionMap
   - name: DensityMap
 - name: simulation
@@ -181,9 +211,11 @@ modules:
   - name: AbstractVesselNetworkComponentProperties
   - name: AbstractVesselNetworkComponentFlowProperties
   - name: AbstractVesselNetworkComponentChemicalProperties
+  - name: AbstractVesselNetworkComponentCellularProperties
   - name: AbstractVesselNetworkComponent
   - name: NodeFlowProperties
   - name: SegmentFlowProperties
+  - name: SegmentCellularProperties
   - name: VesselFlowProperties
   - name: VesselNode
     constructor_arg_type_excludes:  
@@ -245,5 +277,5 @@ modules:
   - name: Owen11Parameters
   - name: Connor17Parameters
   - name: Secomb04Parameters
-  - name: GenericParameters
-    source_file: UnitCollection.hpp  
+#  - name: GenericParameters
+#    source_file: UnitCollection.hpp  

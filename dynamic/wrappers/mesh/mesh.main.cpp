@@ -15,12 +15,12 @@
 #include "GridCalculator2.cppwg.hpp"
 #include "GridCalculator3.cppwg.hpp"
 #include "MeshReader.cppwg.hpp"
+#include "MeshFormat.cppwg.hpp"
 #include "MultiFormatMeshWriter2.cppwg.hpp"
 #include "MultiFormatMeshWriter3.cppwg.hpp"
 #include "RegularGrid2.cppwg.hpp"
 #include "RegularGrid3.cppwg.hpp"
 #include "RegularGridWriter.cppwg.hpp"
-#include "MeshFormat.cppwg.hpp"
 
 namespace py = pybind11;
 
@@ -42,10 +42,10 @@ PYBIND11_MODULE(_chaste_project_MicrovesselChaste_mesh, m)
     register_GridCalculator2_class(m);
     register_GridCalculator3_class(m);
     register_MeshReader_class(m);
+    register_MeshFormat_class(m);
     register_MultiFormatMeshWriter2_class(m);
     register_MultiFormatMeshWriter3_class(m);
     register_RegularGrid2_class(m);
     register_RegularGrid3_class(m);
     register_RegularGridWriter_class(m);
-    register_MeshFormat_class(m);
 }

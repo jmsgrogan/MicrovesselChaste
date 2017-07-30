@@ -60,6 +60,12 @@ OffLatticeSproutingRule<DIM>::~OffLatticeSproutingRule()
 }
 
 template <unsigned DIM>
+void OffLatticeSproutingRule<DIM>::SetHalfMaxVegf(QConcentration halfMaxVegf)
+{
+    mHalfMaxVegf = halfMaxVegf;
+}
+
+template <unsigned DIM>
 std::shared_ptr<OffLatticeSproutingRule<DIM> > OffLatticeSproutingRule<DIM>::Create()
 {
     return std::make_shared<OffLatticeSproutingRule<DIM> >();

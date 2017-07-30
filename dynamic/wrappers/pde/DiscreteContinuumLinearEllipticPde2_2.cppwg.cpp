@@ -67,8 +67,8 @@ pElement);
             ComputeDiscreteLinearInUCoeffInSourceTerm,
             gridIndex);
     }
-};
 
+};
 void register_DiscreteContinuumLinearEllipticPde2_2_class(py::module &m){
 py::class_<DiscreteContinuumLinearEllipticPde2_2 , DiscreteContinuumLinearEllipticPde2_2_Overloads , std::shared_ptr<DiscreteContinuumLinearEllipticPde2_2 >  , AbstractDiscreteContinuumLinearEllipticPde<2, 2>  >(m, "DiscreteContinuumLinearEllipticPde2_2")
         .def(py::init< >())

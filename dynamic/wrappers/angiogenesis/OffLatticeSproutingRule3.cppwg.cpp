@@ -37,12 +37,12 @@ py::class_<OffLatticeSproutingRule3 , OffLatticeSproutingRule3_Overloads , std::
             (::std::shared_ptr<OffLatticeSproutingRule<3> >(*)()) &OffLatticeSproutingRule3::Create, 
             " "  )
         .def(
-            "SetTipExclusionRadius", 
-            (void(OffLatticeSproutingRule3::*)(::QLength)) &OffLatticeSproutingRule3::SetTipExclusionRadius, 
-            " " , py::arg("exclusionRadius") )
-        .def(
             "GetSprouts", 
             (::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > >(OffLatticeSproutingRule3::*)(::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > const &)) &OffLatticeSproutingRule3::GetSprouts, 
             " " , py::arg("rNodes") )
+        .def(
+            "SetHalfMaxVegf", 
+            (void(OffLatticeSproutingRule3::*)(::QConcentration)) &OffLatticeSproutingRule3::SetHalfMaxVegf, 
+            " " , py::arg("halfMaxVegf") )
     ;
 }

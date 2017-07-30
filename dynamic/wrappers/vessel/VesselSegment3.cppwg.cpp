@@ -58,6 +58,10 @@ py::class_<VesselSegment3 , VesselSegment3_Overloads , std::shared_ptr<VesselSeg
             (::std::shared_ptr<SegmentFlowProperties<3> >(VesselSegment3::*)() const ) &VesselSegment3::GetFlowProperties, 
             " "  )
         .def(
+            "GetCellularProperties", 
+            (::std::shared_ptr<SegmentCellularProperties<3> >(VesselSegment3::*)() const ) &VesselSegment3::GetCellularProperties, 
+            " "  )
+        .def(
             "GetLength", 
             (::QLength(VesselSegment3::*)() const ) &VesselSegment3::GetLength, 
             " "  )
@@ -141,6 +145,10 @@ py::class_<VesselSegment3 , VesselSegment3_Overloads , std::shared_ptr<VesselSeg
             "SetFlowProperties", 
             (void(VesselSegment3::*)(::SegmentFlowProperties<3> const &)) &VesselSegment3::SetFlowProperties, 
             " " , py::arg("rFlowProperties") )
+        .def(
+            "SetCellularProperties", 
+            (void(VesselSegment3::*)(::SegmentCellularProperties<3> const &)) &VesselSegment3::SetCellularProperties, 
+            " " , py::arg("rCellularProperties") )
         .def(
             "SetMaturity", 
             (void(VesselSegment3::*)(double)) &VesselSegment3::SetMaturity, 

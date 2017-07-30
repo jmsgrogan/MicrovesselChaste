@@ -20,57 +20,57 @@ typedef ::QConcentrationFlowRate _QConcentrationFlowRate;
 typedef ::QRate _QRate;
 typedef ::QRate _QRate;
 
-//class DiscreteContinuumLinearEllipticPde3_3_Overloads : public DiscreteContinuumLinearEllipticPde3_3{
-//    public:
-//    using DiscreteContinuumLinearEllipticPde3_3::DiscreteContinuumLinearEllipticPde;
-//    double ComputeConstantInUSourceTerm(::ChastePoint<3> const & rX, ::Element<3, 3> * pElement) override {
-//        PYBIND11_OVERLOAD(
-//            double,
-//            DiscreteContinuumLinearEllipticPde3_3,
-//            ComputeConstantInUSourceTerm,
-//            rX,
-//pElement);
-//    }
-//    ::QConcentrationFlowRate ComputeConstantInUSourceTerm(unsigned int gridIndex) override {
-//        PYBIND11_OVERLOAD(
-//            _QConcentrationFlowRate,
-//            DiscreteContinuumLinearEllipticPde3_3,
-//            ComputeConstantInUSourceTerm,
-//            gridIndex);
-//    }
-//    ::QConcentrationFlowRate ComputeDiscreteConstantInUSourceTerm(unsigned int gridIndex) override {
-//        PYBIND11_OVERLOAD(
-//            _QConcentrationFlowRate,
-//            DiscreteContinuumLinearEllipticPde3_3,
-//            ComputeDiscreteConstantInUSourceTerm,
-//            gridIndex);
-//    }
-//    double ComputeLinearInUCoeffInSourceTerm(::ChastePoint<3> const & rX, ::Element<3, 3> * pElement) override {
-//        PYBIND11_OVERLOAD(
-//            double,
-//            DiscreteContinuumLinearEllipticPde3_3,
-//            ComputeLinearInUCoeffInSourceTerm,
-//            rX,
-//pElement);
-//    }
-//    ::QRate ComputeLinearInUCoeffInSourceTerm(unsigned int gridIndex) override {
-//        PYBIND11_OVERLOAD(
-//            _QRate,
-//            DiscreteContinuumLinearEllipticPde3_3,
-//            ComputeLinearInUCoeffInSourceTerm,
-//            gridIndex);
-//    }
-//    ::QRate ComputeDiscreteLinearInUCoeffInSourceTerm(unsigned int gridIndex) override {
-//        PYBIND11_OVERLOAD(
-//            _QRate,
-//            DiscreteContinuumLinearEllipticPde3_3,
-//            ComputeDiscreteLinearInUCoeffInSourceTerm,
-//            gridIndex);
-//    }
-//
-//};
+class DiscreteContinuumLinearEllipticPde3_3_Overloads : public DiscreteContinuumLinearEllipticPde3_3{
+    public:
+    using DiscreteContinuumLinearEllipticPde3_3::DiscreteContinuumLinearEllipticPde;
+    double ComputeConstantInUSourceTerm(::ChastePoint<3> const & rX, ::Element<3, 3> * pElement) override {
+        PYBIND11_OVERLOAD(
+            double,
+            DiscreteContinuumLinearEllipticPde3_3,
+            ComputeConstantInUSourceTerm,
+            rX, 
+pElement);
+    }
+    ::QConcentrationFlowRate ComputeConstantInUSourceTerm(unsigned int gridIndex) override {
+        PYBIND11_OVERLOAD(
+            _QConcentrationFlowRate,
+            DiscreteContinuumLinearEllipticPde3_3,
+            ComputeConstantInUSourceTerm,
+            gridIndex);
+    }
+    ::QConcentrationFlowRate ComputeDiscreteConstantInUSourceTerm(unsigned int gridIndex) override {
+        PYBIND11_OVERLOAD(
+            _QConcentrationFlowRate,
+            DiscreteContinuumLinearEllipticPde3_3,
+            ComputeDiscreteConstantInUSourceTerm,
+            gridIndex);
+    }
+    double ComputeLinearInUCoeffInSourceTerm(::ChastePoint<3> const & rX, ::Element<3, 3> * pElement) override {
+        PYBIND11_OVERLOAD(
+            double,
+            DiscreteContinuumLinearEllipticPde3_3,
+            ComputeLinearInUCoeffInSourceTerm,
+            rX, 
+pElement);
+    }
+    ::QRate ComputeLinearInUCoeffInSourceTerm(unsigned int gridIndex) override {
+        PYBIND11_OVERLOAD(
+            _QRate,
+            DiscreteContinuumLinearEllipticPde3_3,
+            ComputeLinearInUCoeffInSourceTerm,
+            gridIndex);
+    }
+    ::QRate ComputeDiscreteLinearInUCoeffInSourceTerm(unsigned int gridIndex) override {
+        PYBIND11_OVERLOAD(
+            _QRate,
+            DiscreteContinuumLinearEllipticPde3_3,
+            ComputeDiscreteLinearInUCoeffInSourceTerm,
+            gridIndex);
+    }
+
+};
 void register_DiscreteContinuumLinearEllipticPde3_3_class(py::module &m){
-py::class_<DiscreteContinuumLinearEllipticPde3_3  , std::shared_ptr<DiscreteContinuumLinearEllipticPde3_3 >  , AbstractDiscreteContinuumLinearEllipticPde<3, 3>  >(m, "DiscreteContinuumLinearEllipticPde3_3")
+py::class_<DiscreteContinuumLinearEllipticPde3_3 , DiscreteContinuumLinearEllipticPde3_3_Overloads , std::shared_ptr<DiscreteContinuumLinearEllipticPde3_3 >  , AbstractDiscreteContinuumLinearEllipticPde<3, 3>  >(m, "DiscreteContinuumLinearEllipticPde3_3")
         .def(py::init< >())
         .def_static(
             "Create", 

@@ -1,5 +1,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <petsc/private/vecimpl.h>
+#include <petsc/private/matimpl.h>
 #include <set>
 #include <vector>
 #include <string>
@@ -15,6 +17,8 @@
 namespace py = pybind11;
 typedef SimpleNonLinearEllipticFiniteDifferenceSolver<2 > SimpleNonLinearEllipticFiniteDifferenceSolver2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+PYBIND11_MAKE_OPAQUE(Vec);
+PYBIND11_MAKE_OPAQUE(Mat);
 
 class SimpleNonLinearEllipticFiniteDifferenceSolver2_Overloads : public SimpleNonLinearEllipticFiniteDifferenceSolver2{
     public:
@@ -57,6 +61,10 @@ py::class_<SimpleNonLinearEllipticFiniteDifferenceSolver2 , SimpleNonLinearEllip
             "AssembleVector", 
             (void(SimpleNonLinearEllipticFiniteDifferenceSolver2::*)()) &SimpleNonLinearEllipticFiniteDifferenceSolver2::AssembleVector, 
             " "  )
+        .def(
+            "ComputeResidual", 
+            (void(SimpleNonLinearEllipticFiniteDifferenceSolver2::*)(::Vec const, ::Vec)) &SimpleNonLinearEllipticFiniteDifferenceSolver2::ComputeResidual, 
+            " " , py::arg("currentGuess"), py::arg("residualVector") )
         .def(
             "Solve", 
             (void(SimpleNonLinearEllipticFiniteDifferenceSolver2::*)()) &SimpleNonLinearEllipticFiniteDifferenceSolver2::Solve, 

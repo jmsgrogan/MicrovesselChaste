@@ -1,14 +1,12 @@
 #include <pybind11/pybind11.h>
 #include "FlowSolver2.cppwg.hpp"
 #include "FlowSolver3.cppwg.hpp"
+#include "AbstractVesselNetworkCalculator2.cppwg.hpp"
+#include "AbstractVesselNetworkCalculator3.cppwg.hpp"
 #include "WallShearStressCalculator2.cppwg.hpp"
 #include "WallShearStressCalculator3.cppwg.hpp"
 #include "VesselImpedanceCalculator2.cppwg.hpp"
 #include "VesselImpedanceCalculator3.cppwg.hpp"
-#include "BetteridgeHaematocritSolver2.cppwg.hpp"
-#include "BetteridgeHaematocritSolver3.cppwg.hpp"
-#include "AbstractVesselNetworkCalculator2.cppwg.hpp"
-#include "AbstractVesselNetworkCalculator3.cppwg.hpp"
 #include "MechanicalStimulusCalculator2.cppwg.hpp"
 #include "MechanicalStimulusCalculator3.cppwg.hpp"
 #include "MetabolicStimulusCalculator2.cppwg.hpp"
@@ -29,6 +27,8 @@
 #include "AlarconHaematocritSolver3.cppwg.hpp"
 #include "ConstantHaematocritSolver2.cppwg.hpp"
 #include "ConstantHaematocritSolver3.cppwg.hpp"
+#include "BetteridgeHaematocritSolver2.cppwg.hpp"
+#include "BetteridgeHaematocritSolver3.cppwg.hpp"
 
 namespace py = pybind11;
 

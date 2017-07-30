@@ -1,5 +1,8 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <petsc/private/vecimpl.h>
+#include <petsc/private/matimpl.h>
+#include <petsc/private/tsimpl.h>
 #include <set>
 #include <vector>
 #include <string>
@@ -15,6 +18,9 @@
 namespace py = pybind11;
 typedef CoupledLumpedSystemFiniteDifferenceSolver<3 > CoupledLumpedSystemFiniteDifferenceSolver3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
+PYBIND11_MAKE_OPAQUE(Vec);
+PYBIND11_MAKE_OPAQUE(Mat);
+PYBIND11_MAKE_OPAQUE(TS);
 
 class CoupledLumpedSystemFiniteDifferenceSolver3_Overloads : public CoupledLumpedSystemFiniteDifferenceSolver3{
     public:
@@ -57,6 +63,10 @@ py::class_<CoupledLumpedSystemFiniteDifferenceSolver3 , CoupledLumpedSystemFinit
             "AssembleVector", 
             (void(CoupledLumpedSystemFiniteDifferenceSolver3::*)()) &CoupledLumpedSystemFiniteDifferenceSolver3::AssembleVector, 
             " "  )
+        .def(
+            "ComputeRHSFunction", 
+            (void(CoupledLumpedSystemFiniteDifferenceSolver3::*)(::Vec const, ::Vec, ::TS)) &CoupledLumpedSystemFiniteDifferenceSolver3::ComputeRHSFunction, 
+            " " , py::arg("currentGuess"), py::arg("dUdt"), py::arg("ts") )
         .def(
             "SetUseCoupling", 
             (void(CoupledLumpedSystemFiniteDifferenceSolver3::*)(bool)) &CoupledLumpedSystemFiniteDifferenceSolver3::SetUseCoupling, 

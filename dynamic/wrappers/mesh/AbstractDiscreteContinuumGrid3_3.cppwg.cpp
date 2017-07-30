@@ -21,6 +21,7 @@ typedef ::Vertex<3> _Vertex_lt_3_gt_;
 typedef ::Vertex<3> _Vertex_lt_3_gt_;
 typedef ::Vertex<3> _Vertex_lt_3_gt_;
 typedef ::Vertex<3> _Vertex_lt_3_gt_;
+typedef ::QLength _QLength;
 typedef ::std::vector<double, std::allocator<double> > const & _std_vector_lt_double_std_allocator_lt_double_gt__gt_constRef;
 typedef ::vtkSmartPointer<vtkDataSet> _vtkSmartPointer_lt_vtkDataSet_gt_;
 typedef ::vtkSmartPointer<vtkDataSet> _vtkSmartPointer_lt_vtkDataSet_gt_;
@@ -94,6 +95,13 @@ rName);
             AbstractDiscreteContinuumGrid3_3,
             GetCellLocation,
             index);
+    }
+    ::QLength GetSpacing() override {
+        PYBIND11_OVERLOAD_PURE(
+            _QLength,
+            AbstractDiscreteContinuumGrid3_3,
+            GetSpacing,
+            );
     }
     ::std::vector<double, std::allocator<double> > const & rGetCellVolumes(bool update, bool jiggle) override {
         PYBIND11_OVERLOAD_PURE(
@@ -266,6 +274,10 @@ py::class_<AbstractDiscreteContinuumGrid3_3 , AbstractDiscreteContinuumGrid3_3_O
             "GetCellLocation", 
             (::Vertex<3>(AbstractDiscreteContinuumGrid3_3::*)(unsigned int)) &AbstractDiscreteContinuumGrid3_3::GetCellLocation, 
             " " , py::arg("index") )
+        .def(
+            "GetSpacing", 
+            (::QLength(AbstractDiscreteContinuumGrid3_3::*)()) &AbstractDiscreteContinuumGrid3_3::GetSpacing, 
+            " "  )
         .def(
             "rGetCellVolumes", 
             (::std::vector<double, std::allocator<double> > const &(AbstractDiscreteContinuumGrid3_3::*)(bool, bool)) &AbstractDiscreteContinuumGrid3_3::rGetCellVolumes, 

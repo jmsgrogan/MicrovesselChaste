@@ -17,6 +17,7 @@ typedef DiscreteContinuumMesh<2,2 > DiscreteContinuumMesh2_2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::Vertex<2> _Vertex_lt_2_gt_;
 typedef ::std::vector<double, std::allocator<double> > const & _std_vector_lt_double_std_allocator_lt_double_gt__gt_constRef;
+typedef ::QLength _QLength;
 
 class DiscreteContinuumMesh2_2_Overloads : public DiscreteContinuumMesh2_2{
     public:
@@ -35,6 +36,13 @@ class DiscreteContinuumMesh2_2_Overloads : public DiscreteContinuumMesh2_2{
             rGetCellVolumes,
             update, 
 jiggle);
+    }
+    ::QLength GetSpacing() override {
+        PYBIND11_OVERLOAD(
+            _QLength,
+            DiscreteContinuumMesh2_2,
+            GetSpacing,
+            );
     }
     void SetUpVtkGrid() override {
         PYBIND11_OVERLOAD(
@@ -71,6 +79,10 @@ py::class_<DiscreteContinuumMesh2_2 , DiscreteContinuumMesh2_2_Overloads , std::
         .def(
             "GetElementPartitioning", 
             (::std::vector<unsigned int, std::allocator<unsigned int> >(DiscreteContinuumMesh2_2::*)()) &DiscreteContinuumMesh2_2::GetElementPartitioning, 
+            " "  )
+        .def(
+            "GetSpacing", 
+            (::QLength(DiscreteContinuumMesh2_2::*)()) &DiscreteContinuumMesh2_2::GetSpacing, 
             " "  )
         .def(
             "SetUpVtkGrid", 

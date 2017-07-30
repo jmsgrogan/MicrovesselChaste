@@ -16,6 +16,7 @@ namespace py = pybind11;
 typedef RegularGrid<3 > RegularGrid3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::Vertex<3> _Vertex_lt_3_gt_;
+typedef ::QLength _QLength;
 typedef ::std::vector<double, std::allocator<double> > const & _std_vector_lt_double_std_allocator_lt_double_gt__gt_constRef;
 
 class RegularGrid3_Overloads : public RegularGrid3{
@@ -34,6 +35,13 @@ class RegularGrid3_Overloads : public RegularGrid3{
             RegularGrid3,
             GetGlobalCellLocation,
             index);
+    }
+    ::QLength GetSpacing() override {
+        PYBIND11_OVERLOAD(
+            _QLength,
+            RegularGrid3,
+            GetSpacing,
+            );
     }
     ::std::vector<double, std::allocator<double> > const & rGetCellVolumes(bool update, bool jiggle) override {
         PYBIND11_OVERLOAD(

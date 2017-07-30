@@ -24,6 +24,22 @@ py::class_<CornealMicropocketSimulation2  , std::shared_ptr<CornealMicropocketSi
             (::std::shared_ptr<CornealMicropocketSimulation<2> >(*)()) &CornealMicropocketSimulation2::Create, 
             " "  )
         .def(
+            "SetAnastamosisRadius", 
+            (void(CornealMicropocketSimulation2::*)(::QLength)) &CornealMicropocketSimulation2::SetAnastamosisRadius, 
+            " " , py::arg("radius") )
+        .def(
+            "GetAnastamosisRadius", 
+            (::QLength(CornealMicropocketSimulation2::*)()) &CornealMicropocketSimulation2::GetAnastamosisRadius, 
+            " "  )
+        .def(
+            "SetCellLength", 
+            (void(CornealMicropocketSimulation2::*)(::QLength)) &CornealMicropocketSimulation2::SetCellLength, 
+            " " , py::arg("length") )
+        .def(
+            "GetCellLength", 
+            (::QLength(CornealMicropocketSimulation2::*)()) &CornealMicropocketSimulation2::GetCellLength, 
+            " "  )
+        .def(
             "SetTipVelocity", 
             (void(CornealMicropocketSimulation2::*)(::QVelocity)) &CornealMicropocketSimulation2::SetTipVelocity, 
             " " , py::arg("velocity") )
@@ -172,9 +188,9 @@ py::class_<CornealMicropocketSimulation2  , std::shared_ptr<CornealMicropocketSi
             (void(CornealMicropocketSimulation2::*)(::QTime)) &CornealMicropocketSimulation2::SetTimeStepSize, 
             " " , py::arg("timeStepSize") )
         .def(
-            "SetTipExclusionRadius", 
-            (void(CornealMicropocketSimulation2::*)(::QLength)) &CornealMicropocketSimulation2::SetTipExclusionRadius, 
-            " " , py::arg("tipExclusionRadius") )
+            "SetUseTipExclusion", 
+            (void(CornealMicropocketSimulation2::*)(bool)) &CornealMicropocketSimulation2::SetUseTipExclusion, 
+            " " , py::arg("usetipexclusion") )
         .def(
             "SetTotalTime", 
             (void(CornealMicropocketSimulation2::*)(::QTime)) &CornealMicropocketSimulation2::SetTotalTime, 

@@ -5,12 +5,16 @@
 #include "AbstractVesselNetworkComponentFlowProperties3.cppwg.hpp"
 #include "AbstractVesselNetworkComponentChemicalProperties2.cppwg.hpp"
 #include "AbstractVesselNetworkComponentChemicalProperties3.cppwg.hpp"
+#include "AbstractVesselNetworkComponentCellularProperties2.cppwg.hpp"
+#include "AbstractVesselNetworkComponentCellularProperties3.cppwg.hpp"
 #include "AbstractVesselNetworkComponent2.cppwg.hpp"
 #include "AbstractVesselNetworkComponent3.cppwg.hpp"
 #include "NodeFlowProperties2.cppwg.hpp"
 #include "NodeFlowProperties3.cppwg.hpp"
 #include "SegmentFlowProperties2.cppwg.hpp"
 #include "SegmentFlowProperties3.cppwg.hpp"
+#include "SegmentCellularProperties2.cppwg.hpp"
+#include "SegmentCellularProperties3.cppwg.hpp"
 #include "VesselFlowProperties2.cppwg.hpp"
 #include "VesselFlowProperties3.cppwg.hpp"
 #include "VesselNode2.cppwg.hpp"
@@ -52,12 +56,16 @@ PYBIND11_MODULE(_chaste_project_MicrovesselChaste_vessel, m)
     register_AbstractVesselNetworkComponentFlowProperties3_class(m);
     register_AbstractVesselNetworkComponentChemicalProperties2_class(m);
     register_AbstractVesselNetworkComponentChemicalProperties3_class(m);
+    register_AbstractVesselNetworkComponentCellularProperties2_class(m);
+    register_AbstractVesselNetworkComponentCellularProperties3_class(m);
     register_AbstractVesselNetworkComponent2_class(m);
     register_AbstractVesselNetworkComponent3_class(m);
     register_NodeFlowProperties2_class(m);
     register_NodeFlowProperties3_class(m);
     register_SegmentFlowProperties2_class(m);
     register_SegmentFlowProperties3_class(m);
+    register_SegmentCellularProperties2_class(m);
+    register_SegmentCellularProperties3_class(m);
     register_VesselFlowProperties2_class(m);
     register_VesselFlowProperties3_class(m);
     register_VesselNode2_class(m);

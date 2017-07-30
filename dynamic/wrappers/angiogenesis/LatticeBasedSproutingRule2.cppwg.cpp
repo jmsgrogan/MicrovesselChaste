@@ -51,9 +51,5 @@ py::class_<LatticeBasedSproutingRule2 , LatticeBasedSproutingRule2_Overloads , s
             "SetGridCalculator", 
             (void(LatticeBasedSproutingRule2::*)(::std::shared_ptr<GridCalculator<2> >)) &LatticeBasedSproutingRule2::SetGridCalculator, 
             " " , py::arg("pGrid") )
-        .def(
-            "SetTipExclusionRadius", 
-            (void(LatticeBasedSproutingRule2::*)(::QLength)) &LatticeBasedSproutingRule2::SetTipExclusionRadius, 
-            " " , py::arg("tipExclusionRadius") )
     ;
 }
