@@ -49,7 +49,7 @@ CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::CoupledVegfPellet
             mCurrentVegfInPellet(Connor17Parameters::mpInitialVegfConcentrationInPellet->GetValue("CoupledVegfPelletDiffusionReactionPde")),
             mCorneaPelletPermeability(Connor17Parameters::mpCorneaVegfPermeability->GetValue("CoupledVegfPelletDiffusionReactionPde")),
             mPelletSurfaceArea(Connor17Parameters::mpPelletSurfaceArea->GetValue("CoupledVegfPelletDiffusionReactionPde")),
-            mPelletDepth(1.0*1e-6*unit::metres), // for consistency with some existing tests
+            mPelletDepth(1_um), // for consistency with some existing tests
             mPelletVolume(Connor17Parameters::mpPelletVolume->GetValue("CoupledVegfPelletDiffusionReactionPde")),
             mHalfMaxVegf(Connor17Parameters::mpVegfAtHalfReceptorOccupancy->GetValue("CoupledVegfPelletDiffusionReactionPde"))
 {
@@ -233,13 +233,13 @@ void CoupledVegfPelletDiffusionReactionPde<ELEMENT_DIM, SPACE_DIM>::UpdateDiscre
     if(this->mDiscreteSources.size()>0)
     {
         unsigned num_locations = this->mDiscreteSources[0]->GetDensityMap()->GetGridCalculator()->GetGrid()->GetNumberOfCells();
-        mDiscreteNonLinearSourceStrengths = std::vector<QConcentrationFlowRate >(num_locations,
+        mDiscreteNonLinearSourceStrengths = std::vector<QConcentrationFlowRate>(num_locations,
                 0.0*unit::mole_per_metre_cubed_per_second);
-        for(unsigned idx=0; idx<this->mDiscreteSources.size(); idx++)
+        for(auto& source:this->mDiscreteSources)
         {
-            std::vector<QConcentrationFlowRate > result = this->mDiscreteSources[idx]->GetNonlinearTermValues();
+            std::vector<QConcentrationFlowRate> result = source->GetNonlinearTermValues();
             std::transform(mDiscreteNonLinearSourceStrengths.begin( ), mDiscreteNonLinearSourceStrengths.end( ),
-                           result.begin( ), mDiscreteNonLinearSourceStrengths.begin( ),std::plus<QConcentrationFlowRate >( ));
+                           result.begin( ), mDiscreteNonLinearSourceStrengths.begin( ), std::plus<QConcentrationFlowRate>( ));
         }
     }
 }

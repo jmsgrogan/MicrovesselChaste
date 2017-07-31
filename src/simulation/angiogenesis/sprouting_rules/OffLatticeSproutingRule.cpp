@@ -100,6 +100,7 @@ std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const 
     // Set up the output sprouts vector
     std::vector<VesselNodePtr<DIM> > sprouts;
     QTime reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
+    QTime time_step = SimulationTime::Instance()->GetTimeStep()*reference_time;
     unsigned counter = 0;
     for(auto& node:rNodes)
     {
@@ -108,28 +109,29 @@ std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const 
         {
             continue;
         }
-
         // Check perfusion if needed
         if(this->mOnlySproutIfPerfused and node->GetFlowProperties()->GetPressure()==0_Pa)
         {
             continue;
         }
-
         // Apply a vessel end cutoff if needed
-        QLength cell_length1 = (node->GetSegment(0)->GetCellularProperties()->GetAverageCellLengthLongitudinal() +
-                node->GetSegment(1)->GetCellularProperties()->GetAverageCellLengthLongitudinal())/2.0;
+        VesselSegmentPtr<DIM> p_segment0 = node->GetSegment(0);
+        VesselSegmentPtr<DIM> p_segment1 = node->GetSegment(1);
+        QLength cell_length1 = (p_segment0->GetCellularProperties()->GetAverageCellLengthLongitudinal() +
+                p_segment1->GetCellularProperties()->GetAverageCellLengthLongitudinal())/2.0;
         if(this->mUseVesselEndCutoff)
         {
-            if(node->GetSegment(0)->GetVessel()->GetClosestEndNodeDistance(node->rGetLocation())< cell_length1)
+            QLength distance0 = p_segment0->GetVessel()->GetClosestEndNodeDistance(node->rGetLocation());
+            QLength distance1 = p_segment1->GetVessel()->GetClosestEndNodeDistance(node->rGetLocation());
+            if(distance0< cell_length1 and distance0>0_m)
             {
                 continue;
             }
-            if(node->GetSegment(1)->GetVessel()->GetClosestEndNodeDistance(node->rGetLocation())< cell_length1)
+            if(distance1< cell_length1 and distance1>0_m)
             {
                 continue;
             }
         }
-
         // Check we are not too close to an existing candidate. This is different
         // from the vessel end cut-off as it relates to candidate tip cells.
         if(this->mUseLateralInhibition)
@@ -138,10 +140,10 @@ std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const 
             for(auto& sprout:sprouts)
             {
                 // Any vessels same
-                bool sv0_nv0_same = (sprout->GetSegment(0)->GetVessel() == node->GetSegment(0)->GetVessel());
-                bool sv1_nv0_same = (sprout->GetSegment(1)->GetVessel() == node->GetSegment(0)->GetVessel());
-                bool sv0_nv1_same = (sprout->GetSegment(0)->GetVessel() == node->GetSegment(1)->GetVessel());
-                bool sv1_nv1_same = (sprout->GetSegment(1)->GetVessel() == node->GetSegment(1)->GetVessel());
+                bool sv0_nv0_same = (sprout->GetSegment(0)->GetVessel() == p_segment0->GetVessel());
+                bool sv1_nv0_same = (sprout->GetSegment(1)->GetVessel() == p_segment0->GetVessel());
+                bool sv0_nv1_same = (sprout->GetSegment(0)->GetVessel() == p_segment1->GetVessel());
+                bool sv1_nv1_same = (sprout->GetSegment(1)->GetVessel() == p_segment1->GetVessel());
                 bool any_same = (sv0_nv0_same or sv1_nv0_same or sv0_nv1_same or sv1_nv1_same);
                 if(any_same)
                 {
@@ -156,7 +158,6 @@ std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const 
                 continue;
             }
         }
-
         // If there is a vegf solution get P sprout
         QConcentration vegf_conc = 0_M;
         if(this->mpSolver)
@@ -164,16 +165,15 @@ std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const 
             vegf_conc = probed_solutions[counter];
         }
 
-        QLength cell_length2 = (node->GetSegment(0)->GetCellularProperties()->GetAverageCellLengthCircumferential() +
-                node->GetSegment(1)->GetCellularProperties()->GetAverageCellLengthCircumferential())/2.0;
+        QLength cell_length2 = (p_segment0->GetCellularProperties()->GetAverageCellLengthCircumferential() +
+                p_segment1->GetCellularProperties()->GetAverageCellLengthCircumferential())/2.0;
         QArea cell_area = cell_length1*cell_length2;
-        QLength segment_length = (node->GetSegment(0)->GetLength() + node->GetSegment(1)->GetLength())/2.0;
-        QLength segment_radius = (node->GetSegment(0)->GetRadius() + node->GetSegment(1)->GetRadius())/2.0;
+        QLength segment_length = (p_segment0->GetLength() + p_segment1->GetLength())/2.0;
+        QLength segment_radius = (p_segment0->GetRadius() + p_segment1->GetRadius())/2.0;
         double num_cells = std::round(2.0*M_PI*segment_radius*segment_length/cell_area);
-
         double vegf_fraction = vegf_conc/(vegf_conc + mHalfMaxVegf);
-        QTime time_step = this->mSproutingProbabilityPerCell*SimulationTime::Instance()->GetTimeStep()*reference_time;
         double prob_per_time_step = this->mSproutingProbabilityPerCell*time_step*num_cells*vegf_fraction;
+
         if (RandomNumberGenerator::Instance()->ranf() < prob_per_time_step)
         {
             sprouts.push_back(node);

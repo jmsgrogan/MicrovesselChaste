@@ -792,7 +792,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
             double sweep_angle = 2.0*M_PI/double(num_nodes);
             for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
             {
-                double this_angle = double(jdx)*sweep_angle+M_PI;
+                double this_angle = double(jdx)*sweep_angle;
                 double x_coord = (sampling_radius/reference_length)*std::sin(this_angle);
                 double y_coord = (sampling_radius/reference_length)*std::cos(this_angle);
                 p_sample_points->InsertNextPoint(x_coord,y_coord, 0.0);
@@ -818,7 +818,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
                 double sweep_angle = 2.0*M_PI/double(num_nodes);
                 for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
                 {
-                    double this_angle = double(jdx)*sweep_angle+M_PI;
+                    double this_angle = double(jdx)*sweep_angle;
                     double x_coord = (sampling_radius/reference_length)*std::sin(this_angle);
                     double y_coord = (sampling_radius/reference_length)*std::cos(this_angle);
                     p_sample_points->InsertNextPoint(x_coord,y_coord, double(kdx)*dimless_sample_spacing_z);
@@ -851,7 +851,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
                 double sweep_angle = 2.0*M_PI/num_nodes;
                 for(unsigned jdx=0;jdx<num_nodes;jdx++)
                 {
-                    double this_angle = double(jdx)*sweep_angle+M_PI;
+                    double this_angle = double(jdx)*sweep_angle;
                     double x_coord = (current_radius/reference_length)*std::sin(this_angle);
                     double y_coord = (current_radius/reference_length)*std::cos(this_angle);
                     p_sample_points->InsertNextPoint(x_coord,y_coord, current_height/reference_length);
