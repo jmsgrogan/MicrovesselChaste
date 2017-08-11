@@ -55,7 +55,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "AngiogenesisSolver.hpp"
 #include "CoupledLumpedSystemFiniteElementSolver.hpp"
 #include "Timer.hpp"
-#include "Debug.hpp"
 
 template<unsigned DIM>
 CornealMicropocketSimulation<DIM>::CornealMicropocketSimulation() :
@@ -216,7 +215,8 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
         if(!mUsePellet)
         {
             mpDomain->AddRectangle(domain_width, domain_height);
-            mpDomain->AddAttributeToEdgeIfFound(Vertex<DIM>(M_PI*mCorneaRadius, mPelletHeight, 0_m), "Pellet Interface", 1.0);
+            mpDomain->AddAttributeToEdgeIfFound(Vertex<DIM>(M_PI*mCorneaRadius, mPelletHeight, 0_m),
+                    "Pellet Interface", 1.0);
         }
         else
         {
@@ -230,7 +230,8 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
 
             auto p_polygon = Polygon<DIM>::Create(points);
             mpDomain->AddPolygon(p_polygon);
-            mpDomain->AddAttributeToEdgeIfFound(Vertex<DIM>(domain_width/2.0, domain_height), "Pellet Interface", 1.0);
+            mpDomain->AddAttributeToEdgeIfFound(Vertex<DIM>(domain_width/2.0, domain_height),
+                    "Pellet Interface", 1.0);
         }
     }
     else if(mDomainType == DomainType::PLANAR_3D)
@@ -240,7 +241,7 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
         if(!mUsePellet)
         {
             mpDomain->AddCuboid(domain_width, domain_height, mCorneaThickness);
-            std::vector<FacetPtr<DIM>> facets = mpDomain->GetFacets();
+            std::vector<FacetPtr<DIM> > facets = mpDomain->GetFacets();
             Vertex<DIM> probe_loc(domain_width/2.0, domain_height, mCorneaThickness/2.0);
             for(auto& facet:mpDomain->GetFacets())
             {
@@ -792,7 +793,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
             double sweep_angle = 2.0*M_PI/double(num_nodes);
             for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
             {
-                double this_angle = double(jdx)*sweep_angle;
+                double this_angle = double(jdx)*sweep_angle + M_PI;
                 double x_coord = (sampling_radius/reference_length)*std::sin(this_angle);
                 double y_coord = (sampling_radius/reference_length)*std::cos(this_angle);
                 p_sample_points->InsertNextPoint(x_coord,y_coord, 0.0);
@@ -815,7 +816,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
                 QLength sampling_radius = mCorneaRadius-mLimbalOffset-
                         double(idx)*mSampleSpacingY;
                 unsigned num_nodes = int(double((2.0*M_PI*sampling_radius)/mNodeSpacing)) + 1;
-                double sweep_angle = 2.0*M_PI/double(num_nodes);
+                double sweep_angle = 2.0*M_PI/double(num_nodes) + M_PI;
                 for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
                 {
                     double this_angle = double(jdx)*sweep_angle;

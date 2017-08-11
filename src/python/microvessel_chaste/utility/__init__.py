@@ -35,3 +35,36 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 from _chaste_project_MicrovesselChaste_utility import *
+
+_symbol_dict = {QLength: "m",
+                QTime: "s",
+                QRate: "Hz",
+                QMolarFlowRate: "kat",
+                QVelocity: "ms^-1",
+                QVolume: "m^3",
+                QConcentration: "m^-3mol",
+                QDiffusivity: "m^2s^-1"}
+
+_unit_dict = {"m": "metres",
+              "s": "seconds",
+              "Hz": "per_second",
+              "kat": "mole_per_second",
+              "ms^-1": "metre_per_second",
+              "m^3": "metres_cubed",
+              "m^-3mol": "mole_per_metre_cubed",
+              "m^2s^-1": "metre_squared_per_second"}
+
+def get_symbol(quantity_type):
+    return _symbol_dict(quantity_type)
+
+def get_unit(symbol):
+    return getattr(microvessel_chaste.utility, _unit_dict[symbol]) 
+
+# Some units
+_m = 1.0*metres
+_um = 1.e-6*metres
+_s = 1.0*seconds
+_h = 1.0*hours
+_M = 1.e3*mole_per_metre_cubed
+_uM = 1.e-3*mole_per_metre_cubed
+_nM = 1.e-6*mole_per_metre_cubed
