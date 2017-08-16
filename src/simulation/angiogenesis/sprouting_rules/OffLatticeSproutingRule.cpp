@@ -46,7 +46,8 @@ template<unsigned DIM>
 OffLatticeSproutingRule<DIM>::OffLatticeSproutingRule()
     : AbstractSproutingRule<DIM>(),
       mHalfMaxVegf(Connor17Parameters::mpVegfAtHalfReceptorOccupancy->GetValue("OffLatticeSproutingRule")),
-      mVegfField()
+      mVegfField(),
+      mNumberSprouted(0)
 {
     this->mSproutingProbabilityPerCell = Owen11Parameters::mpMaximumSproutingRate->GetValue("OffLatticeSproutingRule");
     this->mUseLateralInhibition = true;
@@ -107,13 +108,17 @@ std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const 
         // Only nodes with two segments can sprout
         if(node->GetNumberOfSegments() != 2)
         {
+            counter++;
             continue;
         }
+
         // Check perfusion if needed
         if(this->mOnlySproutIfPerfused and node->GetFlowProperties()->GetPressure()==0_Pa)
         {
+            counter++;
             continue;
         }
+
         // Apply a vessel end cutoff if needed
         VesselSegmentPtr<DIM> p_segment0 = node->GetSegment(0);
         VesselSegmentPtr<DIM> p_segment1 = node->GetSegment(1);
@@ -121,15 +126,23 @@ std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const 
                 p_segment1->GetCellularProperties()->GetAverageCellLengthLongitudinal())/2.0;
         if(this->mUseVesselEndCutoff)
         {
-            QLength distance0 = p_segment0->GetVessel()->GetClosestEndNodeDistance(node->rGetLocation());
-            QLength distance1 = p_segment1->GetVessel()->GetClosestEndNodeDistance(node->rGetLocation());
-            if(distance0< cell_length1 and distance0>0_m)
+            if(p_segment0->GetOppositeNode(node)->GetNumberOfSegments()!=2)
             {
-                continue;
+                QLength distance = p_segment0->GetOppositeNode(node)->GetDistance(node->rGetLocation());
+                if(distance< 1.1*cell_length1)
+                {
+                    counter++;
+                    continue;
+                }
             }
-            if(distance1< cell_length1 and distance1>0_m)
+            if(p_segment1->GetOppositeNode(node)->GetNumberOfSegments()!=2)
             {
-                continue;
+                QLength distance = p_segment1->GetOppositeNode(node)->GetDistance(node->rGetLocation());
+                if(distance< 1.1*cell_length1)
+                {
+                    counter++;
+                    continue;
+                }
             }
         }
         // Check we are not too close to an existing candidate. This is different
@@ -147,7 +160,7 @@ std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const 
                 bool any_same = (sv0_nv0_same or sv1_nv0_same or sv0_nv1_same or sv1_nv1_same);
                 if(any_same)
                 {
-                    if(node->GetDistance(sprout->rGetLocation()) < cell_length1)
+                    if(node->GetDistance(sprout->rGetLocation()) < 1.1*cell_length1)
                     {
                         too_close = true;
                     }
@@ -155,6 +168,7 @@ std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const 
             }
             if(too_close)
             {
+                counter++;
                 continue;
             }
         }
@@ -173,13 +187,13 @@ std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const 
         double num_cells = std::round(2.0*M_PI*segment_radius*segment_length/cell_area);
         double vegf_fraction = vegf_conc/(vegf_conc + mHalfMaxVegf);
         double prob_per_time_step = this->mSproutingProbabilityPerCell*time_step*num_cells*vegf_fraction;
-
         if (RandomNumberGenerator::Instance()->ranf() < prob_per_time_step)
         {
             sprouts.push_back(node);
         }
         counter++;
     }
+    mNumberSprouted += sprouts.size();
     return sprouts;
 }
 

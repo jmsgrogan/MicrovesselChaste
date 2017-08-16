@@ -61,6 +61,11 @@ class OffLatticeSproutingRule : public AbstractSproutingRule<DIM>
      */
     std::vector<QConcentration> mVegfField;
 
+    /**
+     * The number of sprouts formed so far, useful for debugging.
+     */
+    unsigned mNumberSprouted;
+
 public:
 
     /**

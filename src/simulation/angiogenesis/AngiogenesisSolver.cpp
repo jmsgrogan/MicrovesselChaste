@@ -262,7 +262,7 @@ void AngiogenesisSolver<DIM>::UpdateNodalPositions(bool sprouting)
                     else
                     {
                         QLength cell_length = tips[idx]->GetSegment(0)->GetCellularProperties()->GetAverageCellLengthLongitudinal();
-                        if (tips[idx]->GetSegment(0)->GetLength()+movement_length<cell_length)
+                        if (tips[idx]->GetSegment(0)->GetLength()+movement_length<1.1*cell_length)
                         {
                             tips[idx]->SetLocation(tips[idx]->rGetLocation() + movement_vectors[idx]);
                         }
@@ -352,7 +352,7 @@ void AngiogenesisSolver<DIM>::DoAnastamosis()
         }
     }
 
-    typename std::map<VesselNodePtr<DIM> , std::shared_ptr<VesselSegment<DIM> > >::iterator node_iter;
+    typename std::map<VesselNodePtr<DIM> , VesselSegmentPtr<DIM> >::iterator node_iter;
     for(node_iter = node_segment_map.begin(); node_iter != node_segment_map.end(); node_iter++)
     {
         Vertex<DIM> original_location = (*node_iter).first->rGetLocation();

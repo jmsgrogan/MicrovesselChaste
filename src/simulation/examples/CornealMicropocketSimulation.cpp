@@ -111,7 +111,8 @@ CornealMicropocketSimulation<DIM>::CornealMicropocketSimulation() :
     mOnlyPerfusedSprout(false),
     mSampleFrequency(5),
     mStoredSample(),
-    mSproutVelocity(20.0*unit::microns_per_hour)
+    mSproutVelocity(20.0*unit::microns_per_hour),
+    mUseFiniteDifferenceGrid(false)
 {
 
 }
@@ -704,7 +705,11 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
             mpSolver->SetGrid(mpGrid);
 
             std::vector<double> vegf_field;
-            double pellet_angle = std::atan(double(mCorneaRadius/mPelletRadius));
+            //double pellet_angle = std::atan(double(mCorneaRadius/mPelletRadius));
+            double dimless_offset = mLimbalOffset.Convert(reference_length);
+            double dimless_height = mPelletHeight.Convert(reference_length);
+            double mid_radius = mCorneaRadius.Convert(reference_length) - mCorneaThickness.Convert(reference_length)/2.0;
+            double offset_angle = std::asin(mLimbalOffset.Convert(reference_length)/mid_radius);
             for(unsigned idx=0;idx<mpGrid->GetNumberOfPoints();idx++)
             {
                 double x_loc = mpGrid->GetPoint(idx).Convert(reference_length)[0];
@@ -712,12 +717,14 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
                 double z_loc = mpGrid->GetPoint(idx).Convert(reference_length)[2];
                 double radius = std::sqrt(x_loc*x_loc + y_loc*y_loc);
                 double angle = std::atan(z_loc/radius);
-                double frac = angle/pellet_angle;
-                if(frac>1.0)
+                double dist = mid_radius*(angle-offset_angle);
+                double factor = dimless_offset/(dimless_height+dimless_offset);
+                factor += dist/(dimless_height+dimless_offset);
+                if(factor<0)
                 {
-                    frac = 1.0;
+                    factor=0.0;
                 }
-                vegf_field.push_back(frac*double(mPelletConcentration/reference_concentration));
+                vegf_field.push_back(factor*double(mPelletConcentration/reference_concentration));
             }
             mpSolver->SetLabel("vegf");
             mpSolver->UpdateSolution(vegf_field);
@@ -816,10 +823,10 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
                 QLength sampling_radius = mCorneaRadius-mLimbalOffset-
                         double(idx)*mSampleSpacingY;
                 unsigned num_nodes = int(double((2.0*M_PI*sampling_radius)/mNodeSpacing)) + 1;
-                double sweep_angle = 2.0*M_PI/double(num_nodes) + M_PI;
+                double sweep_angle = 2.0*M_PI/double(num_nodes);
                 for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
                 {
-                    double this_angle = double(jdx)*sweep_angle;
+                    double this_angle = double(jdx)*sweep_angle + M_PI;
                     double x_coord = (sampling_radius/reference_length)*std::sin(this_angle);
                     double y_coord = (sampling_radius/reference_length)*std::cos(this_angle);
                     p_sample_points->InsertNextPoint(x_coord,y_coord, double(kdx)*dimless_sample_spacing_z);
@@ -1163,7 +1170,6 @@ void CornealMicropocketSimulation<DIM>::Run()
         p_angiogenesis_solver->SetBoundingDomain(mpDomain);
         p_angiogenesis_solver->SetDoAnastomosis(mDoAnastamosis);
         p_angiogenesis_solver->SetAnastamosisRadius(mAnastamosisRadius);
-
     }
 
     unsigned num_steps = unsigned(mTotalTime/mTimeStepSize);
@@ -1302,7 +1308,7 @@ void CornealMicropocketSimulation<DIM>::Run()
                             std::to_string(int(elapsed_time)));
                     if(output_density_quantities[idx]=="Line")
                     {
-                        if(mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D)
+                        if((mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D) and (!mFinitePelletWidth))
                         {
                             p_density_map_result->UpdateSolution(density_map.rGetVesselLineDensity());
                         }
@@ -1313,7 +1319,7 @@ void CornealMicropocketSimulation<DIM>::Run()
                     }
                     if(output_density_quantities[idx]=="Tip")
                     {
-                        if(mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D)
+                        if((mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D) and (!mFinitePelletWidth))
                         {
                             p_density_map_result->UpdateSolution(density_map.rGetVesselTipDensity());
                         }
@@ -1334,7 +1340,7 @@ void CornealMicropocketSimulation<DIM>::Run()
                                 norm_branch_density[idx] = branch_density[idx]/line_density[idx];
                             }
                         }
-                        if(mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D)
+                        if((mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D) and (!mFinitePelletWidth))
                         {
                             p_density_map_result->UpdateSolution(norm_branch_density);
                         }

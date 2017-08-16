@@ -291,6 +291,8 @@ class CornealMicropocketSimulation
 
     QVelocity mSproutVelocity;
 
+    bool mUseFiniteDifferenceGrid;
+
 public:
 
     /**

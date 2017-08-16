@@ -55,16 +55,7 @@ _unit_dict = {"m": "metres",
               "m^2s^-1": "metre_squared_per_second"}
 
 def get_symbol(quantity_type):
-    return _symbol_dict(quantity_type)
+    return _symbol_dict[quantity_type]
 
 def get_unit(symbol):
-    return getattr(microvessel_chaste.utility, _unit_dict[symbol]) 
-
-# Some units
-_m = 1.0*metres
-_um = 1.e-6*metres
-_s = 1.0*seconds
-_h = 1.0*hours
-_M = 1.e3*mole_per_metre_cubed
-_uM = 1.e-3*mole_per_metre_cubed
-_nM = 1.e-6*mole_per_metre_cubed
+    return getattr(_chaste_project_MicrovesselChaste_utility, _unit_dict[symbol]) 
