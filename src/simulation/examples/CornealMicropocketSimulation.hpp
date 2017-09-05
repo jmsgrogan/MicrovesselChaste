@@ -276,7 +276,7 @@ class CornealMicropocketSimulation
 
     std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > mpSolver;
 
-    std::vector<vtkSmartPointer<vtkPoints> > mSampleLines;
+    std::vector<vtkSmartPointer<vtkPolyData> > mSamplePolygons;
 
     unsigned mNumSampleY;
     unsigned mNumSampleZ;

@@ -131,6 +131,10 @@ public:
      */
     std::shared_ptr<VesselNetwork<DIM> > GetVesselNetwork();
 
+    QLength GetLengthInPolyhedron(vtkSmartPointer<vtkPolyData> polydata);
+
+    unsigned GetNumberOfPointsInPolyhedron(vtkSmartPointer<vtkPolyData> polydata);
+
     /**
      * Return the grid in a form suitable for length of line in box computations
      * @param pGrid the input grid

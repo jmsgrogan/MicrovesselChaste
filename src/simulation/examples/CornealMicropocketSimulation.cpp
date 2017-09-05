@@ -736,136 +736,274 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetUpSamplePoints()
+void CornealMicropocketSimulation<DIM>::SetUpSamplePolygons()
 {
-    mSampleLines.clear();
+    mSamplePolygons.clear();
     QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
-    if(mDomainType == DomainType::PLANAR_2D)
+    if(mDomainType == DomainType::PLANAR_2D or mDomainType == DomainType::PLANAR_3D)
     {
         QLength domain_width = 2.0*M_PI*mCorneaRadius;
-        unsigned num_sample_points_x = int(double(domain_width/mSampleSpacingX)) + 1;
         mNumSampleY = int(double((mPelletHeight)/mSampleSpacingY)) + 1;
-
-        double dimless_sample_spacing_x = mSampleSpacingX/reference_length;
         double dimless_sample_spacing_y = mSampleSpacingY/reference_length;
-        double dimless_limbal_offset = mLimbalOffset/reference_length;
+        double dimless_width = domain_width/reference_length;
+        double dimless_depth = mCorneaThickness/reference_length;
+        double dimless_z_origin = 0.0;
+        if(mDomainType == DomainType::PLANAR_2D)
+        {
+            dimless_z_origin = -dimless_depth/2.0;
+        }
         for(unsigned idx=0;idx<mNumSampleY;idx++)
         {
-            vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
-            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
-            {
-                p_sample_points->InsertNextPoint(double(jdx)*dimless_sample_spacing_x,
-                        double(idx)*dimless_sample_spacing_y + dimless_limbal_offset, 0.0);
-            }
-            mSampleLines.push_back(p_sample_points);
-        }
-    }
-    else if(mDomainType == DomainType::PLANAR_3D)
-    {
-        QLength domain_width = 2.0*M_PI*mCorneaRadius;
-        unsigned num_sample_points_x = int(double(domain_width/mSampleSpacingX)) + 1;
-        mNumSampleY = int(double((mPelletHeight)/mSampleSpacingY)) + 1;
-        mNumSampleZ = int(double(mCorneaThickness/mSampleSpacingZ)) + 1;
+            double height = dimless_sample_spacing_y*double(idx);
+            vtkSmartPointer<vtkPolyData> p_sample_poly = vtkSmartPointer<vtkPolyData>::New();
+            vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
+            p_points->InsertNextPoint(0.0, 0.0, dimless_z_origin);
+            p_points->InsertNextPoint(dimless_width, 0.0, dimless_z_origin);
+            p_points->InsertNextPoint(dimless_width, height, dimless_z_origin);
+            p_points->InsertNextPoint(0.0, height, dimless_z_origin);
+            p_points->InsertNextPoint(0.0, 0.0, dimless_z_origin + dimless_depth);
+            p_points->InsertNextPoint(dimless_width, 0.0, dimless_z_origin + dimless_depth);
+            p_points->InsertNextPoint(dimless_width, height, dimless_z_origin + dimless_depth);
+            p_points->InsertNextPoint(0.0, height, dimless_z_origin + dimless_depth);
 
-        double dimless_sample_spacing_x = mSampleSpacingX/reference_length;
-        double dimless_sample_spacing_y = mSampleSpacingY/reference_length;
-        double dimless_sample_spacing_z = mSampleSpacingZ/reference_length;
-        double dimless_limbal_offset = mLimbalOffset/reference_length;
-        for(unsigned kdx=0;kdx<mNumSampleZ;kdx++)
-        {
-            for(unsigned idx=0;idx<mNumSampleY;idx++)
-            {
-                vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
-                for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
-                {
-                    p_sample_points->InsertNextPoint(double(jdx)*dimless_sample_spacing_x,
-                            double(idx)*dimless_sample_spacing_y + dimless_limbal_offset,
-                            double(kdx)*dimless_sample_spacing_z);
-                }
-                mSampleLines.push_back(p_sample_points);
-            }
+            vtkSmartPointer<vtkCellArray> polygons = vtkSmartPointer<vtkCellArray>::New();
+            vtkSmartPointer<vtkPolygon> p_poly1 = vtkSmartPointer<vtkPolygon>::New();
+            p_poly1->GetPointIds()->SetNumberOfIds(4);
+            p_poly1->GetPointIds()->SetId(0, 0);
+            p_poly1->GetPointIds()->SetId(1, 1);
+            p_poly1->GetPointIds()->SetId(2, 2);
+            p_poly1->GetPointIds()->SetId(3, 3);
+            vtkSmartPointer<vtkPolygon> p_poly2 = vtkSmartPointer<vtkPolygon>::New();
+            p_poly2->GetPointIds()->SetNumberOfIds(4);
+            p_poly2->GetPointIds()->SetId(0, 4);
+            p_poly2->GetPointIds()->SetId(1, 5);
+            p_poly2->GetPointIds()->SetId(2, 6);
+            p_poly2->GetPointIds()->SetId(3, 7);
+            vtkSmartPointer<vtkPolygon> p_poly3 = vtkSmartPointer<vtkPolygon>::New();
+            p_poly3->GetPointIds()->SetNumberOfIds(4);
+            p_poly3->GetPointIds()->SetId(0, 1);
+            p_poly3->GetPointIds()->SetId(1, 2);
+            p_poly3->GetPointIds()->SetId(2, 6);
+            p_poly3->GetPointIds()->SetId(3, 5);
+            vtkSmartPointer<vtkPolygon> p_poly4 = vtkSmartPointer<vtkPolygon>::New();
+            p_poly4->GetPointIds()->SetNumberOfIds(4);
+            p_poly4->GetPointIds()->SetId(0, 4);
+            p_poly4->GetPointIds()->SetId(1, 0);
+            p_poly4->GetPointIds()->SetId(2, 3);
+            p_poly4->GetPointIds()->SetId(3, 7);
+            vtkSmartPointer<vtkPolygon> p_poly5 = vtkSmartPointer<vtkPolygon>::New();
+            p_poly5->GetPointIds()->SetNumberOfIds(4);
+            p_poly5->GetPointIds()->SetId(0, 0);
+            p_poly5->GetPointIds()->SetId(1, 1);
+            p_poly5->GetPointIds()->SetId(2, 5);
+            p_poly5->GetPointIds()->SetId(3, 4);
+            vtkSmartPointer<vtkPolygon> p_poly6 = vtkSmartPointer<vtkPolygon>::New();
+            p_poly6->GetPointIds()->SetNumberOfIds(4);
+            p_poly6->GetPointIds()->SetId(0, 3);
+            p_poly6->GetPointIds()->SetId(1, 2);
+            p_poly6->GetPointIds()->SetId(2, 6);
+            p_poly6->GetPointIds()->SetId(3, 7);
+            polygons->InsertNextCell(p_poly1);
+            polygons->InsertNextCell(p_poly2);
+            polygons->InsertNextCell(p_poly3);
+            polygons->InsertNextCell(p_poly4);
+            polygons->InsertNextCell(p_poly5);
+            polygons->InsertNextCell(p_poly6);
+            p_sample_poly->SetPoints(p_points);
+            p_sample_poly->SetPolys(polygons);
+            mSamplePolygons.push_back(p_sample_poly);
         }
     }
-    else if(mDomainType == DomainType::CIRCLE_2D)
+    else if(mDomainType == DomainType::CIRCLE_2D or mDomainType == DomainType::CIRCLE_3D)
     {
         QLength domain_width = 2.0*M_PI*mCorneaRadius;
-        unsigned num_sample_points_x = int(double(domain_width/mSampleSpacingX)) + 1;
         mNumSampleY = int(double((mPelletHeight)/mSampleSpacingY)) + 1;
+        unsigned num_sample_points_x = int(double(domain_width/mSampleSpacingX)) + 1;
+        double dimless_sample_spacing_y = mSampleSpacingY/reference_length;
+        double dimless_width = domain_width/reference_length;
+        double dimless_depth = mCorneaThickness/reference_length;
+        double dimless_z_origin = 0.0;
+        if(mDomainType == DomainType::PLANAR_2D)
+        {
+            dimless_z_origin = -dimless_depth/2.0;
+        }
         for(unsigned idx=0;idx<mNumSampleY;idx++)
         {
-            vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
-            QLength sampling_radius = mCorneaRadius-mLimbalOffset-
-                    double(idx)*mSampleSpacingY;
-            unsigned num_nodes = int(double((2.0*M_PI*sampling_radius)/mNodeSpacing)) + 1;
+            double height = dimless_sample_spacing_y*double(idx);
+            vtkSmartPointer<vtkPolyData> p_sample_poly = vtkSmartPointer<vtkPolyData>::New();
+            vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
+            QLength outer_radius = mCorneaRadius - double(idx)*mSampleSpacingY;
+            QLength inner_radius = mCorneaRadius - double(idx+1)*mSampleSpacingY;
+            unsigned num_nodes = int(double((2.0*M_PI*outer_radius)/mNodeSpacing)) + 1;
             double sweep_angle = 2.0*M_PI/double(num_nodes);
             for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
             {
                 double this_angle = double(jdx)*sweep_angle + M_PI;
-                double x_coord = (sampling_radius/reference_length)*std::sin(this_angle);
-                double y_coord = (sampling_radius/reference_length)*std::cos(this_angle);
-                p_sample_points->InsertNextPoint(x_coord,y_coord, 0.0);
+                double x_coord = (outer_radius/reference_length)*std::sin(this_angle);
+                double y_coord = (outer_radius/reference_length)*std::cos(this_angle);
+                p_points->InsertNextPoint(x_coord, y_coord, dimless_z_origin);
             }
-            mSampleLines.push_back(p_sample_points);
-        }
-    }
-    else if(mDomainType == DomainType::CIRCLE_3D)
-    {
-        QLength domain_width = 2.0*M_PI*mCorneaRadius;
-        unsigned num_sample_points_x = int(double(domain_width/mSampleSpacingX)) + 1;
-        mNumSampleY = int(double((mPelletHeight)/mSampleSpacingY)) + 1;
-        mNumSampleZ = int(double(mCorneaThickness/mSampleSpacingZ)) + 1;
-        double dimless_sample_spacing_z = mSampleSpacingZ/reference_length;
-        for(unsigned kdx=0;kdx<mNumSampleZ;kdx++)
-        {
-            for(unsigned idx=0;idx<mNumSampleY;idx++)
+            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
             {
-                vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
-                QLength sampling_radius = mCorneaRadius-mLimbalOffset-
-                        double(idx)*mSampleSpacingY;
-                unsigned num_nodes = int(double((2.0*M_PI*sampling_radius)/mNodeSpacing)) + 1;
-                double sweep_angle = 2.0*M_PI/double(num_nodes);
-                for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
-                {
-                    double this_angle = double(jdx)*sweep_angle + M_PI;
-                    double x_coord = (sampling_radius/reference_length)*std::sin(this_angle);
-                    double y_coord = (sampling_radius/reference_length)*std::cos(this_angle);
-                    p_sample_points->InsertNextPoint(x_coord,y_coord, double(kdx)*dimless_sample_spacing_z);
-                }
-                mSampleLines.push_back(p_sample_points);
+                double this_angle = double(jdx)*sweep_angle + M_PI;
+                double x_coord = (inner_radius/reference_length)*std::sin(this_angle);
+                double y_coord = (inner_radius/reference_length)*std::cos(this_angle);
+                p_points->InsertNextPoint(x_coord, y_coord, dimless_z_origin);
             }
+            double sweep_angle = 2.0*M_PI/double(num_nodes);
+            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
+            {
+                double this_angle = double(jdx)*sweep_angle + M_PI;
+                double x_coord = (outer_radius/reference_length)*std::sin(this_angle);
+                double y_coord = (outer_radius/reference_length)*std::cos(this_angle);
+                p_points->InsertNextPoint(x_coord, y_coord, dimless_z_origin + dimless_depth);
+            }
+            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
+            {
+                double this_angle = double(jdx)*sweep_angle + M_PI;
+                double x_coord = (inner_radius/reference_length)*std::sin(this_angle);
+                double y_coord = (inner_radius/reference_length)*std::cos(this_angle);
+                p_points->InsertNextPoint(x_coord, y_coord, dimless_z_origin + dimless_depth);
+            }
+
+            vtkSmartPointer<vtkCellArray> polygons = vtkSmartPointer<vtkCellArray>::New();
+            for(unsigned jdx=0;jdx<num_sample_points_x; jdx++)
+            {
+                unsigned n = num_sample_points_x;
+                vtkSmartPointer<vtkPolygon> p_poly1 = vtkSmartPointer<vtkPolygon>::New();
+                p_poly1->GetPointIds()->SetNumberOfIds(4);
+                p_poly1->GetPointIds()->SetId(0, jdx);
+                p_poly1->GetPointIds()->SetId(1, jdx+1);
+                p_poly1->GetPointIds()->SetId(2, 2*n + jdx);
+                p_poly1->GetPointIds()->SetId(3, 2*n + jdx + 1);
+
+                vtkSmartPointer<vtkPolygon> p_poly2 = vtkSmartPointer<vtkPolygon>::New();
+                p_poly2->GetPointIds()->SetNumberOfIds(4);
+                p_poly2->GetPointIds()->SetId(0, jdx);
+                p_poly2->GetPointIds()->SetId(1, jdx+1);
+                p_poly2->GetPointIds()->SetId(2, n + jdx + 1);
+                p_poly2->GetPointIds()->SetId(3, n + jdx);
+
+                vtkSmartPointer<vtkPolygon> p_poly3 = vtkSmartPointer<vtkPolygon>::New();
+                p_poly3->GetPointIds()->SetNumberOfIds(4);
+                p_poly3->GetPointIds()->SetId(0, n + jdx);
+                p_poly3->GetPointIds()->SetId(1, n + jdx + 1);
+                p_poly3->GetPointIds()->SetId(2, 3*n + jdx + 1);
+                p_poly3->GetPointIds()->SetId(3, 3*n + jdx);
+
+                vtkSmartPointer<vtkPolygon> p_poly4 = vtkSmartPointer<vtkPolygon>::New();
+                p_poly4->GetPointIds()->SetNumberOfIds(4);
+                p_poly4->GetPointIds()->SetId(0, 2*n + jdx);
+                p_poly4->GetPointIds()->SetId(1, 2*n + jdx+1);
+                p_poly4->GetPointIds()->SetId(2, 3*n + jdx + 1);
+                p_poly4->GetPointIds()->SetId(3, 3*n + jdx);
+                polygons->InsertNextCell(p_poly1);
+                polygons->InsertNextCell(p_poly2);
+                polygons->InsertNextCell(p_poly3);
+                polygons->InsertNextCell(p_poly4);
+            }
+            p_sample_poly->SetPoints(p_points);
+            p_sample_poly->SetPolys(polygons);
+            mSamplePolygons.push_back(p_sample_poly);
         }
     }
     else if(mDomainType == DomainType::HEMISPHERE)
     {
+        QLength domain_width = 2.0*M_PI*mCorneaRadius;
         double pellet_angle = std::asin(double(mPelletHeight/mCorneaRadius));
-        double offset_angle = std::asin(double(mLimbalOffset/mCorneaRadius));
-
         QLength y_extent = mCorneaRadius*(pellet_angle);
         mNumSampleY = int(float(y_extent/mSampleSpacingY)) + 1;
-        mNumSampleZ = int(float(mCorneaThickness/mSampleSpacingZ)) + 1;
+        unsigned num_sample_points_x = int(double(domain_width/mSampleSpacingX)) + 1;
+        double dimless_sample_spacing_y = mSampleSpacingY/reference_length;
+        double dimless_width = domain_width/reference_length;
+        double dimless_depth = mCorneaThickness/reference_length;
+        double dimless_z_origin = 0.0;
 
-        for(unsigned kdx=0;kdx<mNumSampleZ;kdx++)
+        for(unsigned idx=0;idx<mNumSampleY;idx++)
         {
-            for(unsigned idx=0;idx<mNumSampleY;idx++)
+            vtkSmartPointer<vtkPolyData> p_sample_poly = vtkSmartPointer<vtkPolyData>::New();
+            vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
+            double bottom_angle = double(idx)*pellet_angle/double(mNumSampleY);
+            double top_angle = double(idx+1)*pellet_angle/double(mNumSampleY);
+            QLength outer_radius = mCorneaRadius*std::cos(bottom_angle);
+            QLength outer_height = mCorneaRadius*std::sin(bottom_angle);
+            QLength inner_radius = (mCorneaRadius-mCorneaThickness)*std::cos(bottom_angle);
+            QLength inner_height = (mCorneaRadius-mCorneaThickness)*std::sin(bottom_angle);
+            QLength top_outer_radius = mCorneaRadius*std::cos(top_angle);
+            QLength top_outer_height = mCorneaRadius*std::sin(top_angle);
+            QLength top_inner_radius = (mCorneaRadius-mCorneaThickness)*std::cos(top_angle);
+            QLength top_inner_height = (mCorneaRadius-mCorneaThickness)*std::sin(top_angle);
+
+            unsigned num_nodes = int(double((2.0*M_PI*outer_radius)/mNodeSpacing)) + 1;
+            double sweep_angle = 2.0*M_PI/double(num_nodes);
+            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
             {
-                vtkSmartPointer<vtkPoints> p_sample_points = vtkSmartPointer<vtkPoints>::New();
-                double current_angle = offset_angle + double(idx)*pellet_angle/double(mNumSampleY);
-                QLength sample_offset_from_outside = double(kdx)*mSampleSpacingZ;
-                QLength current_radius =
-                        (mCorneaRadius-sample_offset_from_outside)*std::cos(current_angle);
-                QLength current_height =
-                        (mCorneaRadius-sample_offset_from_outside)*std::sin(current_angle);
-                unsigned num_nodes = int(double((2.0*M_PI*current_radius)/mNodeSpacing)) + 1;
-                double sweep_angle = 2.0*M_PI/num_nodes;
-                for(unsigned jdx=0;jdx<num_nodes;jdx++)
-                {
-                    double this_angle = double(jdx)*sweep_angle;
-                    double x_coord = (current_radius/reference_length)*std::sin(this_angle);
-                    double y_coord = (current_radius/reference_length)*std::cos(this_angle);
-                    p_sample_points->InsertNextPoint(x_coord,y_coord, current_height/reference_length);
-                }
-                mSampleLines.push_back(p_sample_points);
+                double this_angle = double(jdx)*sweep_angle;
+                double x_coord = (outer_radius/reference_length)*std::sin(this_angle);
+                double y_coord = (outer_radius/reference_length)*std::cos(this_angle);
+                p_points->InsertNextPoint(x_coord, y_coord, outer_height/reference_length);
             }
+            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
+            {
+                double this_angle = double(jdx)*sweep_angle;
+                double x_coord = (inner_radius/reference_length)*std::sin(this_angle);
+                double y_coord = (inner_radius/reference_length)*std::cos(this_angle);
+                p_points->InsertNextPoint(x_coord, y_coord, inner_height/reference_length);
+            }
+            double sweep_angle = 2.0*M_PI/double(num_nodes);
+            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
+            {
+                double this_angle = double(jdx)*sweep_angle;
+                double x_coord = (top_outer_radius/reference_length)*std::sin(this_angle);
+                double y_coord = (top_outer_radius/reference_length)*std::cos(this_angle);
+                p_points->InsertNextPoint(x_coord, y_coord, top_outer_height/reference_length);
+            }
+            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
+            {
+                double this_angle = double(jdx)*sweep_angle;
+                double x_coord = (top_inner_radius/reference_length)*std::sin(this_angle);
+                double y_coord = (top_inner_radius/reference_length)*std::cos(this_angle);
+                p_points->InsertNextPoint(x_coord, y_coord, top_inner_height/reference_length);
+            }
+            vtkSmartPointer<vtkCellArray> polygons = vtkSmartPointer<vtkCellArray>::New();
+            for(unsigned jdx=0;jdx<num_sample_points_x; jdx++)
+            {
+                unsigned n = num_sample_points_x;
+                vtkSmartPointer<vtkPolygon> p_poly1 = vtkSmartPointer<vtkPolygon>::New();
+                p_poly1->GetPointIds()->SetNumberOfIds(4);
+                p_poly1->GetPointIds()->SetId(0, jdx);
+                p_poly1->GetPointIds()->SetId(1, jdx+1);
+                p_poly1->GetPointIds()->SetId(2, 2*n + jdx);
+                p_poly1->GetPointIds()->SetId(3, 2*n + jdx + 1);
+
+                vtkSmartPointer<vtkPolygon> p_poly2 = vtkSmartPointer<vtkPolygon>::New();
+                p_poly2->GetPointIds()->SetNumberOfIds(4);
+                p_poly2->GetPointIds()->SetId(0, jdx);
+                p_poly2->GetPointIds()->SetId(1, jdx+1);
+                p_poly2->GetPointIds()->SetId(2, n + jdx + 1);
+                p_poly2->GetPointIds()->SetId(3, n + jdx);
+
+                vtkSmartPointer<vtkPolygon> p_poly3 = vtkSmartPointer<vtkPolygon>::New();
+                p_poly3->GetPointIds()->SetNumberOfIds(4);
+                p_poly3->GetPointIds()->SetId(0, n + jdx);
+                p_poly3->GetPointIds()->SetId(1, n + jdx + 1);
+                p_poly3->GetPointIds()->SetId(2, 3*n + jdx + 1);
+                p_poly3->GetPointIds()->SetId(3, 3*n + jdx);
+
+                vtkSmartPointer<vtkPolygon> p_poly4 = vtkSmartPointer<vtkPolygon>::New();
+                p_poly4->GetPointIds()->SetNumberOfIds(4);
+                p_poly4->GetPointIds()->SetId(0, 2*n + jdx);
+                p_poly4->GetPointIds()->SetId(1, 2*n + jdx+1);
+                p_poly4->GetPointIds()->SetId(2, 3*n + jdx + 1);
+                p_poly4->GetPointIds()->SetId(3, 3*n + jdx);
+                polygons->InsertNextCell(p_poly1);
+                polygons->InsertNextCell(p_poly2);
+                polygons->InsertNextCell(p_poly3);
+                polygons->InsertNextCell(p_poly4);
+            }
+            p_sample_poly->SetPoints(p_points);
+            p_sample_poly->SetPolys(polygons);
+            mSamplePolygons.push_back(p_sample_poly);
         }
     }
 }
@@ -899,7 +1037,6 @@ void CornealMicropocketSimulation<DIM>::SetDoAnastamosis(bool doAnastamosis)
 {
     mDoAnastamosis = doAnastamosis;
 }
-
 
 template<unsigned DIM>
 void CornealMicropocketSimulation<DIM>::SetElementArea2d(QVolume elementArea2d)
@@ -1078,7 +1215,9 @@ void CornealMicropocketSimulation<DIM>::SetVegfPermeability(QMembranePermeabilit
 
 template<unsigned DIM>
 void CornealMicropocketSimulation<DIM>::DoSampling(std::ofstream& rStream,
-        std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver, double time, double multfact,
+        std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver,
+        double time,
+        double multfact,
         bool sampleOnce)
 {
     rStream << time << ",";
