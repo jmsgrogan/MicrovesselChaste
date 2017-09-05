@@ -38,23 +38,52 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 #include <map>
+#include <boost/serialization/base_object.hpp>
 #include "ChasteSerialization.hpp"
-#include "ClassIsAbstract.hpp"
 #include "UnitCollection.hpp"
+#include "ClassIsAbstract.hpp"
 #include "AbstractVesselNetworkComponentProperties.hpp"
 
 /**
  * This class contains common functionality for chemical property containers for all vessel network components.
  */
 template<unsigned DIM>
-class AbstractVesselNetworkComponentChemicalProperties: public std::enable_shared_from_this<AbstractVesselNetworkComponentChemicalProperties<DIM> >,
+class AbstractVesselNetworkComponentChemicalProperties:
+        public std::enable_shared_from_this<AbstractVesselNetworkComponentChemicalProperties<DIM> >,
     public AbstractVesselNetworkComponentProperties<DIM>
 {
 
 protected:
 
     /**
-     * Dimensionless pressure in the component
+     * Archiving
+     */
+    friend class boost::serialization::access;
+
+    /**
+     * Do the serialize
+     * @param ar the archive
+     * @param version the archive version number
+     */
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        #if BOOST_VERSION < 105600
+            EXCEPTION("Serialization not supported for Boost < 1.56");
+        #else
+            ar & boost::serialization::base_object<AbstractVesselNetworkComponentProperties<DIM> >(*this);
+            ar & mVegfConcentration;
+            ar & mPermeability;
+        #endif
+    }
+
+    /**
+     * Vegf concentration in the component
+     */
+    QConcentration mVegfConcentration;
+
+    /**
+     * Permeability in the component
      */
     QMembranePermeability mPermeability;
 
@@ -71,6 +100,20 @@ public:
     virtual ~AbstractVesselNetworkComponentChemicalProperties();
 
     /**
+     * Return the Vegf concentration in the component
+     *
+     * @return the Vegf concentration in the component
+     */
+    QConcentration GetVegfConcentration() const;
+
+    /**
+     * Set the Vegf concentration in the component
+     *
+     * @param Vegf concentration the component Vegf concentration
+     */
+    virtual void SetVegfConcentration(QConcentration concentration);
+
+    /**
      * Return the permeability in the component
      *
      * @return the permeability in the component
@@ -85,5 +128,7 @@ public:
     virtual void SetPermeability(QMembranePermeability permeability);
 
 };
+
+TEMPLATED_CLASS_IS_ABSTRACT_1_UNSIGNED(AbstractVesselNetworkComponentChemicalProperties);
 
 #endif /* ABSTRACTVESSELNETWORKCOMPONENTCHEMICALPROPERTIES_HPP_ */

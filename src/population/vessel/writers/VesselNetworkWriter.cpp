@@ -138,7 +138,7 @@ vtkSmartPointer<vtkPolyData> VesselNetworkWriter<DIM>::GetOutput()
         for(unsigned idx=0; idx<nodes.size(); idx++)
         {
             nodes[idx]->SetId(idx);
-            c_vector<double, 3> loc = nodes[idx]->rGetLocation().Convert(mReferenceLength);
+            c_vector<double, 3> loc = nodes[idx]->rGetLocation().Convert3(mReferenceLength);
             pPoints->InsertNextPoint(&loc[0]);
 
             std::map<std::string, double> vtk_node_data = nodes[idx]->GetOutputData();

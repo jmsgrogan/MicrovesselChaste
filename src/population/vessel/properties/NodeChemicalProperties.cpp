@@ -33,31 +33,33 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "AbstractVesselNetworkComponentFlowProperties.hpp"
+#include "NodeChemicalProperties.hpp"
 
 template<unsigned DIM>
-AbstractVesselNetworkComponentFlowProperties<DIM>::AbstractVesselNetworkComponentFlowProperties() : AbstractVesselNetworkComponentProperties<DIM>(),
-        mPressure(0.0 * unit::pascals)
+NodeChemicalProperties<DIM>::NodeChemicalProperties() : AbstractVesselNetworkComponentChemicalProperties<DIM>()
 {
+
 }
 
 template<unsigned DIM>
-AbstractVesselNetworkComponentFlowProperties<DIM>::~AbstractVesselNetworkComponentFlowProperties()
+NodeChemicalProperties<DIM>::~NodeChemicalProperties()
 {
+
 }
 
 template<unsigned DIM>
-QPressure AbstractVesselNetworkComponentFlowProperties<DIM>::GetPressure() const
+std::map<std::string, double> NodeChemicalProperties<DIM>::GetOutputData() const
 {
-    return mPressure;
-}
-
-template<unsigned DIM>
-void AbstractVesselNetworkComponentFlowProperties<DIM>::SetPressure(QPressure pressure)
-{
-    mPressure = pressure;
+    std::map<std::string, double> output_data;
+    output_data["Permeability m/s"] = this->GetPermeability() / (1.0*unit::metres_per_second);
+    output_data["VEGF Concentration nM"] = this->GetVegfConcentration() / (1.0_nM);
+    return output_data;
 }
 
 // Explicit instantiation
-template class AbstractVesselNetworkComponentFlowProperties<2>;
-template class AbstractVesselNetworkComponentFlowProperties<3>;
+template class NodeChemicalProperties<2>;
+template class NodeChemicalProperties<3>;
+
+#include "SerializationExportWrapperForCpp.hpp"
+EXPORT_TEMPLATE_CLASS1(NodeChemicalProperties, 2)
+EXPORT_TEMPLATE_CLASS1(NodeChemicalProperties, 3)

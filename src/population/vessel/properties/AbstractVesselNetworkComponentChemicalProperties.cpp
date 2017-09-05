@@ -36,7 +36,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "AbstractVesselNetworkComponentChemicalProperties.hpp"
 
 template<unsigned DIM>
-AbstractVesselNetworkComponentChemicalProperties<DIM>::AbstractVesselNetworkComponentChemicalProperties() : AbstractVesselNetworkComponentProperties<DIM>(),
+AbstractVesselNetworkComponentChemicalProperties<DIM>::AbstractVesselNetworkComponentChemicalProperties() :
+    AbstractVesselNetworkComponentProperties<DIM>(),
+    mVegfConcentration(0_nM),
     mPermeability()
 {
 }
@@ -44,6 +46,18 @@ AbstractVesselNetworkComponentChemicalProperties<DIM>::AbstractVesselNetworkComp
 template<unsigned DIM>
 AbstractVesselNetworkComponentChemicalProperties<DIM>::~AbstractVesselNetworkComponentChemicalProperties()
 {
+}
+
+template<unsigned DIM>
+QConcentration AbstractVesselNetworkComponentChemicalProperties<DIM>::GetVegfConcentration() const
+{
+    return mVegfConcentration;
+}
+
+template<unsigned DIM>
+void AbstractVesselNetworkComponentChemicalProperties<DIM>::SetVegfConcentration(QConcentration concentration)
+{
+    mVegfConcentration = concentration;
 }
 
 template<unsigned DIM>

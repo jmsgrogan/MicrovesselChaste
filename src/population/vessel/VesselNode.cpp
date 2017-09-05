@@ -42,6 +42,7 @@ VesselNode<DIM>::VesselNode(QLength v1, QLength v2, QLength v3) : AbstractVessel
         mSegments(std::vector<std::weak_ptr<VesselSegment<DIM> > >()),
         mIsMigrating(false),
         mpFlowProperties(std::make_shared<NodeFlowProperties<DIM> >()),
+        mpChemicalProperties(std::make_shared<NodeChemicalProperties<DIM> >()),
         mPtrComparisonId(0),
         mGlobalIndex(0),
         mLocalIndex(0),
@@ -60,6 +61,7 @@ VesselNode<DIM>::VesselNode(const Vertex<DIM>& location) : AbstractVesselNetwork
         mSegments(std::vector<std::weak_ptr<VesselSegment<DIM> > >()),
         mIsMigrating(false),
         mpFlowProperties(std::make_shared<NodeFlowProperties<DIM> >()),
+        mpChemicalProperties(std::make_shared<NodeChemicalProperties<DIM> >()),
         mPtrComparisonId(0),
         mGlobalIndex(0),
         mLocalIndex(0),
@@ -79,6 +81,7 @@ VesselNode<DIM>::VesselNode(const VesselNode<DIM>& rExistingNode) :
         mSegments(std::vector<std::weak_ptr<VesselSegment<DIM> > >()),
         mIsMigrating(false),
         mpFlowProperties(std::make_shared<NodeFlowProperties<DIM> >()),
+        mpChemicalProperties(std::make_shared<NodeChemicalProperties<DIM> >()),
         mPtrComparisonId(0),
         mGlobalIndex(0),
         mLocalIndex(0),
@@ -160,6 +163,12 @@ std::shared_ptr<NodeFlowProperties<DIM> > VesselNode<DIM>::GetFlowProperties() c
 }
 
 template<unsigned DIM>
+std::shared_ptr<NodeChemicalProperties<DIM> > VesselNode<DIM>::GetChemicalProperties() const
+{
+    return this->mpChemicalProperties;
+}
+
+template<unsigned DIM>
 const Vertex<DIM>& VesselNode<DIM>::rGetLocation() const
 {
     return mLocation;
@@ -183,6 +192,9 @@ std::map<std::string, double> VesselNode<DIM>::GetOutputData()
     this->mOutputData["Node Owner Rank"] = this->GetOwnerRank();
     this->mOutputData["Node Is Halo"] = this->IsHalo();
     this->mOutputData["Node Has Halo"] = this->HasHalo();
+
+    std::map<std::string, double> chemical_data = this->mpChemicalProperties->GetOutputData();
+    this->mOutputData.insert(chemical_data.begin(), chemical_data.end());
     return this->mOutputData;
 }
 
@@ -297,6 +309,12 @@ template<unsigned DIM>
 void VesselNode<DIM>::SetFlowProperties(const NodeFlowProperties<DIM>& rFlowProperties)
 {
     this->mpFlowProperties = std::shared_ptr<NodeFlowProperties<DIM> >(new NodeFlowProperties<DIM>(rFlowProperties));
+}
+
+template<unsigned DIM>
+void VesselNode<DIM>::SetChemicalProperties(const NodeChemicalProperties<DIM>& rChemicalProperties)
+{
+    this->mpChemicalProperties = std::shared_ptr<NodeChemicalProperties<DIM> >(new NodeChemicalProperties<DIM>(rChemicalProperties));
 }
 
 template<unsigned DIM>

@@ -505,6 +505,7 @@ std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(
             av_tangent = (dir1-dir2);
         }
         av_tangent/=norm_2(av_tangent);
+
         if(this->mpSolver)
         {
             c_vector<double, 3> gradient = solution_gradients[counter];
@@ -524,56 +525,38 @@ std::vector<Vertex<DIM> > OffLatticeMigrationRule<DIM>::GetDirectionsForSprouts(
                 }
                 else
                 {
-                    double angle = std::acos(inner_prod(av_tangent, gradient));
-                    double angle_threshold = M_PI/20.0;
-                    double rot_angle = M_PI/2.0;
-                    if(angle<angle_threshold)
+                    new_direction = RotateAboutAxis<DIM>(av_tangent, rot_axis, 0.5*M_PI*unit::radians);
+                    if(inner_prod(new_direction, gradient)<0.0)
                     {
-                        if(RandomNumberGenerator::Instance()->ranf()>0.5)
-                        {
-                            rot_angle*=-1.0;
-                        }
+                        new_direction = -new_direction;
                     }
-                    else if(angle<0.0)
-                    {
-                        rot_angle = -M_PI/2.0 - angle;
-                    }
-                    else if(angle >0.0)
-                    {
-                        rot_angle = M_PI/2.0 - angle;
-                    }
-                    new_direction = RotateAboutAxis<DIM>(gradient, rot_axis, rot_angle*unit::radians);
                 }
             }
             else
             {
-                c_vector<double, 2> gradient_2d;
-                gradient_2d[0] = solution_gradients[counter][0];
-                gradient_2d[1] = solution_gradients[counter][1];
-                gradient_2d/=norm_2(gradient_2d);
-                double angle = std::acos(inner_prod(av_tangent, gradient_2d));
-                double rot_angle = M_PI/2.0;
-                double angle_threshold = M_PI/20.0;
-                if(angle<angle_threshold)
-                {
-                    if(RandomNumberGenerator::Instance()->ranf()>0.5)
-                    {
-                        rot_angle*=-1.0;
-                    }
-                }
-                else if(angle<0.0)
-                {
-                    rot_angle = -M_PI/2.0 - angle;
-                }
-                else if(angle >0.0)
-                {
-                    rot_angle = M_PI/2.0 - angle;
-                }
+                // Get a segment normal
                 c_vector<double, 3> rot_axis;
                 rot_axis[0] = 0.0;
                 rot_axis[1] = 0.0;
                 rot_axis[2] = 1.0;
-                new_direction = RotateAboutAxis<DIM>(gradient_2d, rot_axis, rot_angle*unit::radians);
+                c_vector<double, DIM> normal = RotateAboutAxis<DIM>(av_tangent, rot_axis, 0.5*M_PI*unit::radians);
+                normal/=norm_2(normal);
+
+                // Flip if pointing away from the gradient
+                c_vector<double, 2> gradient_2d;
+                gradient_2d[0] = solution_gradients[counter][0];
+                gradient_2d[1] = solution_gradients[counter][1];
+                gradient_2d/=norm_2(gradient_2d);
+                double dot_prod = inner_prod(normal, gradient_2d);
+                if(dot_prod<0)
+                {
+                    normal = -normal;
+                }
+                else if(dot_prod==0.0 and RandomNumberGenerator::Instance()->ranf()<0.5)
+                {
+                    normal = -normal;
+                }
+                new_direction = normal;
             }
         }
         else

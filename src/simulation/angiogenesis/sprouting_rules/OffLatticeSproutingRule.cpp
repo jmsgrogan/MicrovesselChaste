@@ -96,26 +96,29 @@ std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const 
         {
             probed_solutions = this->mpSolver->GetConcentrations(p_probe_locations);
         }
+        unsigned counter=0;
+        for(auto& node:rNodes)
+        {
+            node->GetChemicalProperties()->SetVegfConcentration(probed_solutions[counter]);
+            counter++;
+        }
     }
 
     // Set up the output sprouts vector
     std::vector<VesselNodePtr<DIM> > sprouts;
     QTime reference_time = BaseUnits::Instance()->GetReferenceTimeScale();
     QTime time_step = SimulationTime::Instance()->GetTimeStep()*reference_time;
-    unsigned counter = 0;
     for(auto& node:rNodes)
     {
         // Only nodes with two segments can sprout
         if(node->GetNumberOfSegments() != 2)
         {
-            counter++;
             continue;
         }
 
         // Check perfusion if needed
         if(this->mOnlySproutIfPerfused and node->GetFlowProperties()->GetPressure()==0_Pa)
         {
-            counter++;
             continue;
         }
 
@@ -131,7 +134,6 @@ std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const 
                 QLength distance = p_segment0->GetOppositeNode(node)->GetDistance(node->rGetLocation());
                 if(distance< 1.1*cell_length1)
                 {
-                    counter++;
                     continue;
                 }
             }
@@ -140,7 +142,6 @@ std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const 
                 QLength distance = p_segment1->GetOppositeNode(node)->GetDistance(node->rGetLocation());
                 if(distance< 1.1*cell_length1)
                 {
-                    counter++;
                     continue;
                 }
             }
@@ -168,16 +169,11 @@ std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const 
             }
             if(too_close)
             {
-                counter++;
                 continue;
             }
         }
         // If there is a vegf solution get P sprout
-        QConcentration vegf_conc = 0_M;
-        if(this->mpSolver)
-        {
-            vegf_conc = probed_solutions[counter];
-        }
+        QConcentration vegf_conc = node->GetChemicalProperties()->GetVegfConcentration();
 
         QLength cell_length2 = (p_segment0->GetCellularProperties()->GetAverageCellLengthCircumferential() +
                 p_segment1->GetCellularProperties()->GetAverageCellLengthCircumferential())/2.0;
@@ -187,11 +183,11 @@ std::vector<VesselNodePtr<DIM> > OffLatticeSproutingRule<DIM>::GetSprouts(const 
         double num_cells = std::round(2.0*M_PI*segment_radius*segment_length/cell_area);
         double vegf_fraction = vegf_conc/(vegf_conc + mHalfMaxVegf);
         double prob_per_time_step = this->mSproutingProbabilityPerCell*time_step*num_cells*vegf_fraction;
+
         if (RandomNumberGenerator::Instance()->ranf() < prob_per_time_step)
         {
             sprouts.push_back(node);
         }
-        counter++;
     }
     mNumberSprouted += sprouts.size();
     return sprouts;

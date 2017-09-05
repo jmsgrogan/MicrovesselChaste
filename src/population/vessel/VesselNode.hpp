@@ -44,6 +44,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Vertex.hpp"
 #include "AbstractVesselNetworkComponent.hpp"
 #include "NodeFlowProperties.hpp"
+#include "NodeChemicalProperties.hpp"
 #include "UblasVectorInclude.hpp"
 #include "UnitCollection.hpp"
 #include "VectorUnitCollection.hpp"
@@ -116,6 +117,11 @@ private:
      * A flow property collection for the node
      */
     std::shared_ptr<NodeFlowProperties<DIM> > mpFlowProperties;
+
+    /**
+     * A chemical property collection for the node
+     */
+    std::shared_ptr<NodeChemicalProperties<DIM> > mpChemicalProperties;
 
     /**
      * This is used for comparing nodes in some VesselNetwork methods.
@@ -246,6 +252,13 @@ public:
     std::shared_ptr<NodeFlowProperties<DIM> > GetFlowProperties() const;
 
     /**
+     * Return the chemical properties of the component
+     *
+     * @return the chemical properties of the component
+     */
+    std::shared_ptr<NodeChemicalProperties<DIM> > GetChemicalProperties() const;
+
+    /**
      * Return a reference to the location of the node
      *
      * @return a vector at the location of the node
@@ -361,6 +374,13 @@ public:
      * @param rFlowProperties the flow properties to be set
      */
     void SetFlowProperties(const NodeFlowProperties<DIM>& rFlowProperties);
+
+    /**
+     * Set the flow properties of the node
+     *
+     * @param rFlowProperties the flow properties to be set
+     */
+    void SetChemicalProperties(const NodeChemicalProperties<DIM>& rChemicalProperties);
 
     /**
      * Set that the node is migrating

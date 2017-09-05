@@ -33,31 +33,69 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "AbstractVesselNetworkComponentFlowProperties.hpp"
+#ifndef NODECHEMICALPROPERTIES_HPP_
+#define NODECHEMICALPROPERTIES_HPP_
 
+#include <memory>
+#include <string>
+#include <map>
+#include "ChasteSerialization.hpp" // NOLINT
+#include "Exception.hpp"
+#include "AbstractVesselNetworkComponentChemicalProperties.hpp"
+
+/**
+ * This is a class for vascular node flow properties.
+ *
+ * This class stores nodal data for vessel network flow problems. Each node has
+ * an instance of the class.
+ */
 template<unsigned DIM>
-AbstractVesselNetworkComponentFlowProperties<DIM>::AbstractVesselNetworkComponentFlowProperties() : AbstractVesselNetworkComponentProperties<DIM>(),
-        mPressure(0.0 * unit::pascals)
+class NodeChemicalProperties : public std::enable_shared_from_this<NodeChemicalProperties<DIM> >,
+    public AbstractVesselNetworkComponentChemicalProperties<DIM>
 {
-}
 
-template<unsigned DIM>
-AbstractVesselNetworkComponentFlowProperties<DIM>::~AbstractVesselNetworkComponentFlowProperties()
-{
-}
+private:
 
-template<unsigned DIM>
-QPressure AbstractVesselNetworkComponentFlowProperties<DIM>::GetPressure() const
-{
-    return mPressure;
-}
+    /**
+     * Archiving
+     */
+    friend class boost::serialization::access;
 
-template<unsigned DIM>
-void AbstractVesselNetworkComponentFlowProperties<DIM>::SetPressure(QPressure pressure)
-{
-    mPressure = pressure;
-}
+    /**
+     * Do the serialize
+     * @param ar the archive
+     * @param version the archive version number
+     */
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        #if BOOST_VERSION < 105600
+            EXCEPTION("Serialization not supported for Boost < 1.56");
+        #else
+            ar & boost::serialization::base_object<AbstractVesselNetworkComponentChemicalProperties<DIM> >(*this);
+        #endif
+    }
 
-// Explicit instantiation
-template class AbstractVesselNetworkComponentFlowProperties<2>;
-template class AbstractVesselNetworkComponentFlowProperties<3>;
+public:
+
+    /**
+     * Constructor
+     */
+    NodeChemicalProperties();
+
+    /**
+     * Destructor
+     */
+    ~NodeChemicalProperties();
+
+    /**
+     * Return a map of nodal data for use by the vtk writer
+     * @return a map of nodal data for use by the vtk writer
+     */
+    std::map<std::string, double> GetOutputData() const;
+};
+
+#include "SerializationExportWrapper.hpp"
+EXPORT_TEMPLATE_CLASS1(NodeChemicalProperties, 2)
+EXPORT_TEMPLATE_CLASS1(NodeChemicalProperties, 3)
+#endif /* NODECHEMICALPROPERTIES_HPP_ */

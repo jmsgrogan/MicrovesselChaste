@@ -337,8 +337,8 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
             p_pellet_domain->AddCylinder(mPelletRadius, mPelletThickness, Vertex<DIM>(0_m, 0_m, base));
             std::vector<PolygonPtr<DIM> > polygons = p_pellet_domain->GetPolygons();
 
-            double height_fraction = double((mPelletHeight+mPelletRadius+ mLimbalOffset)/mCorneaRadius);
-            double rotation_angle = std::acos(std::ceil(height_fraction - 0.5));
+            double height_fraction = double((mPelletHeight+ mPelletRadius + mLimbalOffset)/mCorneaRadius);
+            double rotation_angle = M_PI/2.0 - std::asin(height_fraction);
             Vertex<DIM> pellet_centre(0_m, 0_m, base + mPelletThickness/2.0);
             c_vector<double, 3> axis;
             axis[0] = 0.0;
@@ -1137,6 +1137,8 @@ void CornealMicropocketSimulation<DIM>::Run()
 
     // Set up domain, grid, vessel network and pde solver
     SetUpDomain();
+    mpDomain->Write(p_file_handler->GetOutputDirectoryFullPath() + "simulation_domain.vtp");
+
     SetUpGrid();
 
     if(!mUsePdeOnly)
