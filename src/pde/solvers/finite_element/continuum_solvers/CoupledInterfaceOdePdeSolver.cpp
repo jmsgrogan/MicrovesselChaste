@@ -147,13 +147,15 @@ void CoupledInterfaceOdePdeSolver<DIM>::SetupLinearSystem(Vec currentSolution, b
             NullSurfaceIntegralCalculator<DIM> surf_calc(this->mpMesh, mpBoundaryConditions);
             surf_calc.SetCurrentSolution(currentSolution);
 
-            QLength depth=mReferenceLengthScale;
+            QLength depth = mReferenceLengthScale;
             if(DIM==2)
             {
                 depth=p_coupled_pde->GetPelletDepth();
             }
             QArea surface_area = surf_calc.CalculateSurfaceIntegral(false)*mReferenceLengthScale*depth;
             QArea surface_concentration_integral = surf_calc.CalculateSurfaceIntegral()*mReferenceLengthScale*depth;
+//            std::cout << "sa " << surface_area/(mReferenceLengthScale*mReferenceLengthScale) << " sac " << surface_concentration_integral/(mReferenceLengthScale*mReferenceLengthScale) << std::endl;
+//            std::cout << "sol " << mCurrentLumpedSolution << std::endl;
 
             // Update the vegf in the pellet
             QVolume volume = p_coupled_pde->GetPelletVolume();

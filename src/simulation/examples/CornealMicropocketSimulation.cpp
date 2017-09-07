@@ -419,8 +419,8 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
             points.push_back(Vertex<DIM>::Create(0_m));
             points.push_back(Vertex<DIM>::Create(domain_width));
             points.push_back(Vertex<DIM>::Create(domain_width, domain_height));
-            points.push_back(Vertex<DIM>::Create((domain_width+domain_height)/2.0, domain_height));
-            points.push_back(Vertex<DIM>::Create((domain_width-domain_height)/2.0, domain_height));
+            points.push_back(Vertex<DIM>::Create((domain_width+2.0 * M_PI *mPelletRadius)/2.0, domain_height));
+            points.push_back(Vertex<DIM>::Create((domain_width-2.0 * M_PI *mPelletRadius)/2.0, domain_height));
             points.push_back(Vertex<DIM>::Create(0_m, domain_height));
 
             auto p_polygon = Polygon<DIM>::Create(points);
@@ -452,8 +452,8 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
             mpDomain->AddCuboid(domain_width, domain_height, mCorneaThickness);
             QLength gap = (mCorneaThickness - mPelletThickness)/2.0;
             std::vector<VertexPtr<DIM> > points;
-            QLength left_side = (domain_width-mPelletRadius)/2.0;
-            QLength right_side = (domain_width+mPelletRadius)/2.0;
+            QLength left_side = (domain_width-2.0 * M_PI *mPelletRadius)/2.0;
+            QLength right_side = (domain_width+2.0 * M_PI *mPelletRadius)/2.0;
 
             points.push_back(Vertex<DIM>::Create(left_side, domain_height, gap));
             points.push_back(Vertex<DIM>::Create(right_side,domain_height, gap));
@@ -531,7 +531,11 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
             p_pellet_domain->AddCylinder(mPelletRadius, mPelletThickness, Vertex<DIM>(0_m, 0_m, base));
             std::vector<PolygonPtr<DIM> > polygons = p_pellet_domain->GetPolygons();
 
-            double height_fraction = double((mPelletHeight+ mPelletRadius + mLimbalOffset)/mCorneaRadius);
+            double height_fraction = double((mPelletHeight + mLimbalOffset)/mCorneaRadius);
+            if(height_fraction>1.0)
+            {
+            	height_fraction=1.0;
+            }
             double rotation_angle = M_PI/2.0 - std::asin(height_fraction);
             Vertex<DIM> pellet_centre(0_m, 0_m, base + mPelletThickness/2.0);
             c_vector<double, 3> axis;
@@ -540,7 +544,6 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
             axis[2] = 0.0;
             p_pellet_domain->RotateAboutAxis(axis, rotation_angle);
             pellet_centre.RotateAboutAxis(axis, rotation_angle);
-
             mpDomain->AppendPart(p_pellet_domain);
             mpDomain->AddHoleMarker(pellet_centre);
             for(auto& polygon:polygons)
@@ -700,7 +703,9 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
 
         QArea surface_area = 2.0*M_PI*mPelletRadius*mPelletThickness;
         surface_area = surface_area + 2.0*M_PI*mPelletRadius*mPelletRadius;
+        QVolume volume = M_PI*mPelletRadius*mPelletRadius*mPelletThickness;
         p_pde->SetPelletSurfaceArea(surface_area);
+        p_pde->SetPelletVolume(volume);
         p_pde->SetCorneaPelletPermeability(0.002*p_pde->GetCorneaPelletPermeability());
 
         if(mIncludeVesselSink and !mUsePdeOnly)
