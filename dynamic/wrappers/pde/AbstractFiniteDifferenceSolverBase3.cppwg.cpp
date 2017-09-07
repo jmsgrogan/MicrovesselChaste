@@ -2,7 +2,6 @@
 #include <pybind11/stl.h>
 #include <petsc/private/vecimpl.h>
 #include <petsc/private/matimpl.h>
-#include <petsc/private/tsimpl.h>
 #include <set>
 #include <vector>
 #include <string>
@@ -13,14 +12,16 @@
 #include "vtkPolyData.h"
 #include "AbstractFiniteDifferenceSolverBase.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "AbstractFiniteDifferenceSolverBase3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef AbstractFiniteDifferenceSolverBase<3 > AbstractFiniteDifferenceSolverBase3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 PYBIND11_MAKE_OPAQUE(Vec);
 PYBIND11_MAKE_OPAQUE(Mat);
-PYBIND11_MAKE_OPAQUE(TS);
 
 class AbstractFiniteDifferenceSolverBase3_Overloads : public AbstractFiniteDifferenceSolverBase3{
     public:

@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "VesselNetworkReader.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "VesselNetworkReader2.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef VesselNetworkReader<2 > VesselNetworkReader2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

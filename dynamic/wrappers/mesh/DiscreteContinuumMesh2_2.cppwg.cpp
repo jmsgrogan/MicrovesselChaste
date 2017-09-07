@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "DiscreteContinuumMesh.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "DiscreteContinuumMesh2_2.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef DiscreteContinuumMesh<2,2 > DiscreteContinuumMesh2_2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::Vertex<2> _Vertex_lt_2_gt_;

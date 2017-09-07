@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "AbstractTetrahedralMesh.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "AbstractTetrahedralMesh3_3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef AbstractTetrahedralMesh<3,3 > AbstractTetrahedralMesh3_3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef unsigned int unsignedint;

@@ -11,9 +11,12 @@
 #include "vtkPolyData.h"
 #include "MicrovesselVtkScene.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "MicrovesselVtkScene3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef MicrovesselVtkScene<3 > MicrovesselVtkScene3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 PYBIND11_VTK_TYPECASTER(vtkRenderer);

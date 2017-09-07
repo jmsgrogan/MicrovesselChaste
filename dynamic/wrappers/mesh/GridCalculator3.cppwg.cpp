@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "GridCalculator.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "GridCalculator3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef GridCalculator<3 > GridCalculator3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
@@ -47,10 +50,18 @@ py::class_<GridCalculator3  , std::shared_ptr<GridCalculator3 >   >(m, "GridCalc
             "rGetVesselNodeMap", 
             (::std::vector<std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > >, std::allocator<std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > > > const &(GridCalculator3::*)(bool)) &GridCalculator3::rGetVesselNodeMap, 
             " " , py::arg("update") = true , py::return_value_policy::reference_internal)
+        .def_static(
+            "GetVesselNodeMap", 
+            (::std::vector<std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > >, std::allocator<std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > > >(*)(::vtkSmartPointer<vtkUnstructuredGrid>, ::std::shared_ptr<VesselNetwork<3> >, ::QLength)) &GridCalculator3::GetVesselNodeMap, 
+            " " , py::arg("pGrid"), py::arg("pNetwork"), py::arg("referenceLength") )
         .def(
             "rGetSegmentMap", 
             (::std::vector<std::vector<std::shared_ptr<VesselSegment<3> >, std::allocator<std::shared_ptr<VesselSegment<3> > > >, std::allocator<std::vector<std::shared_ptr<VesselSegment<3> >, std::allocator<std::shared_ptr<VesselSegment<3> > > > > > const &(GridCalculator3::*)(bool, bool)) &GridCalculator3::rGetSegmentMap, 
             " " , py::arg("update") = true, py::arg("useVesselSurface") = false , py::return_value_policy::reference_internal)
+        .def_static(
+            "GetSegmentMap", 
+            (::std::vector<std::vector<std::shared_ptr<VesselSegment<3> >, std::allocator<std::shared_ptr<VesselSegment<3> > > >, std::allocator<std::vector<std::shared_ptr<VesselSegment<3> >, std::allocator<std::shared_ptr<VesselSegment<3> > > > > >(*)(::vtkSmartPointer<vtkUnstructuredGrid>, ::std::shared_ptr<VesselNetwork<3> >, ::QLength)) &GridCalculator3::GetSegmentMap, 
+            " " , py::arg("pGrid"), py::arg("pNetwork"), py::arg("referenceLength") )
         .def(
             "GetGrid", 
             (::std::shared_ptr<AbstractDiscreteContinuumGrid<3, 3> >(GridCalculator3::*)()) &GridCalculator3::GetGrid, 

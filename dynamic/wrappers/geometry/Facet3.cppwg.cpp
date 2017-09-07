@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "Facet.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "Facet3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef Facet<3 > Facet3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

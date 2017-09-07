@@ -1,5 +1,6 @@
 #ifndef CoupledLumpedSystemFiniteDifferenceSolver3_hpp__pyplusplus_wrapper
 #define CoupledLumpedSystemFiniteDifferenceSolver3_hpp__pyplusplus_wrapper
+
 namespace py = pybind11;
 void register_CoupledLumpedSystemFiniteDifferenceSolver3_class(py::module &m);
 #endif // CoupledLumpedSystemFiniteDifferenceSolver3_hpp__pyplusplus_wrapper

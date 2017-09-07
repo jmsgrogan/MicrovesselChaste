@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "ShrinkingStimulusCalculator.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "ShrinkingStimulusCalculator3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef ShrinkingStimulusCalculator<3 > ShrinkingStimulusCalculator3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

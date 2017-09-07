@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "DensityMap.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "DensityMap2.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef DensityMap<2 > DensityMap2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
@@ -47,6 +50,14 @@ py::class_<DensityMap2  , std::shared_ptr<DensityMap2 >   >(m, "DensityMap2")
             "rGetVesselLineDensity", 
             (::std::vector<double, std::allocator<double> >(DensityMap2::*)(bool)) &DensityMap2::rGetVesselLineDensity, 
             " " , py::arg("update") = true )
+        .def_static(
+            "GetVesselLineDensity", 
+            (void(*)(::vtkSmartPointer<vtkUnstructuredGrid>, ::std::shared_ptr<VesselNetwork<2> >, ::QLength)) &DensityMap2::GetVesselLineDensity, 
+            " " , py::arg("pGrid"), py::arg("pNetwork"), py::arg("reference_length") )
+        .def_static(
+            "GetVesselTipDensity", 
+            (void(*)(::vtkSmartPointer<vtkUnstructuredGrid>, ::std::shared_ptr<VesselNetwork<2> >, ::QLength)) &DensityMap2::GetVesselTipDensity, 
+            " " , py::arg("pGrid"), py::arg("pNetwork"), py::arg("reference_length") )
         .def(
             "rGetPerfusedVesselSurfaceAreaDensity", 
             (::std::vector<double, std::allocator<double> > const &(DensityMap2::*)(bool)) &DensityMap2::rGetPerfusedVesselSurfaceAreaDensity, 
@@ -75,13 +86,13 @@ py::class_<DensityMap2  , std::shared_ptr<DensityMap2 >   >(m, "DensityMap2")
             "rGetCellDensity", 
             (::std::vector<double, std::allocator<double> > const &(DensityMap2::*)(::boost::shared_ptr<AbstractCellMutationState>, bool)) &DensityMap2::rGetCellDensity, 
             " " , py::arg("pMutationState"), py::arg("update") = true , py::return_value_policy::reference_internal)
-        .def(
+        .def_static(
             "IsPointInCell", 
-            (bool(DensityMap2::*)(::vtkSmartPointer<vtkCellLocator>, ::boost::numeric::ublas::c_vector<double, 2>, unsigned int)) &DensityMap2::IsPointInCell, 
+            (bool(*)(::vtkSmartPointer<vtkCellLocator>, ::boost::numeric::ublas::c_vector<double, 2>, unsigned int)) &DensityMap2::IsPointInCell, 
             " " , py::arg("pCellLocator"), py::arg("loc"), py::arg("index") )
-        .def(
+        .def_static(
             "LengthOfLineInCell", 
-            (double(DensityMap2::*)(::vtkSmartPointer<vtkUnstructuredGrid>, ::boost::numeric::ublas::c_vector<double, 2>, ::boost::numeric::ublas::c_vector<double, 2>, unsigned int, bool, bool)) &DensityMap2::LengthOfLineInCell, 
+            (double(*)(::vtkSmartPointer<vtkUnstructuredGrid>, ::boost::numeric::ublas::c_vector<double, 2>, ::boost::numeric::ublas::c_vector<double, 2>, unsigned int, bool, bool)) &DensityMap2::LengthOfLineInCell, 
             " " , py::arg("pSamplingGrid"), py::arg("loc1"), py::arg("loc2"), py::arg("index"), py::arg("loc1InCell"), py::arg("loc2InCell") )
         .def(
             "SetVesselNetwork", 

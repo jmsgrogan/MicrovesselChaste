@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "OffLatticeMigrationRule.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "OffLatticeMigrationRule3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef OffLatticeMigrationRule<3 > OffLatticeMigrationRule3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::std::vector<Vertex<3>, std::allocator<Vertex<3> > > _std_vector_lt_Vertex_lt_3_gt__std_allocator_lt_Vertex_lt_3_gt__gt__gt_;

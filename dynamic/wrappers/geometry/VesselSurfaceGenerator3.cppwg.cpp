@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "VesselSurfaceGenerator.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "VesselSurfaceGenerator3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef VesselSurfaceGenerator<3 > VesselSurfaceGenerator3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

@@ -1,5 +1,6 @@
 #ifndef AbstractStructuralAdaptationSolver3_hpp__pyplusplus_wrapper
 #define AbstractStructuralAdaptationSolver3_hpp__pyplusplus_wrapper
+
 namespace py = pybind11;
 void register_AbstractStructuralAdaptationSolver3_class(py::module &m);
 #endif // AbstractStructuralAdaptationSolver3_hpp__pyplusplus_wrapper

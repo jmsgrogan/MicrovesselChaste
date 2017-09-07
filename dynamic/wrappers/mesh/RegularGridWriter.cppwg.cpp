@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "RegularGridWriter.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "RegularGridWriter.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef RegularGridWriter RegularGridWriter;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

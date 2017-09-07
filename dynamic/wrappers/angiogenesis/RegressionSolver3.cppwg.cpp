@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "RegressionSolver.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "RegressionSolver3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef RegressionSolver<3 > RegressionSolver3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

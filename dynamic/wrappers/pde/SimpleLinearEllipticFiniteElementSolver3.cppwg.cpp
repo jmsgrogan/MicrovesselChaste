@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "SimpleLinearEllipticFiniteElementSolver.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "SimpleLinearEllipticFiniteElementSolver3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef SimpleLinearEllipticFiniteElementSolver<3 > SimpleLinearEllipticFiniteElementSolver3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

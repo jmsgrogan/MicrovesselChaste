@@ -1,5 +1,6 @@
 #ifndef VesselNetworkGeometryCalculator2_hpp__pyplusplus_wrapper
 #define VesselNetworkGeometryCalculator2_hpp__pyplusplus_wrapper
+
 namespace py = pybind11;
 void register_VesselNetworkGeometryCalculator2_class(py::module &m);
 #endif // VesselNetworkGeometryCalculator2_hpp__pyplusplus_wrapper

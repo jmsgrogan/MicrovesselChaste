@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "CornealMicropocketSimulation.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "DomainType.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef DomainType DomainType;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 void register_DomainType_class(py::module &m){

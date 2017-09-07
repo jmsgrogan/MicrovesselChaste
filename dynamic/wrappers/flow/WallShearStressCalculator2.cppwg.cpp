@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "WallShearStressCalculator.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "WallShearStressCalculator2.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef WallShearStressCalculator<2 > WallShearStressCalculator2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

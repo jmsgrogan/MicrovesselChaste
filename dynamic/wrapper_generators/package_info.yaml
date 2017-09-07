@@ -152,6 +152,15 @@ modules:
   - name: AbstractFiniteDifferenceSolverBase
     excluded_methods:
     - GetRGBoundaryConditions
+    - SetMatrixToAssemble
+    - SetVectorToAssemble
+    - SetCurrentSolution
+    source_includes:
+    - <petsc/private/vecimpl.h> # forward decl
+    - <petsc/private/matimpl.h> # forward decl
+    prefix_code:
+    - PYBIND11_MAKE_OPAQUE(Vec); 
+    - PYBIND11_MAKE_OPAQUE(Mat);     
   - name: SimpleLinearEllipticFiniteDifferenceSolver
   - name: SimpleNonLinearEllipticFiniteDifferenceSolver
     source_includes:
@@ -160,6 +169,9 @@ modules:
     prefix_code:
     - PYBIND11_MAKE_OPAQUE(Vec); 
     - PYBIND11_MAKE_OPAQUE(Mat); 
+    excluded_methods:
+    - ComputeResidual
+    - ComputeJacobian
   - name: AbstractFiniteElementSolverBase
   - name: SimpleLinearEllipticFiniteElementSolver
   - name: SimpleNonLinearEllipticFiniteElementSolver
@@ -173,6 +185,9 @@ modules:
     - PYBIND11_MAKE_OPAQUE(Vec); 
     - PYBIND11_MAKE_OPAQUE(Mat); 
     - PYBIND11_MAKE_OPAQUE(TS); 
+    excluded_methods:
+    - ComputeResidual
+    - ComputeJacobian
   - name: CoupledLumpedSystemFiniteElementSolver
     source_includes:
     - <petsc/private/vecimpl.h> # forward decl
@@ -191,6 +206,9 @@ modules:
     - PYBIND11_MAKE_OPAQUE(Vec); 
     - PYBIND11_MAKE_OPAQUE(Mat); 
     - PYBIND11_MAKE_OPAQUE(TS); 
+    excluded_methods:
+    - ComputeResidual
+    - ComputeJacobian
   - name: FunctionMap
   - name: DensityMap
 - name: simulation

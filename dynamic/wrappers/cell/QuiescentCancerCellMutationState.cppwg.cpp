@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "QuiescentCancerCellMutationState.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "QuiescentCancerCellMutationState.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef QuiescentCancerCellMutationState QuiescentCancerCellMutationState;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

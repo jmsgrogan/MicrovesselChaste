@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "AbstractStructuralAdaptationSolver.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "AbstractStructuralAdaptationSolver2.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef AbstractStructuralAdaptationSolver<2 > AbstractStructuralAdaptationSolver2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

@@ -34,6 +34,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include <string>
+#include <vtkUnstructuredGrid.h>
+#include <vtkPoints.h>
+#include <vtkHexahedron.h>
+#include <vtkAppendFilter.h>
+#include <vtkXMLUnstructuredGridWriter.h>
 #include "UblasIncludes.hpp"
 #include "VesselSegment.hpp"
 #include "VesselNode.hpp"
@@ -69,10 +74,8 @@ CornealMicropocketSimulation<DIM>::CornealMicropocketSimulation() :
     mElementArea2d(1e3*unit::microns_cubed),
     mElementArea3d(1e4*unit::microns_cubed),
     mNodeSpacing(40_um),
-    mDensityGridSpacing(40_um),
-    mSampleSpacingX(60_um),
+    mSampleSpacingX(180_um),
     mSampleSpacingY(60_um),
-    mSampleSpacingZ(33_um),
     mUsePellet(true),
     mFinitePelletWidth(false),
     mSproutingProbability(0.5*unit::per_hour),
@@ -104,10 +107,9 @@ CornealMicropocketSimulation<DIM>::CornealMicropocketSimulation() :
     mpGrid(),
     mpNetwork(),
     mpSolver(),
-    mSampleLines(),
+    mpSampleGrid(),
     mNumSampleY(1),
-    mNumSampleZ(1),
-    mpSamplingGrid(),
+    mSamplingIndices(),
     mOnlyPerfusedSprout(false),
     mSampleFrequency(5),
     mStoredSample(),
@@ -131,21 +133,9 @@ std::shared_ptr<CornealMicropocketSimulation<DIM> > CornealMicropocketSimulation
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetAnastamosisRadius(QLength radius)
-{
-    mAnastamosisRadius = radius;
-}
-
-template<unsigned DIM>
 QLength CornealMicropocketSimulation<DIM>::GetAnastamosisRadius()
 {
     return mAnastamosisRadius;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetCellLength(QLength length)
-{
-    mCellLength = length;
 }
 
 template<unsigned DIM>
@@ -155,21 +145,33 @@ QLength CornealMicropocketSimulation<DIM>::GetCellLength()
 }
 
 template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetAnastamosisRadius(QLength radius)
+{
+    mAnastamosisRadius = radius;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetCellLength(QLength length)
+{
+    mCellLength = length;
+}
+
+template<unsigned DIM>
 void CornealMicropocketSimulation<DIM>::SetTipVelocity(QVelocity velocity)
 {
     mSproutVelocity = velocity;
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetPelletHeight(QLength pelletHeight)
-{
-    mPelletHeight = pelletHeight;
-}
-
-template<unsigned DIM>
 void CornealMicropocketSimulation<DIM>::SetOnlyPerfusedSprout(bool onlyPerfused)
 {
     mOnlyPerfusedSprout = onlyPerfused;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetPelletHeight(QLength pelletHeight)
+{
+    mPelletHeight = pelletHeight;
 }
 
 template<unsigned DIM>
@@ -200,6 +202,198 @@ template<unsigned DIM>
 void CornealMicropocketSimulation<DIM>::SetSampleFrequency(unsigned freq)
 {
     mSampleFrequency = freq;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetAttractionStrength(double attractionStrength)
+{
+    mAttractionStrength = attractionStrength;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetChemotacticStrength(double chemotacticStrength)
+{
+    mChemotacticStrength = chemotacticStrength;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetCorneaThickness(QLength corneaThickness)
+{
+    mCorneaThickness = corneaThickness;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetDoAnastamosis(bool doAnastamosis)
+{
+    mDoAnastamosis = doAnastamosis;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetElementArea2d(QVolume elementArea2d)
+{
+    mElementArea2d = elementArea2d;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetElementArea3d(QVolume elementArea3d)
+{
+    mElementArea3d = elementArea3d;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetFinitePelletWidth(bool finitePelletWidth)
+{
+    mFinitePelletWidth = finitePelletWidth;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetGridSpacing(QLength gridSpacing)
+{
+    mGridSpacing = gridSpacing;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetIncludeVesselSink(bool includeVesselSink)
+{
+    mIncludeVesselSink = includeVesselSink;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetNodeSpacing(QLength nodeSpacing)
+{
+    mNodeSpacing = nodeSpacing;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetPdeTimeIncrement(double pdeTimeIncrement)
+{
+    mPdeTimeIncrement = pdeTimeIncrement;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetPelletConcentration(QConcentration pelletConcentration)
+{
+    mPelletConcentration = pelletConcentration;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetPersistenceAngle(double persistenceAngle)
+{
+    mPersistenceAngle = persistenceAngle;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetRandomSeed(unsigned randomSeed)
+{
+    mRandomSeed = randomSeed;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetRunNumber(unsigned runNumber)
+{
+    mRunNumber = runNumber;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetSampleSpacingX(QLength sampleSpacingX)
+{
+    mSampleSpacingX = sampleSpacingX;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetSampleSpacingY(QLength sampleSpacingY)
+{
+    mSampleSpacingY = sampleSpacingY;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetSproutingProbability(QRate sproutingProbability)
+{
+    mSproutingProbability = sproutingProbability;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetTimeStepSize(QTime timeStepSize)
+{
+    mTimeStepSize = timeStepSize;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetUseTipExclusion(bool exclude)
+{
+    mUseTipExclusion = exclude;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetTotalTime(QTime totalTime)
+{
+    mTotalTime = totalTime;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetUptakeRatePerCell(QMolarFlowRate uptakeRatePerCell)
+{
+    mUptakeRatePerCell = uptakeRatePerCell;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetUseFixedGradient(bool useFixedGradient)
+{
+    mUseFixedGradient = useFixedGradient;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetUsePdeOnly(bool usePdeOnly)
+{
+    mUsePdeOnly = usePdeOnly;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetUsePellet(bool usePellet)
+{
+    mUsePellet = usePellet;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetVegfBindingConstant(double vegfBindingConstant)
+{
+    mVegfBindingConstant = vegfBindingConstant;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetVegfBloodConcentration(QConcentration vegfBloodConcentration)
+{
+    mVegfBloodConcentration = vegfBloodConcentration;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetDomainType(DomainType::Value domainType)
+{
+    mDomainType = domainType;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetVegfDecayRate(QRate vegfDecayRate)
+{
+    mVegfDecayRate = vegfDecayRate;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetWorkDir(std::string workDir)
+{
+    mWorkDirectory = workDir;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetVegfDiffusivity(QDiffusivity vegfDiffusivity)
+{
+    mVegfDiffusivity = vegfDiffusivity;
+}
+
+template<unsigned DIM>
+void CornealMicropocketSimulation<DIM>::SetVegfPermeability(QMembranePermeability vegfPermeability)
+{
+    mVegfPermeability = vegfPermeability;
 }
 
 template<unsigned DIM>
@@ -359,24 +553,15 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
 }
 
 template<unsigned DIM>
-std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulation<DIM>::SetUpGrid(bool mSampling)
+std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulation<DIM>::SetUpGrid()
 {
     if(mDomainType == DomainType::PLANAR_2D or mDomainType == DomainType::PLANAR_3D)
     {
         if(!mFinitePelletWidth)
         {
-            if(mSampling)
-            {
-                mpSamplingGrid = RegularGrid<DIM>::Create();
-                auto p_regular_grid = std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpSamplingGrid);
-                p_regular_grid->GenerateFromPart(mpDomain, mCorneaThickness);
-            }
-            else
-            {
-                mpGrid = RegularGrid<DIM>::Create();
-                auto p_regular_grid = std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGrid);
-                p_regular_grid->GenerateFromPart(mpDomain, mGridSpacing);
-            }
+            mpGrid = RegularGrid<DIM>::Create();
+            auto p_regular_grid = std::dynamic_pointer_cast<RegularGrid<DIM> >(this->mpGrid);
+            p_regular_grid->GenerateFromPart(mpDomain, mGridSpacing);
         }
         else
         {
@@ -384,35 +569,14 @@ std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulatio
             generator.SetDomain(mpDomain);
             if(mDomainType == DomainType::PLANAR_2D)
             {
-                if(mSampling)
-                {
-                    generator.SetMaxElementArea(mElementArea2d*12.0); // was 3
-                }
-                else
-                {
-                    generator.SetMaxElementArea(mElementArea2d);
-                }
+                generator.SetMaxElementArea(mElementArea2d);
             }
             else
             {
-                if(mSampling)
-                {
-                    generator.SetMaxElementArea(mElementArea3d*300.0);
-                }
-                else
-                {
-                    generator.SetMaxElementArea(mElementArea3d);
-                }
+                generator.SetMaxElementArea(mElementArea3d);
             }
             generator.Update();
-            if(mSampling)
-            {
-                mpSamplingGrid = generator.GetMesh();
-            }
-            else
-            {
-                mpGrid = generator.GetMesh();
-            }
+            mpGrid = generator.GetMesh();
         }
     }
     else if(mDomainType == DomainType::CIRCLE_2D or
@@ -423,39 +587,18 @@ std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > CornealMicropocketSimulatio
         generator.SetDomain(mpDomain);
         if(mDomainType == DomainType::CIRCLE_2D)
         {
-            if(mSampling)
-            {
-                generator.SetMaxElementArea(mElementArea2d*12.0);
-            }
-            else
-            {
-                generator.SetMaxElementArea(mElementArea2d);
-            }
+            generator.SetMaxElementArea(mElementArea2d);
         }
         else
         {
-            if(mSampling)
-            {
-                generator.SetMaxElementArea(mElementArea3d*300.0);
-            }
-            else
-            {
-                generator.SetMaxElementArea(mElementArea3d);
-            }
+            generator.SetMaxElementArea(mElementArea3d);
         }
         if (mHoles.size() > 0)
         {
             generator.SetHoles(mHoles);
         }
         generator.Update();
-        if(mSampling)
-        {
-            mpSamplingGrid = generator.GetMesh();
-        }
-        else
-        {
-            mpGrid = generator.GetMesh();
-        }
+        mpGrid = generator.GetMesh();
     }
     return mpGrid;
 }
@@ -543,8 +686,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
 {
 
     QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
-    QConcentration reference_concentration =
-            BaseUnits::Instance()->GetReferenceConcentrationScale();
+    QConcentration reference_concentration = BaseUnits::Instance()->GetReferenceConcentrationScale();
     auto file_handler = std::make_shared<OutputFileHandler>(mWorkDirectory, false);
 
     if(!mUseFixedGradient)
@@ -579,7 +721,6 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
                 mpSolver->SetGrid(mpGrid);
                 mpSolver->SetPde(p_pde);
                 mpSolver->SetLabel("vegf");
-
             }
             else
             {
@@ -602,7 +743,6 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
                 mpSolver->SetPde(p_pde);
                 mpSolver->SetLabel("vegf");
                 mpSolver->AddBoundaryCondition(p_boundary_condition);
-
             }
         }
         else if(mDomainType == DomainType::CIRCLE_2D)
@@ -627,7 +767,6 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
              p_boundary_condition->SetIsRobin(true);
              p_boundary_condition->SetLabel("Pellet Interface");
              p_boundary_condition->SetDomain(mpDomain);
-
              mpSolver = CoupledLumpedSystemFiniteElementSolver<DIM>::Create();
              mpSolver->SetGrid(mpGrid);
              mpSolver->SetPde(p_pde);
@@ -637,16 +776,14 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
         mpSolver->SetFileHandler(file_handler);
         mpSolver->SetWriteSolution(true);
 
-        auto p_fe_solver =
-                    std::dynamic_pointer_cast<CoupledLumpedSystemFiniteElementSolver<DIM> >(this->mpSolver);
+        auto p_fe_solver = std::dynamic_pointer_cast<CoupledLumpedSystemFiniteElementSolver<DIM> >(this->mpSolver);
         if(p_fe_solver)
         {
             p_fe_solver->SetTargetTimeIncrement(mPdeTimeIncrement);
             p_fe_solver->SetUseCoupling(true);
         }
 
-        auto p_fd_solver =
-                    std::dynamic_pointer_cast<CoupledLumpedSystemFiniteDifferenceSolver<DIM> >(this->mpSolver);
+        auto p_fd_solver = std::dynamic_pointer_cast<CoupledLumpedSystemFiniteDifferenceSolver<DIM> >(this->mpSolver);
         if(p_fd_solver)
         {
             p_fd_solver->SetTargetTimeIncrement(mPdeTimeIncrement);
@@ -657,7 +794,6 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
         {
             p_pde->GetDiscreteSources()[0]->SetDensityMap(mpSolver->GetDensityMap());
         }
-
         if(mpNetwork)
         {
             mpSolver->GetDensityMap()->SetVesselNetwork(mpNetwork);
@@ -669,7 +805,6 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
         {
             mpSolver = FunctionMap<DIM>::Create();
             mpSolver->SetGrid(mpGrid);
-
             std::vector<double> vegf_field;
             for(unsigned idx=0;idx<mpGrid->GetNumberOfPoints();idx++)
             {
@@ -685,7 +820,6 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
         {
             mpSolver = FunctionMap<DIM>::Create();
             mpSolver->SetGrid(mpGrid);
-
             std::vector<double> vegf_field;
             for(unsigned idx=0;idx<mpGrid->GetNumberOfPoints();idx++)
             {
@@ -703,9 +837,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
         {
             mpSolver = FunctionMap<DIM>::Create();
             mpSolver->SetGrid(mpGrid);
-
             std::vector<double> vegf_field;
-            //double pellet_angle = std::atan(double(mCorneaRadius/mPelletRadius));
             double dimless_offset = mLimbalOffset.Convert(reference_length);
             double dimless_height = mPelletHeight.Convert(reference_length);
             double mid_radius = mCorneaRadius.Convert(reference_length) - mCorneaThickness.Convert(reference_length)/2.0;
@@ -736,192 +868,142 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
 }
 
 template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetUpSamplePolygons()
+void CornealMicropocketSimulation<DIM>::SetUpSampleGrid()
 {
-    mSamplePolygons.clear();
+    vtkSmartPointer<vtkAppendFilter> p_append = vtkSmartPointer<vtkAppendFilter>::New();
+    mSamplingIndices.clear();
+
     QLength reference_length = BaseUnits::Instance()->GetReferenceLengthScale();
     if(mDomainType == DomainType::PLANAR_2D or mDomainType == DomainType::PLANAR_3D)
     {
-        QLength domain_width = 2.0*M_PI*mCorneaRadius;
         mNumSampleY = int(double((mPelletHeight)/mSampleSpacingY)) + 1;
+        unsigned n = int(double((2.0*M_PI*mCorneaRadius)/mSampleSpacingX));
+
         double dimless_sample_spacing_y = mSampleSpacingY/reference_length;
-        double dimless_width = domain_width/reference_length;
+        double dimless_sample_spacing_x = mSampleSpacingX/reference_length;
         double dimless_depth = mCorneaThickness/reference_length;
         double dimless_z_origin = 0.0;
         if(mDomainType == DomainType::PLANAR_2D)
         {
             dimless_z_origin = -dimless_depth/2.0;
         }
+        unsigned sample_counter=0;
         for(unsigned idx=0;idx<mNumSampleY;idx++)
         {
-            double height = dimless_sample_spacing_y*double(idx);
-            vtkSmartPointer<vtkPolyData> p_sample_poly = vtkSmartPointer<vtkPolyData>::New();
+            vtkSmartPointer<vtkUnstructuredGrid> p_sample_grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
             vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
-            p_points->InsertNextPoint(0.0, 0.0, dimless_z_origin);
-            p_points->InsertNextPoint(dimless_width, 0.0, dimless_z_origin);
-            p_points->InsertNextPoint(dimless_width, height, dimless_z_origin);
-            p_points->InsertNextPoint(0.0, height, dimless_z_origin);
-            p_points->InsertNextPoint(0.0, 0.0, dimless_z_origin + dimless_depth);
-            p_points->InsertNextPoint(dimless_width, 0.0, dimless_z_origin + dimless_depth);
-            p_points->InsertNextPoint(dimless_width, height, dimless_z_origin + dimless_depth);
-            p_points->InsertNextPoint(0.0, height, dimless_z_origin + dimless_depth);
-
-            vtkSmartPointer<vtkCellArray> polygons = vtkSmartPointer<vtkCellArray>::New();
-            vtkSmartPointer<vtkPolygon> p_poly1 = vtkSmartPointer<vtkPolygon>::New();
-            p_poly1->GetPointIds()->SetNumberOfIds(4);
-            p_poly1->GetPointIds()->SetId(0, 0);
-            p_poly1->GetPointIds()->SetId(1, 1);
-            p_poly1->GetPointIds()->SetId(2, 2);
-            p_poly1->GetPointIds()->SetId(3, 3);
-            vtkSmartPointer<vtkPolygon> p_poly2 = vtkSmartPointer<vtkPolygon>::New();
-            p_poly2->GetPointIds()->SetNumberOfIds(4);
-            p_poly2->GetPointIds()->SetId(0, 4);
-            p_poly2->GetPointIds()->SetId(1, 5);
-            p_poly2->GetPointIds()->SetId(2, 6);
-            p_poly2->GetPointIds()->SetId(3, 7);
-            vtkSmartPointer<vtkPolygon> p_poly3 = vtkSmartPointer<vtkPolygon>::New();
-            p_poly3->GetPointIds()->SetNumberOfIds(4);
-            p_poly3->GetPointIds()->SetId(0, 1);
-            p_poly3->GetPointIds()->SetId(1, 2);
-            p_poly3->GetPointIds()->SetId(2, 6);
-            p_poly3->GetPointIds()->SetId(3, 5);
-            vtkSmartPointer<vtkPolygon> p_poly4 = vtkSmartPointer<vtkPolygon>::New();
-            p_poly4->GetPointIds()->SetNumberOfIds(4);
-            p_poly4->GetPointIds()->SetId(0, 4);
-            p_poly4->GetPointIds()->SetId(1, 0);
-            p_poly4->GetPointIds()->SetId(2, 3);
-            p_poly4->GetPointIds()->SetId(3, 7);
-            vtkSmartPointer<vtkPolygon> p_poly5 = vtkSmartPointer<vtkPolygon>::New();
-            p_poly5->GetPointIds()->SetNumberOfIds(4);
-            p_poly5->GetPointIds()->SetId(0, 0);
-            p_poly5->GetPointIds()->SetId(1, 1);
-            p_poly5->GetPointIds()->SetId(2, 5);
-            p_poly5->GetPointIds()->SetId(3, 4);
-            vtkSmartPointer<vtkPolygon> p_poly6 = vtkSmartPointer<vtkPolygon>::New();
-            p_poly6->GetPointIds()->SetNumberOfIds(4);
-            p_poly6->GetPointIds()->SetId(0, 3);
-            p_poly6->GetPointIds()->SetId(1, 2);
-            p_poly6->GetPointIds()->SetId(2, 6);
-            p_poly6->GetPointIds()->SetId(3, 7);
-            polygons->InsertNextCell(p_poly1);
-            polygons->InsertNextCell(p_poly2);
-            polygons->InsertNextCell(p_poly3);
-            polygons->InsertNextCell(p_poly4);
-            polygons->InsertNextCell(p_poly5);
-            polygons->InsertNextCell(p_poly6);
-            p_sample_poly->SetPoints(p_points);
-            p_sample_poly->SetPolys(polygons);
-            mSamplePolygons.push_back(p_sample_poly);
+            for(unsigned jdx=0;jdx<n; jdx++)
+            {
+                double bottom = dimless_sample_spacing_y*double(idx);
+                double top = dimless_sample_spacing_y*double(idx + 1);
+                double left = dimless_sample_spacing_x*double(jdx);
+                double right = dimless_sample_spacing_x*double(jdx+1);
+                p_points->InsertNextPoint(left, bottom, dimless_z_origin);
+                p_points->InsertNextPoint(right, bottom, dimless_z_origin);
+                p_points->InsertNextPoint(right, top, dimless_z_origin);
+                p_points->InsertNextPoint(left, top, dimless_z_origin);
+                p_points->InsertNextPoint(left, bottom, dimless_z_origin + dimless_depth);
+                p_points->InsertNextPoint(right, bottom, dimless_z_origin + dimless_depth);
+                p_points->InsertNextPoint(right, top, dimless_z_origin + dimless_depth);
+                p_points->InsertNextPoint(left, top, dimless_z_origin + dimless_depth);
+            }
+            p_sample_grid->SetPoints(p_points);
+            for(unsigned jdx=0;jdx<n; jdx++)
+            {
+                vtkSmartPointer<vtkHexahedron> p_hex = vtkSmartPointer<vtkHexahedron>::New();
+                for(unsigned hex_id=0; hex_id<8; hex_id++)
+                {
+                    p_hex->GetPointIds()->SetId(hex_id, hex_id + 8*jdx);
+                }
+                p_sample_grid->InsertNextCell(p_hex->GetCellType(), p_hex->GetPointIds());
+            }
+            sample_counter += n;
+            mSamplingIndices.push_back(sample_counter);
+            p_append->AddInputData(p_sample_grid);
         }
     }
     else if(mDomainType == DomainType::CIRCLE_2D or mDomainType == DomainType::CIRCLE_3D)
     {
-        QLength domain_width = 2.0*M_PI*mCorneaRadius;
         mNumSampleY = int(double((mPelletHeight)/mSampleSpacingY)) + 1;
-        unsigned num_sample_points_x = int(double(domain_width/mSampleSpacingX)) + 1;
-        double dimless_sample_spacing_y = mSampleSpacingY/reference_length;
-        double dimless_width = domain_width/reference_length;
         double dimless_depth = mCorneaThickness/reference_length;
         double dimless_z_origin = 0.0;
-        if(mDomainType == DomainType::PLANAR_2D)
+        if(mDomainType == DomainType::CIRCLE_2D)
         {
             dimless_z_origin = -dimless_depth/2.0;
         }
+
+        unsigned sample_counter=0;
         for(unsigned idx=0;idx<mNumSampleY;idx++)
         {
-            double height = dimless_sample_spacing_y*double(idx);
-            vtkSmartPointer<vtkPolyData> p_sample_poly = vtkSmartPointer<vtkPolyData>::New();
+            vtkSmartPointer<vtkUnstructuredGrid> p_sample_grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
             vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
             QLength outer_radius = mCorneaRadius - double(idx)*mSampleSpacingY;
             QLength inner_radius = mCorneaRadius - double(idx+1)*mSampleSpacingY;
-            unsigned num_nodes = int(double((2.0*M_PI*outer_radius)/mNodeSpacing)) + 1;
-            double sweep_angle = 2.0*M_PI/double(num_nodes);
-            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
+            unsigned n = int(double((2.0*M_PI*outer_radius)/mSampleSpacingX)) + 1;
+            double sweep_angle = 2.0*M_PI/double(n);
+            for(unsigned jdx=0;jdx<n;jdx++)
             {
-                double this_angle = double(jdx)*sweep_angle + M_PI;
+                double this_angle = double(jdx)*sweep_angle;
                 double x_coord = (outer_radius/reference_length)*std::sin(this_angle);
                 double y_coord = (outer_radius/reference_length)*std::cos(this_angle);
                 p_points->InsertNextPoint(x_coord, y_coord, dimless_z_origin);
             }
-            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
+            for(unsigned jdx=0;jdx<n;jdx++)
             {
-                double this_angle = double(jdx)*sweep_angle + M_PI;
+                double this_angle = double(jdx)*sweep_angle;
                 double x_coord = (inner_radius/reference_length)*std::sin(this_angle);
                 double y_coord = (inner_radius/reference_length)*std::cos(this_angle);
                 p_points->InsertNextPoint(x_coord, y_coord, dimless_z_origin);
             }
-            double sweep_angle = 2.0*M_PI/double(num_nodes);
-            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
+            for(unsigned jdx=0;jdx<n;jdx++)
             {
-                double this_angle = double(jdx)*sweep_angle + M_PI;
+                double this_angle = double(jdx)*sweep_angle;
                 double x_coord = (outer_radius/reference_length)*std::sin(this_angle);
                 double y_coord = (outer_radius/reference_length)*std::cos(this_angle);
                 p_points->InsertNextPoint(x_coord, y_coord, dimless_z_origin + dimless_depth);
             }
-            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
+            for(unsigned jdx=0;jdx<n;jdx++)
             {
-                double this_angle = double(jdx)*sweep_angle + M_PI;
+                double this_angle = double(jdx)*sweep_angle;
                 double x_coord = (inner_radius/reference_length)*std::sin(this_angle);
                 double y_coord = (inner_radius/reference_length)*std::cos(this_angle);
                 p_points->InsertNextPoint(x_coord, y_coord, dimless_z_origin + dimless_depth);
             }
+            p_sample_grid->SetPoints(p_points);
 
-            vtkSmartPointer<vtkCellArray> polygons = vtkSmartPointer<vtkCellArray>::New();
-            for(unsigned jdx=0;jdx<num_sample_points_x; jdx++)
+            for(unsigned jdx=0;jdx<n; jdx++)
             {
-                unsigned n = num_sample_points_x;
-                vtkSmartPointer<vtkPolygon> p_poly1 = vtkSmartPointer<vtkPolygon>::New();
-                p_poly1->GetPointIds()->SetNumberOfIds(4);
-                p_poly1->GetPointIds()->SetId(0, jdx);
-                p_poly1->GetPointIds()->SetId(1, jdx+1);
-                p_poly1->GetPointIds()->SetId(2, 2*n + jdx);
-                p_poly1->GetPointIds()->SetId(3, 2*n + jdx + 1);
-
-                vtkSmartPointer<vtkPolygon> p_poly2 = vtkSmartPointer<vtkPolygon>::New();
-                p_poly2->GetPointIds()->SetNumberOfIds(4);
-                p_poly2->GetPointIds()->SetId(0, jdx);
-                p_poly2->GetPointIds()->SetId(1, jdx+1);
-                p_poly2->GetPointIds()->SetId(2, n + jdx + 1);
-                p_poly2->GetPointIds()->SetId(3, n + jdx);
-
-                vtkSmartPointer<vtkPolygon> p_poly3 = vtkSmartPointer<vtkPolygon>::New();
-                p_poly3->GetPointIds()->SetNumberOfIds(4);
-                p_poly3->GetPointIds()->SetId(0, n + jdx);
-                p_poly3->GetPointIds()->SetId(1, n + jdx + 1);
-                p_poly3->GetPointIds()->SetId(2, 3*n + jdx + 1);
-                p_poly3->GetPointIds()->SetId(3, 3*n + jdx);
-
-                vtkSmartPointer<vtkPolygon> p_poly4 = vtkSmartPointer<vtkPolygon>::New();
-                p_poly4->GetPointIds()->SetNumberOfIds(4);
-                p_poly4->GetPointIds()->SetId(0, 2*n + jdx);
-                p_poly4->GetPointIds()->SetId(1, 2*n + jdx+1);
-                p_poly4->GetPointIds()->SetId(2, 3*n + jdx + 1);
-                p_poly4->GetPointIds()->SetId(3, 3*n + jdx);
-                polygons->InsertNextCell(p_poly1);
-                polygons->InsertNextCell(p_poly2);
-                polygons->InsertNextCell(p_poly3);
-                polygons->InsertNextCell(p_poly4);
+                unsigned next_index = jdx + 1;
+                if(jdx==n-1)
+                {
+                    next_index = 0;
+                }
+                vtkSmartPointer<vtkHexahedron> p_hex = vtkSmartPointer<vtkHexahedron>::New();
+                p_hex->GetPointIds()->SetId(0, jdx);
+                p_hex->GetPointIds()->SetId(1, next_index);
+                p_hex->GetPointIds()->SetId(2, n + next_index);
+                p_hex->GetPointIds()->SetId(3, n + jdx);
+                p_hex->GetPointIds()->SetId(4, 2*n + jdx);
+                p_hex->GetPointIds()->SetId(5, 2*n + next_index);
+                p_hex->GetPointIds()->SetId(6, 3*n + next_index);
+                p_hex->GetPointIds()->SetId(7, 3*n + jdx);
+                p_sample_grid->InsertNextCell(p_hex->GetCellType(), p_hex->GetPointIds());
             }
-            p_sample_poly->SetPoints(p_points);
-            p_sample_poly->SetPolys(polygons);
-            mSamplePolygons.push_back(p_sample_poly);
+            sample_counter += n;
+            mSamplingIndices.push_back(sample_counter);
+            p_append->AddInputData(p_sample_grid);
         }
     }
     else if(mDomainType == DomainType::HEMISPHERE)
     {
-        QLength domain_width = 2.0*M_PI*mCorneaRadius;
         double pellet_angle = std::asin(double(mPelletHeight/mCorneaRadius));
         QLength y_extent = mCorneaRadius*(pellet_angle);
         mNumSampleY = int(float(y_extent/mSampleSpacingY)) + 1;
-        unsigned num_sample_points_x = int(double(domain_width/mSampleSpacingX)) + 1;
-        double dimless_sample_spacing_y = mSampleSpacingY/reference_length;
-        double dimless_width = domain_width/reference_length;
-        double dimless_depth = mCorneaThickness/reference_length;
-        double dimless_z_origin = 0.0;
+        unsigned sample_counter=0;
 
         for(unsigned idx=0;idx<mNumSampleY;idx++)
         {
-            vtkSmartPointer<vtkPolyData> p_sample_poly = vtkSmartPointer<vtkPolyData>::New();
+            vtkSmartPointer<vtkUnstructuredGrid> p_sample_grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
             vtkSmartPointer<vtkPoints> p_points = vtkSmartPointer<vtkPoints>::New();
             double bottom_angle = double(idx)*pellet_angle/double(mNumSampleY);
             double top_angle = double(idx+1)*pellet_angle/double(mNumSampleY);
@@ -934,291 +1016,68 @@ void CornealMicropocketSimulation<DIM>::SetUpSamplePolygons()
             QLength top_inner_radius = (mCorneaRadius-mCorneaThickness)*std::cos(top_angle);
             QLength top_inner_height = (mCorneaRadius-mCorneaThickness)*std::sin(top_angle);
 
-            unsigned num_nodes = int(double((2.0*M_PI*outer_radius)/mNodeSpacing)) + 1;
-            double sweep_angle = 2.0*M_PI/double(num_nodes);
-            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
+            unsigned n = int(double((2.0*M_PI*outer_radius)/mSampleSpacingX)) + 1;
+            double sweep_angle = 2.0*M_PI/double(n);
+            for(unsigned jdx=0;jdx<n;jdx++)
             {
                 double this_angle = double(jdx)*sweep_angle;
                 double x_coord = (outer_radius/reference_length)*std::sin(this_angle);
                 double y_coord = (outer_radius/reference_length)*std::cos(this_angle);
                 p_points->InsertNextPoint(x_coord, y_coord, outer_height/reference_length);
             }
-            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
+            for(unsigned jdx=0;jdx<n;jdx++)
             {
                 double this_angle = double(jdx)*sweep_angle;
                 double x_coord = (inner_radius/reference_length)*std::sin(this_angle);
                 double y_coord = (inner_radius/reference_length)*std::cos(this_angle);
                 p_points->InsertNextPoint(x_coord, y_coord, inner_height/reference_length);
             }
-            double sweep_angle = 2.0*M_PI/double(num_nodes);
-            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
+            for(unsigned jdx=0;jdx<n;jdx++)
             {
                 double this_angle = double(jdx)*sweep_angle;
                 double x_coord = (top_outer_radius/reference_length)*std::sin(this_angle);
                 double y_coord = (top_outer_radius/reference_length)*std::cos(this_angle);
                 p_points->InsertNextPoint(x_coord, y_coord, top_outer_height/reference_length);
             }
-            for(unsigned jdx=0;jdx<num_sample_points_x;jdx++)
+            for(unsigned jdx=0;jdx<n;jdx++)
             {
                 double this_angle = double(jdx)*sweep_angle;
                 double x_coord = (top_inner_radius/reference_length)*std::sin(this_angle);
                 double y_coord = (top_inner_radius/reference_length)*std::cos(this_angle);
                 p_points->InsertNextPoint(x_coord, y_coord, top_inner_height/reference_length);
             }
-            vtkSmartPointer<vtkCellArray> polygons = vtkSmartPointer<vtkCellArray>::New();
-            for(unsigned jdx=0;jdx<num_sample_points_x; jdx++)
+            p_sample_grid->SetPoints(p_points);
+            for(unsigned jdx=0;jdx<n; jdx++)
             {
-                unsigned n = num_sample_points_x;
-                vtkSmartPointer<vtkPolygon> p_poly1 = vtkSmartPointer<vtkPolygon>::New();
-                p_poly1->GetPointIds()->SetNumberOfIds(4);
-                p_poly1->GetPointIds()->SetId(0, jdx);
-                p_poly1->GetPointIds()->SetId(1, jdx+1);
-                p_poly1->GetPointIds()->SetId(2, 2*n + jdx);
-                p_poly1->GetPointIds()->SetId(3, 2*n + jdx + 1);
-
-                vtkSmartPointer<vtkPolygon> p_poly2 = vtkSmartPointer<vtkPolygon>::New();
-                p_poly2->GetPointIds()->SetNumberOfIds(4);
-                p_poly2->GetPointIds()->SetId(0, jdx);
-                p_poly2->GetPointIds()->SetId(1, jdx+1);
-                p_poly2->GetPointIds()->SetId(2, n + jdx + 1);
-                p_poly2->GetPointIds()->SetId(3, n + jdx);
-
-                vtkSmartPointer<vtkPolygon> p_poly3 = vtkSmartPointer<vtkPolygon>::New();
-                p_poly3->GetPointIds()->SetNumberOfIds(4);
-                p_poly3->GetPointIds()->SetId(0, n + jdx);
-                p_poly3->GetPointIds()->SetId(1, n + jdx + 1);
-                p_poly3->GetPointIds()->SetId(2, 3*n + jdx + 1);
-                p_poly3->GetPointIds()->SetId(3, 3*n + jdx);
-
-                vtkSmartPointer<vtkPolygon> p_poly4 = vtkSmartPointer<vtkPolygon>::New();
-                p_poly4->GetPointIds()->SetNumberOfIds(4);
-                p_poly4->GetPointIds()->SetId(0, 2*n + jdx);
-                p_poly4->GetPointIds()->SetId(1, 2*n + jdx+1);
-                p_poly4->GetPointIds()->SetId(2, 3*n + jdx + 1);
-                p_poly4->GetPointIds()->SetId(3, 3*n + jdx);
-                polygons->InsertNextCell(p_poly1);
-                polygons->InsertNextCell(p_poly2);
-                polygons->InsertNextCell(p_poly3);
-                polygons->InsertNextCell(p_poly4);
+                unsigned next_index = jdx + 1;
+                if(jdx==n-1)
+                {
+                    next_index = 0;
+                }
+                vtkSmartPointer<vtkHexahedron> p_hex = vtkSmartPointer<vtkHexahedron>::New();
+                p_hex->GetPointIds()->SetId(0, jdx);
+                p_hex->GetPointIds()->SetId(1, next_index);
+                p_hex->GetPointIds()->SetId(2, n + next_index);
+                p_hex->GetPointIds()->SetId(3, n + jdx);
+                p_hex->GetPointIds()->SetId(4, 2*n + jdx);
+                p_hex->GetPointIds()->SetId(5, 2*n + next_index);
+                p_hex->GetPointIds()->SetId(6, 3*n + next_index);
+                p_hex->GetPointIds()->SetId(7, 3*n + jdx);
+                p_sample_grid->InsertNextCell(p_hex->GetCellType(), p_hex->GetPointIds());
             }
-            p_sample_poly->SetPoints(p_points);
-            p_sample_poly->SetPolys(polygons);
-            mSamplePolygons.push_back(p_sample_poly);
+            sample_counter += n;
+            mSamplingIndices.push_back(sample_counter);
+            p_append->AddInputData(p_sample_grid);
         }
     }
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetAttractionStrength(double attractionStrength)
-{
-    mAttractionStrength = attractionStrength;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetChemotacticStrength(double chemotacticStrength)
-{
-    mChemotacticStrength = chemotacticStrength;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetCorneaThickness(QLength corneaThickness)
-{
-    mCorneaThickness = corneaThickness;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetDensityGridSpacing(QLength densityGridSpacing)
-{
-    mDensityGridSpacing = densityGridSpacing;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetDoAnastamosis(bool doAnastamosis)
-{
-    mDoAnastamosis = doAnastamosis;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetElementArea2d(QVolume elementArea2d)
-{
-    mElementArea2d = elementArea2d;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetElementArea3d(QVolume elementArea3d)
-{
-    mElementArea3d = elementArea3d;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetFinitePelletWidth(bool finitePelletWidth)
-{
-    mFinitePelletWidth = finitePelletWidth;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetGridSpacing(QLength gridSpacing)
-{
-    mGridSpacing = gridSpacing;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetIncludeVesselSink(bool includeVesselSink)
-{
-    mIncludeVesselSink = includeVesselSink;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetNodeSpacing(QLength nodeSpacing)
-{
-    mNodeSpacing = nodeSpacing;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetPdeTimeIncrement(double pdeTimeIncrement)
-{
-    mPdeTimeIncrement = pdeTimeIncrement;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetPelletConcentration(QConcentration pelletConcentration)
-{
-    mPelletConcentration = pelletConcentration;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetPersistenceAngle(double persistenceAngle)
-{
-    mPersistenceAngle = persistenceAngle;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetRandomSeed(unsigned randomSeed)
-{
-    mRandomSeed = randomSeed;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetRunNumber(unsigned runNumber)
-{
-    mRunNumber = runNumber;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetSampleSpacingX(QLength sampleSpacingX)
-{
-    mSampleSpacingX = sampleSpacingX;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetSampleSpacingY(QLength sampleSpacingY)
-{
-    mSampleSpacingY = sampleSpacingY;
-}
-
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetSampleSpacingZ(QLength sampleSpacingZ)
-{
-    mSampleSpacingZ = sampleSpacingZ;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetSproutingProbability(QRate sproutingProbability)
-{
-    mSproutingProbability = sproutingProbability;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetTimeStepSize(QTime timeStepSize)
-{
-    mTimeStepSize = timeStepSize;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetUseTipExclusion(bool exclude)
-{
-    mUseTipExclusion = exclude;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetTotalTime(QTime totalTime)
-{
-    mTotalTime = totalTime;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetUptakeRatePerCell(QMolarFlowRate uptakeRatePerCell)
-{
-    mUptakeRatePerCell = uptakeRatePerCell;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetUseFixedGradient(bool useFixedGradient)
-{
-    mUseFixedGradient = useFixedGradient;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetUsePdeOnly(bool usePdeOnly)
-{
-    mUsePdeOnly = usePdeOnly;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetUsePellet(bool usePellet)
-{
-    mUsePellet = usePellet;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetVegfBindingConstant(double vegfBindingConstant)
-{
-    mVegfBindingConstant = vegfBindingConstant;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetVegfBloodConcentration(QConcentration vegfBloodConcentration)
-{
-    mVegfBloodConcentration = vegfBloodConcentration;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetDomainType(DomainType::Value domainType)
-{
-    mDomainType = domainType;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetVegfDecayRate(QRate vegfDecayRate)
-{
-    mVegfDecayRate = vegfDecayRate;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetWorkDir(std::string workDir)
-{
-    mWorkDirectory = workDir;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetVegfDiffusivity(QDiffusivity vegfDiffusivity)
-{
-    mVegfDiffusivity = vegfDiffusivity;
-}
-
-template<unsigned DIM>
-void CornealMicropocketSimulation<DIM>::SetVegfPermeability(QMembranePermeability vegfPermeability)
-{
-    mVegfPermeability = vegfPermeability;
+    p_append->Update();
+    mpSampleGrid = p_append->GetOutput();
 }
 
 template<unsigned DIM>
 void CornealMicropocketSimulation<DIM>::DoSampling(std::ofstream& rStream,
-        std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver,
-        double time,
-        double multfact,
-        bool sampleOnce)
+        vtkSmartPointer<vtkUnstructuredGrid> pSampleGrid, std::string sampleType,
+        double time, double multfact, bool sampleOnce)
 {
     rStream << time << ",";
 
@@ -1230,20 +1089,45 @@ void CornealMicropocketSimulation<DIM>::DoSampling(std::ofstream& rStream,
         }
         else
         {
-            double mean = 0.0;
-            for(unsigned jdx=0;jdx<mNumSampleZ; jdx++)
+            if(sampleType=="Line")
             {
-                unsigned sample_index = jdx*mNumSampleY + idx;
-                std::vector<double> solution = pSolver->GetSolution(mSampleLines[sample_index]);
-                double average = std::accumulate(solution.begin(), solution.end(), 0.0)/solution.size();
-                mean += average;
+                unsigned low_index = 0;
+                if(idx>0)
+                {
+                    low_index = mSamplingIndices[idx-1];
+                }
+                unsigned high_index = mSamplingIndices[idx];
+                double average = 0.0;
+                for(unsigned jdx=low_index; jdx<high_index; jdx++)
+                {
+                    average += pSampleGrid->GetCellData()->GetArray("Line Density")->GetTuple1(jdx);
+                }
+                average/=double(high_index-low_index);
+                rStream << average*multfact << ",";
+                if(sampleOnce and time==0.0)
+                {
+                    mStoredSample.push_back(average*multfact);
+                }
             }
-            mean /= double(mNumSampleZ);
-            rStream << mean*multfact << ",";
-
-            if(sampleOnce and time==0.0)
+            else
             {
-                mStoredSample.push_back(mean*multfact);
+                unsigned low_index = 0;
+                if(idx>0)
+                {
+                    low_index = mSamplingIndices[idx-1];
+                }
+                unsigned high_index = mSamplingIndices[idx];
+                double average = 0.0;
+                for(unsigned jdx=low_index; jdx<high_index; jdx++)
+                {
+                    average += pSampleGrid->GetCellData()->GetArray("Tip Density")->GetTuple1(jdx);
+                }
+                average/=double(high_index-low_index);
+                rStream << average*multfact << ",";
+                if(sampleOnce and time==0.0)
+                {
+                    mStoredSample.push_back(average*multfact);
+                }
             }
         }
     }
@@ -1260,10 +1144,6 @@ void CornealMicropocketSimulation<DIM>::Run()
     auto p_file_handler = std::make_shared<OutputFileHandler>(mWorkDirectory, true);
 
     // self.parameter_collection.save(file_handler.GetOutputDirectoryFullPath() + "/adopted_parameter_collection.p")
-    std::cout << "Running Simulation in: " << p_file_handler->GetOutputDirectoryFullPath() << std::endl;
-    std::cout << "With Fixed Gradient: " << mUseFixedGradient << std::endl;
-    std::cout << "With PDE Only: " << mUsePdeOnly << std::endl;
-
     Timer::PrintAndReset("Starting Simulation");
 
     // Initialize length scales
@@ -1317,13 +1197,18 @@ void CornealMicropocketSimulation<DIM>::Run()
     SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(mTotalTime/reference_time, num_steps);
     VesselNetworkWriter<DIM> network_writer;
 
-    SetUpSamplePoints();
-    SetUpGrid(true);
+    SetUpSampleGrid();
+    vtkSmartPointer<vtkXMLUnstructuredGridWriter> p_writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
+    std::string file_name = p_file_handler->GetOutputDirectoryFullPath() + "samplying_grid_initial.vtu";
+    p_writer->SetFileName(file_name.c_str());
+    p_writer->SetInputData(mpSampleGrid);
+    p_writer->Write();
+
+    SetUpGrid();
 
     std::vector<std::shared_ptr<std::ofstream > > output_density_files;
     std::vector<std::string> output_density_quantities;
     output_density_quantities.push_back("Line");
-    output_density_quantities.push_back("Branch");
     output_density_quantities.push_back("Tip");
 
     if(!mUsePdeOnly)
@@ -1341,16 +1226,16 @@ void CornealMicropocketSimulation<DIM>::Run()
                 double z_coord = 0.0;
                 if(mDomainType == DomainType::CIRCLE_3D or mDomainType == DomainType::CIRCLE_2D)
                 {
-                    y_coord = mCorneaRadius/reference_length + mSampleLines[jdx]->GetPoint(0)[1];
+                    y_coord = double(jdx)*mSampleSpacingY/reference_length + 0.5*mSampleSpacingY/reference_length;
                 }
                 else if(mDomainType == DomainType::HEMISPHERE)
                 {
-                    z_coord = mSampleLines[jdx]->GetPoint(0)[2];
+                    z_coord = double(jdx)*mSampleSpacingY/reference_length + 0.5*mSampleSpacingY/reference_length;
                     y_coord = (mCorneaRadius/reference_length)*std::asin(z_coord*reference_length/mCorneaRadius);
                 }
                 else
                 {
-                    y_coord = mSampleLines[jdx]->GetPoint(0)[1];
+                    y_coord = double(jdx)*mSampleSpacingY/reference_length + 0.5*mSampleSpacingY/reference_length;
                 }
                 (*p_output_file) << y_coord << ",";
             }
@@ -1359,30 +1244,30 @@ void CornealMicropocketSimulation<DIM>::Run()
         }
     }
 
-    std::ofstream pde_output_file;
-    std::string pde_file_path = p_file_handler->GetOutputDirectoryFullPath()+"Sampled_PDE.txt";
-    pde_output_file.open(pde_file_path.c_str());
-    pde_output_file << "Time, ";
-    for(unsigned jdx=0;jdx<mNumSampleY; jdx++)
-    {
-        double y_coord = 0.0;
-        double z_coord = 0.0;
-        if(mDomainType == DomainType::CIRCLE_3D or mDomainType == DomainType::CIRCLE_2D)
-        {
-            y_coord = mCorneaRadius/reference_length + mSampleLines[jdx]->GetPoint(0)[1];
-        }
-        else if(mDomainType == DomainType::HEMISPHERE)
-        {
-            z_coord = mSampleLines[jdx]->GetPoint(0)[2];
-            y_coord = (mCorneaRadius/reference_length)*std::asin(z_coord*reference_length/mCorneaRadius);
-        }
-        else
-        {
-            y_coord = mSampleLines[jdx]->GetPoint(0)[1];
-        }
-        pde_output_file << y_coord << ",";
-    }
-    pde_output_file << "\n";
+//    std::ofstream pde_output_file;
+//    std::string pde_file_path = p_file_handler->GetOutputDirectoryFullPath()+"Sampled_PDE.txt";
+//    pde_output_file.open(pde_file_path.c_str());
+//    pde_output_file << "Time, ";
+//    for(unsigned jdx=0;jdx<mNumSampleY; jdx++)
+//    {
+//        double y_coord = 0.0;
+//        double z_coord = 0.0;
+//        if(mDomainType == DomainType::CIRCLE_3D or mDomainType == DomainType::CIRCLE_2D)
+//        {
+//            y_coord = mCorneaRadius/reference_length - double(jdx)*mSampleSpacingY/reference_length;
+//        }
+//        else if(mDomainType == DomainType::HEMISPHERE)
+//        {
+//            z_coord = double(jdx)*mSampleSpacingY/reference_length;
+//            y_coord = (mCorneaRadius/reference_length)*std::asin(z_coord*reference_length/mCorneaRadius);
+//        }
+//        else
+//        {
+//            y_coord = double(jdx)*mSampleSpacingY/reference_length;
+//        }
+//        pde_output_file << y_coord << ",";
+//    }
+//    pde_output_file << "\n";
 
     double old_time = SimulationTime::Instance()->GetTime();
     unsigned counter = 0;
@@ -1426,73 +1311,26 @@ void CornealMicropocketSimulation<DIM>::Run()
             mpSolver->Solve();
         }
 
-        if(sample_this_step)
-        {
-            DoSampling(pde_output_file, mpSolver, time, 1e3, mUseFixedGradient);
-        }
+//        if(sample_this_step)
+//        {
+//            DoSampling(pde_output_file, mpSolver, time, 1e3, mUseFixedGradient);
+//        }
 
         if(!mUsePdeOnly)
         {
             if(sample_this_step)
             {
                 DensityMap<DIM> density_map;
-                density_map.SetGrid(mpSamplingGrid);
-                density_map.SetVesselNetwork(mpNetwork);
-                auto p_density_map_result = FunctionMap<DIM>::Create();
-                p_density_map_result->SetGrid(mpSamplingGrid);
-                p_density_map_result->SetVesselNetwork(mpNetwork);
-                p_density_map_result->SetFileHandler(p_file_handler);
-
-                for(unsigned idx=0;idx<output_density_quantities.size();idx++)
-                {
-                    p_density_map_result->SetFileName("/" + output_density_quantities[idx] + "_Density" +
-                            std::to_string(int(elapsed_time)));
-                    if(output_density_quantities[idx]=="Line")
-                    {
-                        if((mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D) and (!mFinitePelletWidth))
-                        {
-                            p_density_map_result->UpdateSolution(density_map.rGetVesselLineDensity());
-                        }
-                        else
-                        {
-                            p_density_map_result->UpdateElementSolution(density_map.rGetVesselLineDensity());
-                        }
-                    }
-                    if(output_density_quantities[idx]=="Tip")
-                    {
-                        if((mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D) and (!mFinitePelletWidth))
-                        {
-                            p_density_map_result->UpdateSolution(density_map.rGetVesselTipDensity());
-                        }
-                        else
-                        {
-                            p_density_map_result->UpdateElementSolution(density_map.rGetVesselTipDensity());
-                        }
-                    }
-                    if(output_density_quantities[idx]=="Branch")
-                    {
-                        std::vector<double> line_density = density_map.rGetVesselLineDensity();
-                        std::vector<double> branch_density = density_map.rGetVesselBranchDensity();
-                        std::vector<double> norm_branch_density(branch_density.size(), 0.0);
-                        for(unsigned idx=0;idx<branch_density.size();idx++)
-                        {
-                            if(line_density[idx]>1.e-4)
-                            {
-                                norm_branch_density[idx] = branch_density[idx]/line_density[idx];
-                            }
-                        }
-                        if((mDomainType == DomainType::PLANAR_3D or mDomainType == DomainType::PLANAR_2D) and (!mFinitePelletWidth))
-                        {
-                            p_density_map_result->UpdateSolution(norm_branch_density);
-                        }
-                        else
-                        {
-                            p_density_map_result->UpdateElementSolution(norm_branch_density);
-                        }
-                    }
-                    p_density_map_result->Write();
-                    DoSampling(*output_density_files[idx], p_density_map_result, time);
-                }
+                DensityMap<DIM>::GetVesselLineDensity(mpSampleGrid, mpNetwork, reference_length);
+                DensityMap<DIM>::GetVesselTipDensity(mpSampleGrid, mpNetwork, reference_length);
+                DoSampling(*output_density_files[0], mpSampleGrid, "Line", time);
+                DoSampling(*output_density_files[1], mpSampleGrid, "Tip", time);
+                vtkSmartPointer<vtkXMLUnstructuredGridWriter> p_sample_writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
+                std::string file_name = p_file_handler->GetOutputDirectoryFullPath() + "/sampled_density" +
+                        std::to_string(int(elapsed_time)) + ".vtu";
+                p_sample_writer->SetFileName(file_name.c_str());
+                p_sample_writer->SetInputData(mpSampleGrid);
+                p_sample_writer->Write();
             }
             network_writer.SetFileName(
                     p_file_handler->GetOutputDirectoryFullPath() + "/vessel_network_" +
@@ -1513,7 +1351,7 @@ void CornealMicropocketSimulation<DIM>::Run()
         }
     }
 
-    pde_output_file.close();
+    //pde_output_file.close();
     SimulationTime::Instance()->Destroy();
 }
 

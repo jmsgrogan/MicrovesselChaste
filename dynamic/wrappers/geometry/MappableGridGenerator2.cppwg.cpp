@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "MappableGridGenerator.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "MappableGridGenerator2.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef MappableGridGenerator<2 > MappableGridGenerator2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

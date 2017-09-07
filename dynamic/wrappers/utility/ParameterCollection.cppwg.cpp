@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "ParameterCollection.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "ParameterCollection.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef ParameterCollection ParameterCollection;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

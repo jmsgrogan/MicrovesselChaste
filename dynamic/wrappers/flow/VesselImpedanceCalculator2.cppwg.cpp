@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "VesselImpedanceCalculator.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "VesselImpedanceCalculator2.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef VesselImpedanceCalculator<2 > VesselImpedanceCalculator2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

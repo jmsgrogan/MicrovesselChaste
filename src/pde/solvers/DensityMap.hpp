@@ -131,10 +131,6 @@ public:
      */
     std::shared_ptr<VesselNetwork<DIM> > GetVesselNetwork();
 
-    QLength GetLengthInPolyhedron(vtkSmartPointer<vtkPolyData> polydata);
-
-    unsigned GetNumberOfPointsInPolyhedron(vtkSmartPointer<vtkPolyData> polydata);
-
     /**
      * Return the grid in a form suitable for length of line in box computations
      * @param pGrid the input grid
@@ -168,6 +164,20 @@ public:
      * @return the vessel line density
      */
     std::vector<double> rGetVesselLineDensity(bool update=true);
+
+    /**
+     * Get the vessel line density on each of the provided grids
+     * @return the vessel line density
+     */
+    static void GetVesselLineDensity(vtkSmartPointer<vtkUnstructuredGrid> pGrid,
+            VesselNetworkPtr<DIM> pNetwork, QLength reference_length);
+
+    /**
+     * Get the vessel tip density on each of the provided grids
+     * @return the vessel tip density
+     */
+    static void GetVesselTipDensity(vtkSmartPointer<vtkUnstructuredGrid> pGrid,
+            VesselNetworkPtr<DIM> pNetwork, QLength reference_length);
 
     /**
      * Get the perfused vessel surface area density
@@ -228,7 +238,7 @@ public:
      * @param index the index of the cell to be checked
      * @return true if the specified point is in the cell
      */
-    bool IsPointInCell(vtkSmartPointer<vtkCellLocator> pCellLocator, c_vector<double, DIM> loc, unsigned index);
+    static bool IsPointInCell(vtkSmartPointer<vtkCellLocator> pCellLocator, c_vector<double, DIM> loc, unsigned index);
 
     /**
      * Return the length of the provided line segment in the indexed cell. Provide the VTK grid corresponding
@@ -241,7 +251,7 @@ public:
      * @param loc2InCell is the second point in the cell
      * @return the dimensionless length of the line in the cell
      */
-    double LengthOfLineInCell(vtkSmartPointer<vtkUnstructuredGrid> pSamplingGrid, c_vector<double, DIM> loc1,
+    static double LengthOfLineInCell(vtkSmartPointer<vtkUnstructuredGrid> pSamplingGrid, c_vector<double, DIM> loc1,
             c_vector<double, DIM> loc2, unsigned index, bool loc1InCell, bool loc2InCell);
 
     /**

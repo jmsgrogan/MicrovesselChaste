@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "VesselNode.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "VesselNode3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef VesselNode<3 > VesselNode3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::std::map<std::basic_string<char>, double, std::less<std::basic_string<char> >, std::allocator<std::pair<const std::basic_string<char>, double> > > _std_map_lt_std_basic_string_lt_char_gt__double_std_less_lt_std_basic_string_lt_char_gt__gt__std_allocator_lt_std_pair_lt_conststd_basic_string_lt_char_gt__double_gt__gt__gt_;
@@ -60,6 +63,10 @@ py::class_<VesselNode3 , VesselNode3_Overloads , std::shared_ptr<VesselNode3 >  
         .def(
             "GetFlowProperties", 
             (::std::shared_ptr<NodeFlowProperties<3> >(VesselNode3::*)() const ) &VesselNode3::GetFlowProperties, 
+            " "  )
+        .def(
+            "GetChemicalProperties", 
+            (::std::shared_ptr<NodeChemicalProperties<3> >(VesselNode3::*)() const ) &VesselNode3::GetChemicalProperties, 
             " "  )
         .def(
             "rGetLocation", 
@@ -129,6 +136,10 @@ py::class_<VesselNode3 , VesselNode3_Overloads , std::shared_ptr<VesselNode3 >  
             "SetFlowProperties", 
             (void(VesselNode3::*)(::NodeFlowProperties<3> const &)) &VesselNode3::SetFlowProperties, 
             " " , py::arg("rFlowProperties") )
+        .def(
+            "SetChemicalProperties", 
+            (void(VesselNode3::*)(::NodeChemicalProperties<3> const &)) &VesselNode3::SetChemicalProperties, 
+            " " , py::arg("rChemicalProperties") )
         .def(
             "SetIsMigrating", 
             (void(VesselNode3::*)(bool)) &VesselNode3::SetIsMigrating, 

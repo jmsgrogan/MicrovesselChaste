@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "DiscreteContinuumLinearEllipticPde.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "DiscreteContinuumLinearEllipticPde2_2.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef DiscreteContinuumLinearEllipticPde<2,2 > DiscreteContinuumLinearEllipticPde2_2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::QConcentrationFlowRate _QConcentrationFlowRate;

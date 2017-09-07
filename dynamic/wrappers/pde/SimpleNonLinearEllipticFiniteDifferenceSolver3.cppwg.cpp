@@ -12,9 +12,12 @@
 #include "vtkPolyData.h"
 #include "SimpleNonLinearEllipticFiniteDifferenceSolver.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "SimpleNonLinearEllipticFiniteDifferenceSolver3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef SimpleNonLinearEllipticFiniteDifferenceSolver<3 > SimpleNonLinearEllipticFiniteDifferenceSolver3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 PYBIND11_MAKE_OPAQUE(Vec);
@@ -61,10 +64,6 @@ py::class_<SimpleNonLinearEllipticFiniteDifferenceSolver3 , SimpleNonLinearEllip
             "AssembleVector", 
             (void(SimpleNonLinearEllipticFiniteDifferenceSolver3::*)()) &SimpleNonLinearEllipticFiniteDifferenceSolver3::AssembleVector, 
             " "  )
-        .def(
-            "ComputeResidual", 
-            (void(SimpleNonLinearEllipticFiniteDifferenceSolver3::*)(::Vec const, ::Vec)) &SimpleNonLinearEllipticFiniteDifferenceSolver3::ComputeResidual, 
-            " " , py::arg("currentGuess"), py::arg("residualVector") )
         .def(
             "Solve", 
             (void(SimpleNonLinearEllipticFiniteDifferenceSolver3::*)()) &SimpleNonLinearEllipticFiniteDifferenceSolver3::Solve, 

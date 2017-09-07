@@ -13,9 +13,12 @@
 #include "vtkPolyData.h"
 #include "CoupledLumpedSystemFiniteElementSolver.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "CoupledLumpedSystemFiniteElementSolver2.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef CoupledLumpedSystemFiniteElementSolver<2 > CoupledLumpedSystemFiniteElementSolver2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 PYBIND11_MAKE_OPAQUE(Vec);

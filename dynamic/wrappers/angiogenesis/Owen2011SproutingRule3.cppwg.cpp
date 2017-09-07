@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "Owen2011SproutingRule.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "Owen2011SproutingRule3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef Owen2011SproutingRule<3 > Owen2011SproutingRule3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::std::vector<std::shared_ptr<VesselNode<3> >, std::allocator<std::shared_ptr<VesselNode<3> > > > _std_vector_lt_std_shared_ptr_lt_VesselNode_lt_3_gt__gt__std_allocator_lt_std_shared_ptr_lt_VesselNode_lt_3_gt__gt__gt__gt_;

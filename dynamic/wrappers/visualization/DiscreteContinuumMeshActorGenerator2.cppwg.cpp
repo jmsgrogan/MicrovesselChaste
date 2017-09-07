@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "DiscreteContinuumMeshActorGenerator.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "DiscreteContinuumMeshActorGenerator2.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef DiscreteContinuumMeshActorGenerator<2 > DiscreteContinuumMeshActorGenerator2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

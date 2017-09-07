@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "Owen11CaBasedDivisionRule.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "Owen11CaBasedDivisionRule3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef Owen11CaBasedDivisionRule<3 > Owen11CaBasedDivisionRule3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef unsigned int unsignedint;

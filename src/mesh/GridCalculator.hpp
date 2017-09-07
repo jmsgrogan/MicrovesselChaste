@@ -174,6 +174,13 @@ public:
     const std::vector<std::vector<VesselNodePtr<DIM> > >& rGetVesselNodeMap(bool update = true);
 
     /**
+     * Return the vessel node map
+     * @return the vessel node map
+     */
+    static std::vector<std::vector<VesselNodePtr<DIM> > > GetVesselNodeMap(vtkSmartPointer<vtkUnstructuredGrid> pGrid,
+            VesselNetworkPtr<DIM> pNetwork, QLength referenceLength);
+
+    /**
      * Return the segments map
      * @param update update the map
      * @param useVesselSurface use the vessel surface for distance calculations
@@ -181,6 +188,13 @@ public:
      */
     const std::vector<std::vector<VesselSegmentPtr<DIM> > >& rGetSegmentMap(bool update = true,
             bool useVesselSurface = false);
+
+    /**
+     * Return the segment map
+     * @return the segment map
+     */
+    static std::vector<std::vector<VesselSegmentPtr<DIM> > > GetSegmentMap(vtkSmartPointer<vtkUnstructuredGrid> pGrid,
+            VesselNetworkPtr<DIM> pNetwork, QLength referenceLength);
 
     /**
      * Return the grid itself

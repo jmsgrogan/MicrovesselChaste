@@ -65,7 +65,7 @@ public:
         simulation.SetIncludeVesselSink(false);
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
         simulation.SetUseFixedGradient(true);
-        simulation.SetPelletConcentration(1.e-10*unit::mole_per_metre_cubed);
+        simulation.SetPelletConcentration(100.e-10*unit::mole_per_metre_cubed);
         simulation.SetTotalTime(12_h);
         simulation.SetPersistenceAngle(0.0);
         simulation.SetChemotacticStrength(0.0);
@@ -82,9 +82,9 @@ public:
         simulation.SetIncludeVesselSink(false);
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
         simulation.SetUseFixedGradient(true);
-        simulation.SetPelletConcentration(8.e-10*unit::mole_per_metre_cubed);
+        simulation.SetPelletConcentration(100.e-10*unit::mole_per_metre_cubed);
         simulation.SetTotalTime(12_h);
-        simulation.SetPelletHeight(200.0e-6*unit::metres);
+        simulation.SetPelletHeight(1000.0e-6*unit::metres);
         simulation.SetPersistenceAngle(0.0);
         simulation.SetChemotacticStrength(0.0);
         simulation.SetOnlyPerfusedSprout(true);
@@ -99,7 +99,7 @@ public:
         simulation.SetIncludeVesselSink(false);
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
         simulation.SetUseFixedGradient(true);
-        simulation.SetPelletConcentration(1.e-10*unit::mole_per_metre_cubed);
+        simulation.SetPelletConcentration(100.e-10*unit::mole_per_metre_cubed);
         simulation.SetTotalTime(12_h);
         simulation.SetPersistenceAngle(0.0);
         simulation.SetChemotacticStrength(0.0);
@@ -116,15 +116,15 @@ public:
         simulation.SetIncludeVesselSink(false);
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
         simulation.SetUseFixedGradient(true);
-        simulation.SetPelletConcentration(1.e-10*unit::mole_per_metre_cubed);
+        simulation.SetPelletConcentration(100.e-10*unit::mole_per_metre_cubed);
         simulation.SetTotalTime(12_h);
         simulation.SetPersistenceAngle(5.0);
         simulation.SetChemotacticStrength(0.5);
-        simulation.SetPelletHeight(200.0e-6*unit::metres);
+        simulation.SetPelletHeight(1000.0e-6*unit::metres);
         simulation.Run();
     }
 
-    void xTestHemisphere() throw(Exception)
+    void TestHemisphere() throw(Exception)
     {
         CornealMicropocketSimulation<3> simulation;
         simulation.SetDomainType(DomainType::HEMISPHERE);
@@ -132,7 +132,7 @@ public:
         simulation.SetIncludeVesselSink(false);
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
         simulation.SetUseFixedGradient(true);
-        simulation.SetPelletConcentration(1.e-10*unit::mole_per_metre_cubed);
+        simulation.SetPelletConcentration(100.e-10*unit::mole_per_metre_cubed);
         simulation.SetTotalTime(12_h);
         simulation.SetPersistenceAngle(0.0);
         simulation.SetChemotacticStrength(0.0);

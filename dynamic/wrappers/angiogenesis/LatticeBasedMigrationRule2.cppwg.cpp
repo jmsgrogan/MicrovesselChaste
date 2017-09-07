@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "LatticeBasedMigrationRule.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "LatticeBasedMigrationRule2.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef LatticeBasedMigrationRule<2 > LatticeBasedMigrationRule2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::std::vector<int, std::allocator<int> > _std_vector_lt_int_std_allocator_lt_int_gt__gt_;

@@ -1,5 +1,6 @@
 #ifndef SolutionDependentDiscreteSource3_hpp__pyplusplus_wrapper
 #define SolutionDependentDiscreteSource3_hpp__pyplusplus_wrapper
+
 namespace py = pybind11;
 void register_SolutionDependentDiscreteSource3_class(py::module &m);
 #endif // SolutionDependentDiscreteSource3_hpp__pyplusplus_wrapper

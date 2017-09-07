@@ -36,18 +36,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef CORNEALMICROPOCKETSIMULATION_HPP_
 #define CORNEALMICROPOCKETSIMULATION_HPP_
 
+#include <memory>
 #include <vector>
 #include <string>
-
-#include "StructuralAdaptationSolver.hpp"
-#include "SmartPointers.hpp"
 #include "VesselNetwork.hpp"
 #include "AbstractDiscreteContinuumSolver.hpp"
 #include "AbstractDiscreteContinuumGrid.hpp"
-#include "AbstractCellPopulation.hpp"
-#include "AngiogenesisSolver.hpp"
-#include "RegressionSolver.hpp"
-#include "AbstractMicrovesselModifier.hpp"
 
 /**
  * Helper struct for defining the type of boundary condition.
@@ -69,7 +63,6 @@ struct DomainType
 template<unsigned DIM>
 class CornealMicropocketSimulation
 {
-
     /**
      * The domain type
      */
@@ -126,24 +119,14 @@ class CornealMicropocketSimulation
     QLength mNodeSpacing;
 
     /**
-     * The density grid spacing
-     */
-    QLength mDensityGridSpacing;
-
-    /**
-     * The sample x
+     * The sample spacing X
      */
     QLength mSampleSpacingX;
 
     /**
-     * The sample Y
+     * The sample spacing Y
      */
     QLength mSampleSpacingY;
-
-    /**
-     * The sample Z
-     */
-    QLength mSampleSpacingZ;
 
     /**
      * Whether to use a pellet
@@ -151,7 +134,7 @@ class CornealMicropocketSimulation
     bool mUsePellet;
 
     /**
-     * Whether to use a finite pellet with
+     * Whether to use a finite pellet width
      */
     bool mFinitePelletWidth;
 
@@ -250,8 +233,14 @@ class CornealMicropocketSimulation
      */
     QTime mTimeStepSize;
 
+    /**
+     * The anastamosis radius
+     */
     QLength mAnastamosisRadius;
 
+    /**
+     * The cell length
+     */
     QLength mCellLength;
 
     /**
@@ -276,12 +265,11 @@ class CornealMicropocketSimulation
 
     std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > mpSolver;
 
-    std::vector<vtkSmartPointer<vtkPolyData> > mSamplePolygons;
+    vtkSmartPointer<vtkUnstructuredGrid> mpSampleGrid;
 
     unsigned mNumSampleY;
-    unsigned mNumSampleZ;
 
-    std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > mpSamplingGrid;
+    std::vector<unsigned> mSamplingIndices;
 
     bool mOnlyPerfusedSprout;
 
@@ -326,14 +314,15 @@ public:
     void SetSampleFrequency(unsigned freq);
 
     void DoSampling(std::ofstream& rStream,
-            std::shared_ptr<AbstractDiscreteContinuumSolver<DIM> > pSolver,
+            vtkSmartPointer<vtkUnstructuredGrid> pSampleGrid,
+            std::string sampleType,
             double time,
             double multfact=1.0,
             bool sampleOnce=false);
 
     PartPtr<DIM> SetUpDomain();
 
-    std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > SetUpGrid(bool mSampling=false);
+    std::shared_ptr<AbstractDiscreteContinuumGrid<DIM> > SetUpGrid();
 
     std::shared_ptr<VesselNetwork<DIM> > SetUpVesselNetwork();
 
@@ -341,7 +330,7 @@ public:
 
     void SetWorkDir(std::string workDir);
 
-    void SetUpSamplePoints();
+    void SetUpSampleGrid();
 
     /**
      * Set the domain type
@@ -389,8 +378,6 @@ public:
 
     void SetChemotacticStrength(double chemotacticStrength);
 
-    void SetDensityGridSpacing(QLength densityGridSpacing);
-
     void SetDoAnastamosis(bool doAnastamosis);
 
     void SetElementArea2d(QVolume elementArea2d);
@@ -418,8 +405,6 @@ public:
     void SetSampleSpacingX(QLength sampleSpacingX);
 
     void SetSampleSpacingY(QLength sampleSpacingY);
-
-    void SetSampleSpacingZ(QLength sampleSpacingZ);
 
     void SetSproutingProbability(QRate sproutingProbability);
 

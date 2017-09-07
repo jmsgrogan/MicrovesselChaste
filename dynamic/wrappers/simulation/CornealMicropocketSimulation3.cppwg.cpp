@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "CornealMicropocketSimulation.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "CornealMicropocketSimulation3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef CornealMicropocketSimulation<3 > CornealMicropocketSimulation3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
@@ -53,16 +56,16 @@ py::class_<CornealMicropocketSimulation3  , std::shared_ptr<CornealMicropocketSi
             " " , py::arg("freq") )
         .def(
             "DoSampling", 
-            (void(CornealMicropocketSimulation3::*)(::std::ofstream &, ::std::shared_ptr<AbstractDiscreteContinuumSolver<3> >, double, double, bool)) &CornealMicropocketSimulation3::DoSampling, 
-            " " , py::arg("rStream"), py::arg("pSolver"), py::arg("time"), py::arg("multfact") = 1., py::arg("sampleOnce") = false )
+            (void(CornealMicropocketSimulation3::*)(::std::ofstream &, ::vtkSmartPointer<vtkUnstructuredGrid>, ::std::string, double, double, bool)) &CornealMicropocketSimulation3::DoSampling, 
+            " " , py::arg("rStream"), py::arg("pSampleGrid"), py::arg("sampleType"), py::arg("time"), py::arg("multfact") = 1., py::arg("sampleOnce") = false )
         .def(
             "SetUpDomain", 
             (::std::shared_ptr<Part<3> >(CornealMicropocketSimulation3::*)()) &CornealMicropocketSimulation3::SetUpDomain, 
             " "  )
         .def(
             "SetUpGrid", 
-            (::std::shared_ptr<AbstractDiscreteContinuumGrid<3, 3> >(CornealMicropocketSimulation3::*)(bool)) &CornealMicropocketSimulation3::SetUpGrid, 
-            " " , py::arg("mSampling") = false )
+            (::std::shared_ptr<AbstractDiscreteContinuumGrid<3, 3> >(CornealMicropocketSimulation3::*)()) &CornealMicropocketSimulation3::SetUpGrid, 
+            " "  )
         .def(
             "SetUpVesselNetwork", 
             (::std::shared_ptr<VesselNetwork<3> >(CornealMicropocketSimulation3::*)()) &CornealMicropocketSimulation3::SetUpVesselNetwork, 
@@ -76,8 +79,8 @@ py::class_<CornealMicropocketSimulation3  , std::shared_ptr<CornealMicropocketSi
             (void(CornealMicropocketSimulation3::*)(::std::string)) &CornealMicropocketSimulation3::SetWorkDir, 
             " " , py::arg("workDir") )
         .def(
-            "SetUpSamplePoints", 
-            (void(CornealMicropocketSimulation3::*)()) &CornealMicropocketSimulation3::SetUpSamplePoints, 
+            "SetUpSampleGrid", 
+            (void(CornealMicropocketSimulation3::*)()) &CornealMicropocketSimulation3::SetUpSampleGrid, 
             " "  )
         .def(
             "SetDomainType", 
@@ -115,10 +118,6 @@ py::class_<CornealMicropocketSimulation3  , std::shared_ptr<CornealMicropocketSi
             "SetChemotacticStrength", 
             (void(CornealMicropocketSimulation3::*)(double)) &CornealMicropocketSimulation3::SetChemotacticStrength, 
             " " , py::arg("chemotacticStrength") )
-        .def(
-            "SetDensityGridSpacing", 
-            (void(CornealMicropocketSimulation3::*)(::QLength)) &CornealMicropocketSimulation3::SetDensityGridSpacing, 
-            " " , py::arg("densityGridSpacing") )
         .def(
             "SetDoAnastamosis", 
             (void(CornealMicropocketSimulation3::*)(bool)) &CornealMicropocketSimulation3::SetDoAnastamosis, 
@@ -175,10 +174,6 @@ py::class_<CornealMicropocketSimulation3  , std::shared_ptr<CornealMicropocketSi
             "SetSampleSpacingY", 
             (void(CornealMicropocketSimulation3::*)(::QLength)) &CornealMicropocketSimulation3::SetSampleSpacingY, 
             " " , py::arg("sampleSpacingY") )
-        .def(
-            "SetSampleSpacingZ", 
-            (void(CornealMicropocketSimulation3::*)(::QLength)) &CornealMicropocketSimulation3::SetSampleSpacingZ, 
-            " " , py::arg("sampleSpacingZ") )
         .def(
             "SetSproutingProbability", 
             (void(CornealMicropocketSimulation3::*)(::QRate)) &CornealMicropocketSimulation3::SetSproutingProbability, 

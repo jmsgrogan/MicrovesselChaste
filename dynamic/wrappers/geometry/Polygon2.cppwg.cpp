@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "Polygon.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "Polygon2.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef Polygon<2 > Polygon2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "RegularGrid.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "RegularGrid2.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef RegularGrid<2 > RegularGrid2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::Vertex<2> _Vertex_lt_2_gt_;

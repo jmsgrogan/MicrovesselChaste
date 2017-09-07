@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "ImageReader.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "ImageReader.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef ImageReader ImageReader;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

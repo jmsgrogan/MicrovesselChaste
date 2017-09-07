@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "AbstractMigrationRule.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "AbstractMigrationRule2.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef AbstractMigrationRule<2 > AbstractMigrationRule2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::std::vector<Vertex<2>, std::allocator<Vertex<2> > > _std_vector_lt_Vertex_lt_2_gt__std_allocator_lt_Vertex_lt_2_gt__gt__gt_;

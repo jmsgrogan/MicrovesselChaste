@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "AbstractDiscreteContinuumPde.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "AbstractDiscreteContinuumPde3_3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef AbstractDiscreteContinuumPde<3,3 > AbstractDiscreteContinuumPde3_3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

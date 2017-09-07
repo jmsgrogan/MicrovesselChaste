@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "Vertex.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "Vertex3.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef Vertex<3 > Vertex3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

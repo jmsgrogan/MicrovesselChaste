@@ -1,5 +1,6 @@
 #ifndef AbstractDiscreteContinuumPde2_2_hpp__pyplusplus_wrapper
 #define AbstractDiscreteContinuumPde2_2_hpp__pyplusplus_wrapper
+
 namespace py = pybind11;
 void register_AbstractDiscreteContinuumPde2_2_class(py::module &m);
 #endif // AbstractDiscreteContinuumPde2_2_hpp__pyplusplus_wrapper

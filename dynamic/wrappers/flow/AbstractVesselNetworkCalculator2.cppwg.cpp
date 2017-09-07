@@ -10,9 +10,12 @@
 #include "vtkPolyData.h"
 #include "AbstractVesselNetworkCalculator.hpp"
 
+#include "PythonObjectConverters.hpp"
 #include "AbstractVesselNetworkCalculator2.cppwg.hpp"
 
 namespace py = pybind11;
+PYBIND11_CVECTOR_TYPECASTER2();
+PYBIND11_CVECTOR_TYPECASTER3();
 typedef AbstractVesselNetworkCalculator<2 > AbstractVesselNetworkCalculator2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

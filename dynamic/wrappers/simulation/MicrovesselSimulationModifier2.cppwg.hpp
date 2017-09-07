@@ -1,5 +1,6 @@
 #ifndef MicrovesselSimulationModifier2_hpp__pyplusplus_wrapper
 #define MicrovesselSimulationModifier2_hpp__pyplusplus_wrapper
+
 namespace py = pybind11;
 void register_MicrovesselSimulationModifier2_class(py::module &m);
 #endif // MicrovesselSimulationModifier2_hpp__pyplusplus_wrapper

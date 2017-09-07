@@ -156,6 +156,27 @@ const std::vector<std::vector<VesselNodePtr<DIM> > >& GridCalculator<DIM>::rGetV
 }
 
 template<unsigned DIM>
+std::vector<std::vector<VesselNodePtr<DIM> > > GridCalculator<DIM>::GetVesselNodeMap(vtkSmartPointer<vtkUnstructuredGrid> pGrid,
+            VesselNetworkPtr<DIM> pNetwork, QLength referenceLength)
+{
+    vtkSmartPointer<vtkCellLocator> p_sampling_locator = vtkSmartPointer<vtkCellLocator>::New();
+    p_sampling_locator->SetDataSet(pGrid);
+    p_sampling_locator->BuildLocator();
+
+    std::vector<std::vector<VesselNodePtr<DIM> > > vesselNodeMap = std::vector<std::vector<VesselNodePtr<DIM> > >(pGrid->GetNumberOfCells());
+    for(auto& node:pNetwork->GetNodes())
+    {
+        c_vector<double, 3> loc = node->rGetLocation().Convert3(referenceLength);
+        int cell_id = p_sampling_locator->FindCell(&loc[0]);
+        if(cell_id>=0)
+        {
+            vesselNodeMap[cell_id].push_back(node);
+        }
+    }
+    return vesselNodeMap;
+}
+
+template<unsigned DIM>
 const std::vector<std::vector<CellPtr> >& GridCalculator<DIM>::rGetCellMap(bool update)
 {
     if (!update)
@@ -232,6 +253,33 @@ bool GridCalculator<DIM>::IsSegmentAtLocation(unsigned index, bool update)
         EXCEPTION("The requested grid index " + request_index + "  is greater than the segment map size " + grid_size);
     }
     return mSegmentMap[index].size()>0;
+}
+
+template<unsigned DIM>
+std::vector<std::vector<VesselSegmentPtr<DIM> > > GridCalculator<DIM>::GetSegmentMap(vtkSmartPointer<vtkUnstructuredGrid> pGrid,
+        VesselNetworkPtr<DIM> pNetwork, QLength referenceLength)
+{
+    std::vector<std::vector<VesselSegmentPtr<DIM> > > result =
+            std::vector<std::vector<VesselSegmentPtr<DIM> > >(pGrid->GetNumberOfCells());
+    vtkSmartPointer<vtkCellLocator> p_sampling_locator = vtkSmartPointer<vtkCellLocator>::New();
+    p_sampling_locator->SetDataSet(pGrid);
+    p_sampling_locator->BuildLocator();
+
+    std::vector<VesselSegmentPtr<DIM> > segments = pNetwork->GetVesselSegments();
+    for (auto& segment:segments)
+    {
+        c_vector<double, 3> loc1 = segment->GetNode(0)->rGetLocation().Convert3(referenceLength);
+        c_vector<double, 3> loc2 = segment->GetNode(1)->rGetLocation().Convert3(referenceLength);
+        vtkSmartPointer<vtkIdList> p_id_list = vtkSmartPointer<vtkIdList>::New();
+
+        p_sampling_locator->FindCellsAlongLine(&loc1[0], &loc2[0], 1.e-8, p_id_list);
+        unsigned num_intersections = p_id_list->GetNumberOfIds();
+        for(unsigned idx=0; idx<num_intersections; idx++)
+        {
+            result[p_id_list->GetId(idx)].push_back(segment);
+        }
+    }
+    return result;
 }
 
 template<unsigned DIM>
