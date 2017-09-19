@@ -57,7 +57,7 @@ class TestOffLatticeAngiogenesisSolver : public CxxTest::TestSuite
 
 public:
 
-    void Test2dPlane() throw(Exception)
+    void xTest2dPlane() throw(Exception)
     {
         CornealMicropocketSimulation<2> simulation;
         simulation.SetDomainType(DomainType::PLANAR_2D);
@@ -80,18 +80,18 @@ public:
         simulation.SetDomainType(DomainType::CIRCLE_2D);
         simulation.SetWorkDir("TestOffLatticeAngiogenesisSolver/Circle_2D_FG");
         simulation.SetIncludeVesselSink(false);
-        simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
-        simulation.SetUseFixedGradient(true);
-        simulation.SetPelletConcentration(100.e-10*unit::mole_per_metre_cubed);
-        simulation.SetTotalTime(12_h);
-        simulation.SetPelletHeight(1000.0e-6*unit::metres);
+        simulation.SetUptakeRatePerCell((0.0/3600.0)*unit::mole_per_second);
+        simulation.SetUseFixedGradient(false);
+        simulation.SetPelletConcentration(1e3*unit::mole_per_metre_cubed);
+        simulation.SetTotalTime(36_h);
+        simulation.SetPelletHeight(400.0e-6*unit::metres);
         simulation.SetPersistenceAngle(0.0);
         simulation.SetChemotacticStrength(0.0);
         simulation.SetOnlyPerfusedSprout(true);
         simulation.Run();
     }
 
-    void Test3dPlane() throw(Exception)
+    void xTest3dPlane() throw(Exception)
     {
         CornealMicropocketSimulation<3> simulation;
         simulation.SetDomainType(DomainType::PLANAR_3D);
@@ -108,23 +108,23 @@ public:
         simulation.Run();
     }
 
-    void Test3dCircle() throw(Exception)
+    void xTest3dCircle() throw(Exception)
     {
         CornealMicropocketSimulation<3> simulation;
         simulation.SetDomainType(DomainType::CIRCLE_3D);
         simulation.SetWorkDir("TestOffLatticeAngiogenesisSolver/Circle_3D_FG");
         simulation.SetIncludeVesselSink(false);
         simulation.SetUptakeRatePerCell((4.e-12/3600.0)*unit::mole_per_second);
-        simulation.SetUseFixedGradient(true);
-        simulation.SetPelletConcentration(100.e-10*unit::mole_per_metre_cubed);
-        simulation.SetTotalTime(12_h);
+        simulation.SetUseFixedGradient(false);
+        simulation.SetPelletConcentration(1000.e-10*unit::mole_per_metre_cubed);
+        simulation.SetTotalTime(48_h);
         simulation.SetPersistenceAngle(5.0);
         simulation.SetChemotacticStrength(0.5);
-        simulation.SetPelletHeight(1000.0e-6*unit::metres);
+        simulation.SetPelletHeight(400.0e-6*unit::metres);
         simulation.Run();
     }
 
-    void TestHemisphere() throw(Exception)
+    void xTestHemisphere() throw(Exception)
     {
         CornealMicropocketSimulation<3> simulation;
         simulation.SetDomainType(DomainType::HEMISPHERE);

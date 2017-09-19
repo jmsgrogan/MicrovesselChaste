@@ -100,7 +100,7 @@ private:
 
 public:
 
-    void TestMeshCircleInCirle() throw(Exception)
+    void xTestMeshCircleInCirle() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/Circle");
         std::shared_ptr<Part<2> > p_part = Part<2>::Create();
@@ -408,7 +408,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestDistanceMap3D() throw(Exception)
+    void TestDistanceMap3D() throw(Exception)
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/DistanceMap3D");
 

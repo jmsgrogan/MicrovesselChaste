@@ -531,7 +531,7 @@ PartPtr<DIM> CornealMicropocketSimulation<DIM>::SetUpDomain()
             p_pellet_domain->AddCylinder(mPelletRadius, mPelletThickness, Vertex<DIM>(0_m, 0_m, base));
             std::vector<PolygonPtr<DIM> > polygons = p_pellet_domain->GetPolygons();
 
-            double height_fraction = double((mPelletHeight + mLimbalOffset)/mCorneaRadius);
+            double height_fraction = double((mPelletHeight + mLimbalOffset + mPelletRadius/2.0)/mCorneaRadius);
             if(height_fraction>1.0)
             {
             	height_fraction=1.0;
@@ -1161,7 +1161,8 @@ void CornealMicropocketSimulation<DIM>::Run()
 
     // Set up domain, grid, vessel network and pde solver
     SetUpDomain();
-    mpDomain->Write(p_file_handler->GetOutputDirectoryFullPath() + "simulation_domain.vtp");
+    mpDomain->Write(p_file_handler->GetOutputDirectoryFullPath() + "simulation_domain.vtp",
+            GeometryFormat::VTP, true);
 
     SetUpGrid();
 

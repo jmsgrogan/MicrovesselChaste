@@ -119,7 +119,6 @@ void OffLatticeMigrationRule<DIM>::CalculateDomainDistanceMap()
     p_gradient->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Distance");
     p_gradient->Update();
     mpDomainDistanceMap->GetPointData()->AddArray(p_gradient->GetOutput()->GetPointData()->GetArray("Distance Gradients"));
-
 }
 
 template<unsigned DIM>
@@ -141,6 +140,20 @@ void OffLatticeMigrationRule<DIM>::CalculateDomainDistanceMap(std::shared_ptr<Ab
     p_gradient->SetInputArrayToProcess(0, 0, 0, vtkDataObject::FIELD_ASSOCIATION_POINTS, "Distance");
     p_gradient->Update();
     mpDomainDistanceMap->GetPointData()->AddArray(p_gradient->GetOutput()->GetPointData()->GetArray("Distance Gradients"));
+
+    double dcrit = 25.0;
+    vtkSmartPointer<vtkDoubleArray> p_vals = vtkSmartPointer<vtkDoubleArray>::New();
+    for(unsigned idx=0;idx<p_gradient->GetOutput()->GetPointData()->GetArray("Distance Gradients")->GetNumberOfTuples();idx++)
+    {
+        double current_distance = p_gradient->GetOutput()->GetPointData()->GetArray("Distance")->GetTuple1(idx);
+        double value = 0.0;
+        if(current_distance<=dcrit)
+        {
+            value = 1.0-(2.0*current_distance/(dcrit+current_distance));
+        }
+        p_vals->InsertNextTuple1(value);
+    }
+    mpDomainDistanceMap->GetPointData()->AddArray(p_vals);
 }
 
 template<unsigned DIM>
