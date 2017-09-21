@@ -353,7 +353,7 @@ constexpr QConcentrationFlowRate mole_per_metre_cubed_per_second(1.0);
 constexpr QMolarFlux mole_per_metre_squared_per_second(1.0);
 constexpr QConcentrationFlux mole_per_metre_pow5_per_second(1.0);
 constexpr QConcentration mole_per_metre_cubed(1.0);
-constexpr QConcentration molar = 1.e-3*mole_per_metre_cubed;
+constexpr QConcentration molar = 1.e3*mole_per_metre_cubed;
 constexpr QConcentration nanomolar = 1.e-9*molar;
 constexpr QConcentrationGradient mole_per_metre_pow4(1.0);
 constexpr QRatePerConcentration metre_cubed_per_mole_per_second(1.0);
