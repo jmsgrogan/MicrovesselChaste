@@ -706,7 +706,7 @@ void CornealMicropocketSimulation<DIM>::SetUpSolver()
         QVolume volume = M_PI*mPelletRadius*mPelletRadius*mPelletThickness;
         p_pde->SetPelletSurfaceArea(surface_area);
         p_pde->SetPelletVolume(volume);
-        p_pde->SetCorneaPelletPermeability(0.002*p_pde->GetCorneaPelletPermeability());
+        p_pde->SetCorneaPelletPermeability(p_pde->GetCorneaPelletPermeability());
 
         if(mIncludeVesselSink and !mUsePdeOnly)
         {
