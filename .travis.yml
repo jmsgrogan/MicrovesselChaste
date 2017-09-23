@@ -36,8 +36,8 @@ before_script:
   - sudo ln -s /usr/bin/gcc-6 /usr/local/bin/gcc
   - sudo ln -s /usr/bin/g++-6 /usr/local/bin/g++
   - sudo mkdir -p $PETSC_DIR/$PETSC_ARCH/include/petsc/private/
-  - dir /usr/lib/petscdir/3.4.2//linux-gnu-c-opt/
-  - dir /usr/lib/petscdir/3.4.2//linux-gnu-c-opt/include/
+  - dir /usr/lib/petscdir/3.4.2//linux-gnu-c-opt/include/petsc/
+  - dir /usr/lib/petscdir/3.4.2//linux-gnu-c-opt/include/petsc/private/
   - sudo cp $PETSC_DIR/$PETSC_ARCH/include/petsc-private/vecimpl.h $PETSC_DIR/$PETSC_ARCH/include/petsc/private/vecimpl.h
   - sudo cp $PETSC_DIR/$PETSC_ARCH/include/petsc-private/matimpl.h $PETSC_DIR/$PETSC_ARCH/include/petsc/private/matimpl.h
   - gcc -v && g++ -v && cmake --version
