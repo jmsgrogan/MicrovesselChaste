@@ -36,8 +36,8 @@ before_script:
   - sudo ln -s /usr/bin/gcc-6 /usr/local/bin/gcc
   - sudo ln -s /usr/bin/g++-6 /usr/local/bin/g++
   - sudo mkdir -p $PETSC_DIR/$PETSC_ARCH/include/petsc/private/
-  - sudo cp $PETSC_DIR/$PETSC_ARCH/include/private/vecimpl.h $PETSC_DIR/$PETSC_ARCH/include/petsc/private/vecimpl.h
-  - sudo cp $PETSC_DIR/$PETSC_ARCH/include/private/matimpl.h $PETSC_DIR/$PETSC_ARCH/include/petsc/private/matimpl.h
+  - sudo cp $PETSC_DIR/$PETSC_ARCH/include/petsc-private/vecimpl.h $PETSC_DIR/$PETSC_ARCH/include/petsc/private/vecimpl.h
+  - sudo cp $PETSC_DIR/$PETSC_ARCH/include/petsc-private/matimpl.h $PETSC_DIR/$PETSC_ARCH/include/petsc/private/matimpl.h
   - gcc -v && g++ -v && cmake --version
   - pip install pygccxml==1.7.2 https://bitbucket.org/ompl/pyplusplus/get/1.6.tar.gz numpy matplotlib 
   - wget https://bitbucket.org/petsc/petsc4py/downloads/petsc4py-3.4.tar.gz && tar -zxf petsc4py-3.4.tar.gz
