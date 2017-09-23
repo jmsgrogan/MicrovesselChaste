@@ -55,8 +55,21 @@ public:
 
     void TestLatticeBasedSproutingRuleSimpleNetwork() throw(Exception)
     {
+        // Set up the grid
+        auto p_grid = RegularGrid<3>::Create();
+        QLength grid_spacing = 40_um;
+        p_grid->SetSpacing(grid_spacing);
+        c_vector<double, 3> dimensions;
+        dimensions[0] = 101; // num x
+        dimensions[1] = 11; // num_y
+        dimensions[2] = 11; // num_z
+        p_grid->SetDimensions(dimensions);
+
+        auto p_grid_calc = GridCalculator<3>::Create();
+        p_grid_calc->SetGrid(p_grid);
+
         // Make a network
-        std::vector<VesselNodePtr<3>> bottom_nodes;
+        std::vector<VesselNodePtr<3> > bottom_nodes;
         unsigned num_nodes = 100;
         double spacing = 1.0;
         for(unsigned idx=0; idx<num_nodes-1; idx++)
@@ -67,11 +80,13 @@ public:
         auto p_vessel = Vessel<3>::Create(bottom_nodes);
         auto p_network = VesselNetwork<3>::Create();
         p_network->AddVessel(p_vessel);
+        p_grid_calc->SetVesselNetwork(p_network);
 
         // Set up a sprouting rule
         auto p_sprouting_rule = LatticeBasedSproutingRule<3>::Create();
         p_sprouting_rule->SetSproutingProbability(0.2*(1.0/unit::seconds));
         p_sprouting_rule->SetVesselNetwork(p_network);
+        p_sprouting_rule->SetGridCalculator(p_grid_calc);
 
         // Test that we get some, but not all, sprouts
         RandomNumberGenerator::Instance()->Reseed(522525);
@@ -91,7 +106,7 @@ public:
     {
         // Set up the grid
         auto p_grid = RegularGrid<2>::Create();
-        double spacing = 40_um;
+        QLength spacing = 40_um;
         p_grid->SetSpacing(spacing);
         c_vector<double, 3> dimensions;
         dimensions[0] = 101; // num x

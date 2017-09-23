@@ -110,8 +110,8 @@ public:
         std::vector<double> line_density = solver.rGetVesselLineDensity(true);
 
         // Check the density
-        TS_ASSERT_DELTA(line_density[0], 0.251/(0.501*0.501), 1e-6);
-        TS_ASSERT_DELTA(line_density[3], 0.249/(0.501*1.000), 1e-6);
+        TS_ASSERT_DELTA(line_density[0], 0.251/(0.501*0.501), 1e-3);
+        TS_ASSERT_DELTA(line_density[3], 0.249/(0.501*1.000), 1e-3);
         BaseUnits::Instance()->Destroy();
     }
 

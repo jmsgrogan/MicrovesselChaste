@@ -146,7 +146,7 @@ public:
         std::vector<QConcentration> vegf_field =
                 std::vector<QConcentration >(dimensions[0]*dimensions[1], 0_M);
 
-        QConcentration max_vegf(0.2e-3_nM);
+        QConcentration max_vegf(0.2e-6_nM);
         for(unsigned idx=0; idx<p_grid_calc->GetGrid()->GetNumberOfPoints(); idx++)
         {
             vegf_field[idx] = double(p_grid->GetPoint(idx).Convert(1_um)[0] / (double(dimensions[0]) * spacing) )*max_vegf;
@@ -163,7 +163,7 @@ public:
         // Test that we move into the correct locations and that sometimes, but not always, we don't move.
         // Also check that we mostly move in the direction of the vegf gradient, but not always
         RandomNumberGenerator::Instance()->Reseed(522525);
-        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1.e-3, 1);
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1.e-6, 1);
 
         unsigned not_moved = 0;
         unsigned num_right = 0;
@@ -213,11 +213,11 @@ public:
         std::shared_ptr<VesselNode<2> > p_node5 = VesselNode<2>::Create(4.0*spacing, 2.0*spacing);
 
         p_node3->SetIsMigrating(true);
-        std::shared_ptr<Vessel<2> > p_vessel1 = Vessel<2>::Create(p_node1, p_node2);
-        std::shared_ptr<Vessel<2> > p_vessel2 = Vessel<2>::Create(p_node2, p_node3);
-        std::shared_ptr<Vessel<2> > p_vessel3 = Vessel<2>::Create(p_node3, p_node4);
-        std::shared_ptr<Vessel<2> > p_vessel4 = Vessel<2>::Create(p_node4, p_node5);
-        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        auto p_vessel1 = Vessel<2>::Create(p_node1, p_node2);
+        auto p_vessel2 = Vessel<2>::Create(p_node2, p_node3);
+        auto p_vessel3 = Vessel<2>::Create(p_node3, p_node4);
+        auto p_vessel4 = Vessel<2>::Create(p_node4, p_node5);
+        auto p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel1);
         p_network->AddVessel(p_vessel2);
         p_network->AddVessel(p_vessel3);
@@ -236,7 +236,7 @@ public:
             segments[idx]->GetFlowProperties()->SetViscosity(1.e-3 * unit::poiseuille);
         }
 
-        std::shared_ptr<LatticeBasedMigrationRule<2> > p_migration_rule = LatticeBasedMigrationRule<2>::Create();
+        auto p_migration_rule = LatticeBasedMigrationRule<2>::Create();
         p_migration_rule->SetGridCalculator(p_grid_calc);
         p_migration_rule->SetMovementProbability(0.5);
         p_migration_rule->SetNetwork(p_network);
@@ -257,8 +257,7 @@ public:
         angiogenesis_solver.SetMigrationRule(p_migration_rule);
         angiogenesis_solver.SetVesselGridCalculator(p_grid_calc);
 
-        auto p_handler =
-        		std::make_shared<OutputFileHandler>("TestLatticeBasedMigrationRulesWithFlow");
+        auto p_handler = std::make_shared<OutputFileHandler>("TestLatticeBasedMigrationRulesWithFlow");
         angiogenesis_solver.SetOutputFileHandler(p_handler);
         angiogenesis_solver.Run(true);
 

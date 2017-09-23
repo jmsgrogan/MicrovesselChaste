@@ -64,7 +64,7 @@ public:
 
         ImageReader reader = ImageReader();
         reader.SetFilename(finder.GetAbsolutePath());
-        reader.SetImageResizeFactors(0.5, 0.5, 1.0);
+        reader.SetImageResizeFactors(0.2, 0.2, 1.0);
         reader.Read();
 
         RegularGridWriter writer = RegularGridWriter();
@@ -76,7 +76,7 @@ public:
         auto p_image_mesher = ImageToMesh<2>::Create();
         TS_ASSERT_THROWS_THIS(p_image_mesher->GetMesh(), "No mesh set. Did you run 'Update()' ?");
         p_image_mesher->SetInput(reader.GetImage());
-        p_image_mesher->SetElementSize(5.e6*Qpow3(1_um));
+        p_image_mesher->SetElementSize(5.e18*Qpow3(1_um));
         p_image_mesher->Update();
 
         vtkSmartPointer<vtkPolyData> p_boundary = p_image_mesher->GetMeshBoundary();
@@ -94,7 +94,7 @@ public:
 
         ImageReader reader = ImageReader();
         reader.SetFilename(finder.GetAbsolutePath());
-        reader.SetImageResizeFactors(0.5, 0.5, 1.0);
+        reader.SetImageResizeFactors(0.2, 0.2, 1.0);
         reader.Read();
 
         auto p_part = Part<2>::Create();
@@ -104,7 +104,7 @@ public:
         auto p_image_mesher = ImageToMesh<2>::Create();
         TS_ASSERT_THROWS_THIS(p_image_mesher->GetMesh(), "No mesh set. Did you run 'Update()' ?");
         p_image_mesher->SetInput(reader.GetImage());
-        p_image_mesher->SetElementSize(5.e6*Qpow3(1_um));
+        p_image_mesher->SetElementSize(5.e18*Qpow3(1_um));
         p_image_mesher->SetTissueDomain(p_part);
         p_image_mesher->Update();
 
