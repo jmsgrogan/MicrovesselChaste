@@ -15,7 +15,7 @@
 
 namespace py = pybind11;
 PYBIND11_CVECTOR_TYPECASTER2();
-PYBIND11_CVECTOR_TYPECASTER3();
+PYBIND11_CVECTOR_TYPECASTER3();   
 typedef OffLatticeSproutingRule<2 > OffLatticeSproutingRule2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::std::vector<std::shared_ptr<VesselNode<2> >, std::allocator<std::shared_ptr<VesselNode<2> > > > _std_vector_lt_std_shared_ptr_lt_VesselNode_lt_2_gt__gt__std_allocator_lt_std_shared_ptr_lt_VesselNode_lt_2_gt__gt__gt__gt_;

@@ -73,72 +73,72 @@ class TestBiologicalNetwork(chaste.cell_based.AbstractCellBasedTestSuite):
         ## allow non-dimensionalisation when sending quantities to external solvers and re-dimensionalisation of
         ## results. For our purposes microns for length and hours for time are suitable base units.
         
-        reference_length = 1.e-6*metre()
-        reference_time = 3600.0*second()
-        reference_concentration = 1.e-6*mole_per_metre_cubed()
+        reference_length = 1.e-6*metres
+        reference_time = 3600.0*seconds
+        reference_concentration = 1.e-6*mole_per_metre_cubed
         BaseUnits.Instance().SetReferenceLengthScale(reference_length)
         BaseUnits.Instance().SetReferenceTimeScale(reference_time)
         BaseUnits.Instance().SetReferenceConcentrationScale(reference_concentration)
         
         ## Read a vessel network derived from biological images from file
         
-#         vessel_reader = microvessel_chaste.population.vessel.VesselNetworkReader3()
-#         file_finder = chaste.core.FileFinder("/projects/MicrovesselChaste/test/data/bio_original.vtp", 
-#                                              chaste.core.RelativeTo.ChasteSourceRoot)
-#         vessel_reader.SetFileName(file_finder.GetAbsolutePath())
-#         vessel_reader.SetMergeCoincidentPoints(True)
-#         vessel_reader.SetTargetSegmentLength(40.0e-6*metre())
-#         network = vessel_reader.Read()
-#         
-#         ## The vessel network may contain short vessels due to image processing artifacts, 
-#         ## we remove any vessels that are on the order of a single cell length and are not connected
-#         ## to other vessels at both ends. Note that units are explicitly specified for all quantities. It is
-#         ## ok to allow some small disconnected regions to remain for our purposes. The network is large, this
-#         ## can take up to 30 seconds.
-#         
-#         short_vessel_cutoff = 40.0e-6 * metre()
-#         remove_end_vessels_only = True
-#         network.RemoveShortVessels(short_vessel_cutoff, remove_end_vessels_only)
-#         network.UpdateAll()
-#         network.MergeCoincidentNodes()
-#         network.UpdateAll()
-# 
-#         ## Write the modified network to file for inspection and visualize it.
-#         
-#         network.Write(file_handler.GetOutputDirectoryFullPath() + "cleaned_network.vtp")
-#         
-#         scene = microvessel_chaste.visualization.MicrovesselVtkScene3()
-#         scene.SetVesselNetwork(network)
-#         scene.GetVesselNetworkActorGenerator().SetEdgeSize(20.0)
-#         # JUPYTER_SHOW_FIRST
-#         scene.Start()  # JUPYTER_SHOW
-# 
-#         ## Simulating tumour growth for the entire network would be prohibitive for this tutorial, so
-#         ## we sample a small region. We can use some geometry tools to help.
-#         
-#         cylinder = microvessel_chaste.geometry.Part3()
-#         centre = microvessel_chaste.mesh.Vertex3(2300.0, 2300.0, -5.0, 1.e-6*metre())
-#         radius = 600.0e-6*metre()
-#         depth = 205.e-6*metre()
-#         cylinder.AddCylinder(radius, depth, centre, 24)
-#         cylinder.BooleanWithNetwork(network)
-#         
-#         ## We visualize the smaller region
-#         
-#         network.Write(file_handler.GetOutputDirectoryFullPath() + "cleaned_cut_network.vtp")
-#         scene.Start()  # JUPYTER_SHOW
-# 
-#         ## We are ready to simulate tumour growth and angiogenesis. We will use a regular lattice for
-#         ## this purpose. We size and position the lattice according to the bounds of the vessel network.
-#         
-#         network_bounding_box = [microvessel_chaste.mesh.Vertex3(1500.0, 1600.0, -10.0, 1.e-6*metre()),
-#                                 microvessel_chaste.mesh.Vertex3(3100.0, 3000.0, 300.0, 1.e-6*metre())]
-#         grid = microvessel_chaste.mesh.RegularGrid3()
-#         grid_spacing = 40.0e-6* metre()
-#         grid.SetSpacing(grid_spacing)
-#         
-#         ## We can use the built-in dimensional analysis functionality to get the network extents in terms of grid units
-#         
+        vessel_reader = microvessel_chaste.population.vessel.VesselNetworkReader3()
+        file_finder = chaste.core.FileFinder("/projects/MicrovesselChaste/test/data/bio_original.vtp", 
+                                             chaste.core.RelativeTo.ChasteSourceRoot)
+        vessel_reader.SetFileName(file_finder.GetAbsolutePath())
+        vessel_reader.SetMergeCoincidentPoints(True)
+        vessel_reader.SetTargetSegmentLength(40.0e-6*metres)
+        network = vessel_reader.Read()
+         
+        ## The vessel network may contain short vessels due to image processing artifacts, 
+        ## we remove any vessels that are on the order of a single cell length and are not connected
+        ## to other vessels at both ends. Note that units are explicitly specified for all quantities. It is
+        ## ok to allow some small disconnected regions to remain for our purposes. The network is large, this
+        ## can take up to 30 seconds.
+         
+        short_vessel_cutoff = 40.0e-6 * metres
+        remove_end_vessels_only = True
+        network.RemoveShortVessels(short_vessel_cutoff, remove_end_vessels_only)
+        network.UpdateAll()
+        network.MergeCoincidentNodes()
+        network.UpdateAll()
+ 
+        ## Write the modified network to file for inspection and visualize it.
+         
+        network.Write(file_handler.GetOutputDirectoryFullPath() + "cleaned_network.vtp")
+         
+        scene = microvessel_chaste.visualization.MicrovesselVtkScene3()
+        scene.SetVesselNetwork(network)
+        scene.GetVesselNetworkActorGenerator().SetEdgeSize(20.0)
+        # JUPYTER_SHOW_FIRST
+        scene.Start()  # JUPYTER_SHOW
+ 
+        ## Simulating tumour growth for the entire network would be prohibitive for this tutorial, so
+        ## we sample a small region. We can use some geometry tools to help.
+         
+        cylinder = microvessel_chaste.geometry.Part3()
+        centre = microvessel_chaste.geometry.Vertex3(2300.0*1.e-6*metres, 2300.0*1.e-6*metres, -5.0*1.e-6*metres)
+        radius = 600.0e-6*metres
+        depth = 205.e-6*metres
+        cylinder.AddCylinder(radius, depth, centre, 24)
+        cylinder.BooleanWithNetwork(network)
+         
+        ## We visualize the smaller region
+         
+        network.Write(file_handler.GetOutputDirectoryFullPath() + "cleaned_cut_network.vtp")
+        scene.Start()  # JUPYTER_SHOW
+ 
+        ## We are ready to simulate tumour growth and angiogenesis. We will use a regular lattice for
+        ## this purpose. We size and position the lattice according to the bounds of the vessel network.
+         
+        network_bounding_box = [microvessel_chaste.geometry.Vertex3(1500.0*1.e-6*metres, 1600.0*1.e-6*metres, -10.0*1.e-6*metres),
+                                microvessel_chaste.geometry.Vertex3(3100.0*1.e-6*metres, 3000.0*1.e-6*metres, 300.0*1.e-6*metres)]
+        grid = microvessel_chaste.mesh.RegularGrid3()
+        grid_spacing = 40.0e-6* metres
+        grid.SetSpacing(grid_spacing)
+         
+        ## We can use the built-in dimensional analysis functionality to get the network extents in terms of grid units
+         
 #         botom_front_left =  network_bounding_box[0].GetLocation(grid_spacing)
 #         top_back_right =  network_bounding_box[1].GetLocation(grid_spacing)
 #         extents = top_back_right - botom_front_left

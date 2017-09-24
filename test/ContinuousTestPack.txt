@@ -83,3 +83,12 @@ tutorials/TestLatticeBasedAngiogenesisTutorial.hpp
 tutorials/TestBuildVesselNetworkTutorial.hpp
 tutorials/TestBloodFlowTutorial.hpp
 tutorials/TestSolvingPdesTutorial.hpp
+python/population/TestVesselNodePython.py
+python/geometry/TestPolygonPython.py
+python/geometry/TestFacetPython.py
+python/geometry/TestPartPython.py
+python/mesh/TestVertexPython.py
+python/flow/TestFlowSolverPython.py
+python/flow/TestHaematocritCalculatorsPython.py
+python/tutorials/TestPythonBuildVesselNetworkTutorial.py
+python/visualization/TestVtkScene.py

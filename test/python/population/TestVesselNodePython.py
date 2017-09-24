@@ -32,9 +32,9 @@
 """
 
 import unittest
-import microvessel_chaste
+import chaste
+chaste.init()
 import microvessel_chaste.geometry
-import microvessel_chaste.mesh 
 import microvessel_chaste.population.vessel
 from microvessel_chaste.utility import * # bring in all units for convenience
 

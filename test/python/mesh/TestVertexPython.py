@@ -38,7 +38,6 @@ import os
 import chaste
 import microvessel_chaste
 import microvessel_chaste.geometry
-import microvessel_chaste.mesh 
 from microvessel_chaste.utility import * # bring in all units for convenience
 
 class TestVertex(unittest.TestCase):
@@ -50,31 +49,31 @@ class TestVertex(unittest.TestCase):
         # Make a point at the specified location
         length_scale = 1.e-6*metres
         input_location = np.array((0.0, 1.0, 2.0))
-        point = microvessel_chaste.mesh.Vertex3(input_location, length_scale)
-        self.assertAlmostEqual(point.GetLocation(length_scale)[0], 0.0, 2)
-        self.assertAlmostEqual(point.GetLocation(length_scale)[1], 1.0, 2)
-        self.assertAlmostEqual(point.GetLocation(length_scale)[2], 2.0, 2)
+        point = microvessel_chaste.geometry.Vertex3(input_location, length_scale)
+        self.assertAlmostEqual(point.rGetLocation().Convert(length_scale)[0], 0.0, 2)
+        self.assertAlmostEqual(point.rGetLocation().Convert(length_scale)[1], 1.0, 2)
+        self.assertAlmostEqual(point.rGetLocation().Convert(length_scale)[2], 2.0, 2)
   
         # Set the Id and check it
         point.SetIndex(10)
         self.assertEqual(point.GetIndex(), 10)
          
         # Move the vertex and check the new location
-        translation_vector = microvessel_chaste.mesh.Vertex3(1.0, 2.0, 3.0, length_scale)
+        translation_vector = microvessel_chaste.geometry.Vertex3(1.0*length_scale, 2.0*length_scale, 3.0*length_scale)
         point.Translate(translation_vector)
-        self.assertAlmostEqual(point.GetLocation(length_scale)[0], 1.0, 2)
-        self.assertAlmostEqual(point.GetLocation(length_scale)[1], 3.0, 2)
-        self.assertAlmostEqual(point.GetLocation(length_scale)[2], 5.0, 2)
+        self.assertAlmostEqual(point.rGetLocation().Convert(length_scale)[0], 1.0, 2)
+        self.assertAlmostEqual(point.rGetLocation().Convert(length_scale)[1], 3.0, 2)
+        self.assertAlmostEqual(point.rGetLocation().Convert(length_scale)[2], 5.0, 2)
   
         # Rotate the vertex and check the location
         rotation_axis = (0.0, 0.0, 1.0)
         point.RotateAboutAxis(rotation_axis, math.pi)
-        self.assertAlmostEqual(point.GetLocation(length_scale)[0], -1.0, 2)
-        self.assertAlmostEqual(point.GetLocation(length_scale)[1], -3.0, 2)
-        self.assertAlmostEqual(point.GetLocation(length_scale)[2], 5.0, 2)
+        self.assertAlmostEqual(point.rGetLocation().Convert(length_scale)[0], -1.0, 2)
+        self.assertAlmostEqual(point.rGetLocation().Convert(length_scale)[1], -3.0, 2)
+        self.assertAlmostEqual(point.rGetLocation().Convert(length_scale)[2], 5.0, 2)
         
-        input_location = np.array((0.0, 1.0, 2.0))
-        point2d = microvessel_chaste.mesh.Vertex2(input_location, length_scale)
+        input_location = np.array((0.0, 1.0))
+        point2d = microvessel_chaste.geometry.Vertex2(input_location, length_scale)
         
 if __name__ == '__main__':
     unittest.main()

@@ -1,4 +1,6 @@
-"""Copyright (c) 2005-2017, University of Oxford.
+/*
+
+Copyright (c) 2005-2017, University of Oxford.
 All rights reserved.
 
 University of Oxford means the Chancellor, Masters and Scholars of the
@@ -28,24 +30,48 @@ GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-"""
 
-# Example SCons build script for user projects.
+*/
 
-import os
+#ifndef _VTKSETUPANDFINALIZE_HPP_
+#define _VTKSETUPANDFINALIZE_HPP_
 
-# Get variables exported from the SConstruct file
-Import("*")
+/**
+ * This file is designed to be included by any test suites that use PETSc.
+ * It controls the PETSc initialisation and finalisation.
+ */
 
-# Get our project directory name.
-# This assumes that this project is located at <chasteRoot>/projects/<project>.
-# Other things will probably go wrong if this is not the case...
-project_name = os.path.basename(os.path.dirname(os.path.dirname(os.getcwd())))
+#define _BACKWARD_BACKWARD_WARNING_H 1 //Cut out the vtk deprecated warning
+#include <vtkSmartPointer.h>
+#include <vtkMPIController.h>
 
-# Chaste libraries used by this project.
-# Select which line to uncomment based on what your project needs, or alter as required.
-chaste_libs_used = ['cell_based']
+#include "CommandLineArguments.hpp"
 
-# Do the build magic
-result = SConsTools.DoProjectSConscript(project_name, chaste_libs_used, globals())
-Return("result")
+class VtkSetupAndFinalize
+{
+public:
+
+    /**
+     * Standard setup method for PETSc.
+     * @return true (by CxxTest convention)
+     */
+    bool setUpVtk()
+    {
+        CommandLineArguments* p_args = CommandLineArguments::Instance();
+        vtkSmartPointer<vtkMPIController> p_vtk_mpi_controller = vtkSmartPointer<vtkMPIController>::New();
+        p_vtk_mpi_controller->Initialize(p_args->p_argc, p_args->p_argv,1); // 1 here says real finalize has been done by PETSc
+        return true;
+    }
+    /**
+     * Clean up PETSc after running all tests.
+     * @return true (by CxxTest convention)
+     */
+    bool tearDownVtk()
+    {
+        vtkSmartPointer<vtkMPIController> p_vtk_mpi_controller = vtkSmartPointer<vtkMPIController>::New();
+        p_vtk_mpi_controller->Finalize(1); // 1 here says real finalize will be done by PETSc
+        return true;
+    }
+};
+
+#endif //_VTKSETUPANDFINALIZE_HPP_

@@ -11,6 +11,7 @@ PYBIND11_CVECTOR_TYPECASTER2();
 #include "Owen11Parameters.cppwg.hpp"
 #include "Connor17Parameters.cppwg.hpp"
 #include "Secomb04Parameters.cppwg.hpp"
+#include "VtkSetupAndFinalize.cppwg.hpp"
 
 namespace py = pybind11;
 
@@ -21,6 +22,7 @@ PYBIND11_MODULE(_chaste_project_MicrovesselChaste_utility, m)
     register_Owen11Parameters_class(m);
     register_Connor17Parameters_class(m);
     register_Secomb04Parameters_class(m);
+    register_VtkSetupAndFinalize_class(m);
         py::class_<VecQLength<2> >(m, "VecQLength2")
         .def(py::init< >())
         .def(py::init<c_vector<double, 2>, QLength >())

@@ -36,18 +36,14 @@ strengths in PDEs.
 
 * First public release
 
-
-
 ## Install from Source (Linux Only)
 
 The project can be used directly as a typical C++ Chaste project. First, Chaste dependencies need to be built following the [Chaste Install Guide](https://chaste.cs.ox.ac.uk/trac/wiki/InstallGuides/InstallGuide). 
 
-The project only supports a specific development version of Chaste. It will eventually match the next Chaste release.
-
-This can be obtained by doing:
+The project tracks the Chaste master release, this can be obtained by doing:
 
 ```bash
-git clone --branch paper/MicrovesselChaste  https://chaste.cs.ox.ac.uk/git/chaste.git $CHASTE_SOURCE_DIR
+git clone https://chaste.cs.ox.ac.uk/git/chaste.git $CHASTE_SOURCE_DIR
 ```
 
 The project code itself can be obtained by doing: 

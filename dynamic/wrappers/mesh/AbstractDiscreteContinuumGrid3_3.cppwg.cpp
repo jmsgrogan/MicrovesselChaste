@@ -15,7 +15,7 @@
 
 namespace py = pybind11;
 PYBIND11_CVECTOR_TYPECASTER2();
-PYBIND11_CVECTOR_TYPECASTER3();
+PYBIND11_CVECTOR_TYPECASTER3();   
 typedef AbstractDiscreteContinuumGrid<3,3 > AbstractDiscreteContinuumGrid3_3;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::vtkSmartPointer<vtkPolyData> _vtkSmartPointer_lt_vtkPolyData_gt_;

@@ -50,13 +50,13 @@ modules:
   source_locations:
   - projects/MicrovesselChaste/src/mesh
   classes:
-  - name: AbstractMesh
-  - name: AbstractTetrahedralMesh
-  - name: AbstractOdeSystem
-  - name: TetrahedralMesh
-    excluded_methods: 
-    - FreeTriangulateIo
-    - InitialiseTriangulateIo
+#  - name: AbstractMesh
+#  - name: AbstractTetrahedralMesh
+#  - name: AbstractOdeSystem
+#  - name: TetrahedralMesh
+#    excluded_methods: 
+#    - FreeTriangulateIo
+#    - InitialiseTriangulateIo
   - name: AbstractDiscreteContinuumGrid
   - name: DiscreteContinuumMesh
   - name: DiscreteContinuumMeshGenerator
@@ -295,5 +295,6 @@ modules:
   - name: Owen11Parameters
   - name: Connor17Parameters
   - name: Secomb04Parameters
+  - name: VtkSetupAndFinalize
 #  - name: GenericParameters
 #    source_file: UnitCollection.hpp  

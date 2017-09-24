@@ -58,10 +58,12 @@ class AbstractMicrovesselTestSuite(unittest.TestCase):
         simulation_time.SetStartTime(0.0)
         chaste.core.RandomNumberGenerator.Instance().Reseed(0)
         chaste.cell_based.CellId.ResetMaxCellId()
-        microvessel_chaste.utility.InitializeVtk()
+        vtk_controller = microvessel_chaste.utility.VtkSetupAndFinalize()
+        vtk_controller.setUpVtk()
         
     def tearDown(self):
-        microvessel_chaste.utility.TeardownVtk()
+        #vtk_controller = microvessel_chaste.utility.VtkSetupAndFinalize()
+        #vtk_controller.tearDownVtk()
         simulation_time = chaste.cell_based.SimulationTime.Instance()
         simulation_time.Destroy()
         

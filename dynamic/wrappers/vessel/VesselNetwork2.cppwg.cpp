@@ -15,7 +15,7 @@
 
 namespace py = pybind11;
 PYBIND11_CVECTOR_TYPECASTER2();
-PYBIND11_CVECTOR_TYPECASTER3();
+PYBIND11_CVECTOR_TYPECASTER3();   
 typedef VesselNetwork<2 > VesselNetwork2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::std::shared_ptr<VesselNode<2> > _std_shared_ptr_lt_VesselNode_lt_2_gt__gt_;

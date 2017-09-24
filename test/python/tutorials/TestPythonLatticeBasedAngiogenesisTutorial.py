@@ -52,6 +52,7 @@ import microvessel_chaste # Core Microvessel Chaste functionality
 import microvessel_chaste.geometry # Geometry tools
 import microvessel_chaste.mesh # Meshing
 import microvessel_chaste.population.vessel # Vessel tools
+import microvessel_chaste.population.cell # cell tools
 import microvessel_chaste.pde # PDE and solvers
 import microvessel_chaste.simulation # Flow and angiogenesis solvers
 import microvessel_chaste.visualization # Visualization

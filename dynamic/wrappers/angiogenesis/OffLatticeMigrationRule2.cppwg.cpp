@@ -15,7 +15,7 @@
 
 namespace py = pybind11;
 PYBIND11_CVECTOR_TYPECASTER2();
-PYBIND11_CVECTOR_TYPECASTER3();
+PYBIND11_CVECTOR_TYPECASTER3();   
 typedef OffLatticeMigrationRule<2 > OffLatticeMigrationRule2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::std::vector<Vertex<2>, std::allocator<Vertex<2> > > _std_vector_lt_Vertex_lt_2_gt__std_allocator_lt_Vertex_lt_2_gt__gt__gt_;

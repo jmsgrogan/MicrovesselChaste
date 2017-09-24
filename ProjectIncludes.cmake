@@ -34,6 +34,7 @@
 set(MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/population/vessel/properties/)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/utility)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/utility/visualization)
+list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/utility/fortests)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/utility/literature_parameters)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/geometry)
 list (APPEND MicrovesselChaste_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/src/geometry/writers)

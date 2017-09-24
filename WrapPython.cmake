@@ -32,7 +32,7 @@
 add_compile_options(-Wno-unused-local-typedefs)
 # Build the Python bindings
 add_definitions(-DCHASTE_MicrovesselChaste_PYTHON)
-#find_package(Boost COMPONENTS python REQUIRED)
+
 find_package(PythonLibs REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIRS})
 
@@ -51,16 +51,11 @@ else()
 endif()
 
 # These packages are needed for binding generation
-#find_python_module(pyplusplus 1.6.0)
-#find_python_module(pygccxml 1.7.2)
-#find_package(castxml)
-# Numpy is needed for wrapping
-find_package(NumPy)
 set(CASTXML_EXE_LOC "/usr/bin/castxml" CACHE FILEPATH "Path to the castxml executable.")
 
 # Collect the header directories for this project
 include(${CMAKE_CURRENT_SOURCE_DIR}/ProjectIncludes.cmake)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dynamic/  ${PYTHON_NUMPY_INCLUDE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dynamic/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrappers)
 include_directories(${CMAKE_SOURCE_DIR}/projects/PyChaste/src)
 
@@ -73,7 +68,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dynamic/pybind11/include)
 
 set(PYBIND11_PYTHON_VERSION 2.7)
 set(PYBIND11_CPP_STANDARD -std=c++11)
-#add_subdirectory(dynamic/pybind11)
 include_directories(${PYTHON_INCLUDE_DIRS})
 
 ######### Build the Python modules ###################### 

@@ -35,15 +35,14 @@ install:
 before_script:
   - sudo ln -s /usr/bin/gcc-6 /usr/local/bin/gcc
   - sudo ln -s /usr/bin/g++-6 /usr/local/bin/g++
-  - locate vecimpl.h
   - wget https://bitbucket.org/petsc/petsc/get/v3.4.2.tar.gz && tar -zxf v3.4.2.tar.gz
   - sudo mkdir -p $PETSC_DIR/$PETSC_ARCH/include/petsc/private/
   - sudo cp petsc-petsc-a071802d3efe/include/petsc-private/vecimpl.h $PETSC_DIR/$PETSC_ARCH/include/petsc/private/vecimpl.h
   - sudo cp petsc-petsc-a071802d3efe/include/petsc-private/matimpl.h $PETSC_DIR/$PETSC_ARCH/include/petsc/private/matimpl.h
   - gcc -v && g++ -v && cmake --version
-  - pip install numpy matplotlib 
+  - sudo pip install numpy matplotlib 
   - wget https://bitbucket.org/petsc/petsc4py/downloads/petsc4py-3.4.tar.gz && tar -zxf petsc4py-3.4.tar.gz
-  - cd petsc4py-3.4 && python setup.py build && python setup.py install && cd ..
+  - cd petsc4py-3.4 && python setup.py build && sudo python setup.py install && cd ..
   - "export DISPLAY=:99.0" # For GUI tests
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
@@ -76,7 +75,7 @@ script:
     else
       cmake "${TRAVIS_BUILD_DIR}"/../chaste-source -DCASTXML_EXE_LOC="${TRAVIS_BUILD_DIR}"/../castxml/bin/castxml
     fi
-    cmake . && make project_MicrovesselChaste -j 2 && ctest -L project_MicrovesselChaste -j 2
+    cmake . && make project_MicrovesselChaste -j 2
 
 # # following: https://github.com/NLeSC/root-roofit-dev/blob/travis_make-optimize_deps/.travis.yml
 # Save the order of timestamps of the files so we can recreate it with touch in the next build.

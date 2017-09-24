@@ -15,7 +15,7 @@
 
 namespace py = pybind11;
 PYBIND11_CVECTOR_TYPECASTER2();
-PYBIND11_CVECTOR_TYPECASTER3();
+PYBIND11_CVECTOR_TYPECASTER3();   
 typedef Owen11CaUpdateRule<2 > Owen11CaUpdateRule2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 

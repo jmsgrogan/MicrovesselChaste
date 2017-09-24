@@ -15,7 +15,7 @@
 
 namespace py = pybind11;
 PYBIND11_CVECTOR_TYPECASTER2();
-PYBIND11_CVECTOR_TYPECASTER3();
+PYBIND11_CVECTOR_TYPECASTER3();   
 typedef DiscreteContinuumMesh<2,2 > DiscreteContinuumMesh2_2;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 typedef ::Vertex<2> _Vertex_lt_2_gt_;
@@ -57,7 +57,7 @@ jiggle);
 
 };
 void register_DiscreteContinuumMesh2_2_class(py::module &m){
-py::class_<DiscreteContinuumMesh2_2 , DiscreteContinuumMesh2_2_Overloads , std::shared_ptr<DiscreteContinuumMesh2_2 >  , TetrahedralMesh<2, 2> , AbstractDiscreteContinuumGrid<2, 2>  >(m, "DiscreteContinuumMesh2_2")
+py::class_<DiscreteContinuumMesh2_2 , DiscreteContinuumMesh2_2_Overloads , std::shared_ptr<DiscreteContinuumMesh2_2 >  , AbstractDiscreteContinuumGrid<2, 2>  >(m, "DiscreteContinuumMesh2_2")
         .def(py::init< >())
         .def_static(
             "Create", 
