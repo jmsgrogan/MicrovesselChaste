@@ -255,7 +255,7 @@ void TestCoupledOxygenSolve() throw(Exception)
     VesselNodePtr<2> p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
             Vertex<2>(0.0_um));
     VesselNodePtr<2> p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
-            Vertex<2>(640.0_um, 960.0_um));
+            Vertex<2>(960.0_um, 960.0_um));
     p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
     p_inlet_node->GetFlowProperties()->SetPressure(3320.0);
     p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
