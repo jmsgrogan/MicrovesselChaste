@@ -236,12 +236,9 @@ public:
         for(unsigned idx=0;idx<max_iter;idx++)
         {
             impedance_calculator.Calculate();
-
             flow_solver.SetUp();
             flow_solver.Solve();
-
             haematocrit_solver.Calculate();
-
             viscosity_calculator.Calculate();
 
             // Get the residual
@@ -260,7 +257,7 @@ public:
                 }
                 previous_haematocrit[jdx] = current_haematocrit;
             }
-            std::cout << h_for_max << "," << prev_for_max << std::endl;
+            std::cout << "H at max difference: "h_for_max << ", Prev H at max difference:" << prev_for_max << std::endl;
             if(max_difference<=tolerance)
             {
                 std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
