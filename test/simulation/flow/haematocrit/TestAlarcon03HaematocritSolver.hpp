@@ -257,7 +257,7 @@ public:
                 }
                 previous_haematocrit[jdx] = current_haematocrit;
             }
-            std::cout << "H at max difference: "h_for_max << ", Prev H at max difference:" << prev_for_max << std::endl;
+            std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << std::endl;
             if(max_difference<=tolerance)
             {
                 std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
