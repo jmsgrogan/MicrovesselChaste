@@ -70,9 +70,10 @@ class TestLinnengarHaematocritSolver : public CxxTest::TestSuite
 
 public:
 
-
-void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
+void TestPiNetworkOnly() throw(Exception)
 {
+
+
     // Iterate over vessel lengths
     std::vector<double> lengths;
     std::vector<double> average_oxygen_concentration;

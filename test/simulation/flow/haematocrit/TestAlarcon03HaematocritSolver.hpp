@@ -45,6 +45,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "FlowSolver.hpp"
 #include "SimulationTime.hpp"
 #include "AlarconHaematocritSolver.hpp"
+#include "ViscosityCalculator.hpp"
 #include "UnitCollection.hpp"
 #include "VesselNetworkPropertyManager.hpp"
 #include "VesselNetworkGeometryCalculator.hpp"
@@ -58,24 +59,24 @@ public:
 
     void TestTwoVesselNetwork() throw(Exception)
     {
-        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
-        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
-        std::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(160_um);
+        auto p_node1 = VesselNode<2>::Create(0.0_um);
+        auto p_node2 = VesselNode<2>::Create(80_um);
+        auto p_node3 = VesselNode<2>::Create(160_um);
         p_node1->GetFlowProperties()->SetIsInputNode(true);
 
-        std::shared_ptr<VesselSegment<2> > p_segment1(VesselSegment<2>::Create(p_node1, p_node2));
-        std::shared_ptr<VesselSegment<2> > p_segment2(VesselSegment<2>::Create(p_node2, p_node3));
+        auto p_segment1(VesselSegment<2>::Create(p_node1, p_node2));
+        auto p_segment2(VesselSegment<2>::Create(p_node2, p_node3));
 
-        std::shared_ptr<Vessel<2> > p_vessel1(Vessel<2>::Create(p_segment1));
-        std::shared_ptr<Vessel<2> > p_vessel2(Vessel<2>::Create(p_segment2));
+        auto p_vessel1(Vessel<2>::Create(p_segment1));
+        auto p_vessel2(Vessel<2>::Create(p_segment2));
         p_segment1->GetFlowProperties()->SetFlowRate(1.0*unit::metre_cubed_per_second);
         p_segment2->GetFlowProperties()->SetFlowRate(2.0*unit::metre_cubed_per_second);
 
-        std::shared_ptr<VesselNetwork<2> > p_network = std::shared_ptr<VesselNetwork<2> >(new VesselNetwork<2>);
+        auto p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel1);
         p_network->AddVessel(p_vessel2);
 
-        std::shared_ptr<AlarconHaematocritSolver<2> > p_haematocrit_calculator(new AlarconHaematocritSolver<2>());
+        auto p_haematocrit_calculator = AlarconHaematocritSolver<2>::Create();
         p_haematocrit_calculator->SetVesselNetwork(p_network);
         p_haematocrit_calculator->Calculate();
 
@@ -85,26 +86,26 @@ public:
 
     void TestBifurcationInflowNetwork() throw(Exception)
     {
-        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
-        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
-        std::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(160_um);
-        std::shared_ptr<VesselNode<2> > p_node4 = VesselNode<2>::Create(200_um);
+        auto p_node1 = VesselNode<2>::Create(0.0_um);
+        auto p_node2 = VesselNode<2>::Create(80_um);
+        auto p_node3 = VesselNode<2>::Create(160_um);
+        auto p_node4 = VesselNode<2>::Create(200_um);
         p_node1->GetFlowProperties()->SetIsInputNode(true);
         p_node2->GetFlowProperties()->SetIsInputNode(true);
 
-        std::shared_ptr<Vessel<2> > p_vessel1(Vessel<2>::Create(p_node1, p_node3));
-        std::shared_ptr<Vessel<2> > p_vessel2(Vessel<2>::Create(p_node2, p_node3));
-        std::shared_ptr<Vessel<2> > p_vessel3(Vessel<2>::Create(p_node3, p_node4));
+        auto p_vessel1(Vessel<2>::Create(p_node1, p_node3));
+        auto p_vessel2(Vessel<2>::Create(p_node2, p_node3));
+        auto p_vessel3(Vessel<2>::Create(p_node3, p_node4));
         p_vessel1->GetFlowProperties()->SetFlowRate(1.0*unit::metre_cubed_per_second);
         p_vessel2->GetFlowProperties()->SetFlowRate(1.0*unit::metre_cubed_per_second);
         p_vessel3->GetFlowProperties()->SetFlowRate(1.0*unit::metre_cubed_per_second);
 
-        std::shared_ptr<VesselNetwork<2> > p_network = std::shared_ptr<VesselNetwork<2> >(new VesselNetwork<2>);
+        auto p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel1);
         p_network->AddVessel(p_vessel2);
         p_network->AddVessel(p_vessel3);
 
-        std::shared_ptr<AlarconHaematocritSolver<2> > p_haematocrit_calculator(new AlarconHaematocritSolver<2>());
+        auto p_haematocrit_calculator = AlarconHaematocritSolver<2>::Create();
         p_haematocrit_calculator->SetVesselNetwork(p_network);
         p_haematocrit_calculator->Calculate();
 
@@ -115,29 +116,29 @@ public:
 
     void TestBifurcationOutflowNetwork() throw(Exception)
     {
-        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
-        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
-        std::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(160_um);
-        std::shared_ptr<VesselNode<2> > p_node4 = VesselNode<2>::Create(200_um);
+        auto p_node1 = VesselNode<2>::Create(0.0_um);
+        auto p_node2 = VesselNode<2>::Create(80_um);
+        auto p_node3 = VesselNode<2>::Create(160_um);
+        auto p_node4 = VesselNode<2>::Create(200_um);
         p_node4->GetFlowProperties()->SetIsInputNode(true);
 
-        std::shared_ptr<VesselSegment<2> > p_segment1(VesselSegment<2>::Create(p_node1, p_node3));
-        std::shared_ptr<VesselSegment<2> > p_segment2(VesselSegment<2>::Create(p_node2, p_node3));
-        std::shared_ptr<VesselSegment<2> > p_segment3(VesselSegment<2>::Create(p_node3, p_node4));
+        auto p_segment1(VesselSegment<2>::Create(p_node1, p_node3));
+        auto p_segment2(VesselSegment<2>::Create(p_node2, p_node3));
+        auto p_segment3(VesselSegment<2>::Create(p_node3, p_node4));
 
-        std::shared_ptr<Vessel<2> > p_vessel1(Vessel<2>::Create(p_segment1));
-        std::shared_ptr<Vessel<2> > p_vessel2(Vessel<2>::Create(p_segment2));
-        std::shared_ptr<Vessel<2> > p_vessel3(Vessel<2>::Create(p_segment3));
+        auto p_vessel1(Vessel<2>::Create(p_segment1));
+        auto p_vessel2(Vessel<2>::Create(p_segment2));
+        auto p_vessel3(Vessel<2>::Create(p_segment3));
         p_vessel1->GetFlowProperties()->SetFlowRate(-1.0*unit::metre_cubed_per_second);
         p_vessel2->GetFlowProperties()->SetFlowRate(-1.0*unit::metre_cubed_per_second);
         p_vessel3->GetFlowProperties()->SetFlowRate(-1.0*unit::metre_cubed_per_second);
 
-        std::shared_ptr<VesselNetwork<2> > p_network = std::shared_ptr<VesselNetwork<2> >(new VesselNetwork<2>);
+        auto p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel1);
         p_network->AddVessel(p_vessel2);
         p_network->AddVessel(p_vessel3);
 
-        std::shared_ptr<AlarconHaematocritSolver<2> > p_haematocrit_calculator(new AlarconHaematocritSolver<2>());
+        auto p_haematocrit_calculator = AlarconHaematocritSolver<2>::Create();
         p_haematocrit_calculator->SetVesselNetwork(p_network);
         p_haematocrit_calculator->Calculate();
 
@@ -148,138 +149,144 @@ public:
 
     void TestBifurcationOutflowNetworkBiasedFlow() throw(Exception)
     {
-        std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
-        std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
-        std::shared_ptr<VesselNode<2> > p_node3 = VesselNode<2>::Create(160_um);
-        std::shared_ptr<VesselNode<2> > p_node4 = VesselNode<2>::Create(200_um);
+        auto p_node1 = VesselNode<2>::Create(0.0_um);
+        auto p_node2 = VesselNode<2>::Create(80_um);
+        auto p_node3 = VesselNode<2>::Create(160_um);
+        auto p_node4 = VesselNode<2>::Create(200_um);
         p_node4->GetFlowProperties()->SetIsInputNode(true);
 
-        std::shared_ptr<VesselSegment<2> > p_segment1(VesselSegment<2>::Create(p_node1, p_node3));
-        std::shared_ptr<VesselSegment<2> > p_segment2(VesselSegment<2>::Create(p_node2, p_node3));
-        std::shared_ptr<VesselSegment<2> > p_segment3(VesselSegment<2>::Create(p_node3, p_node4));
+        auto p_segment1(VesselSegment<2>::Create(p_node1, p_node3));
+        auto p_segment2(VesselSegment<2>::Create(p_node2, p_node3));
+        auto p_segment3(VesselSegment<2>::Create(p_node3, p_node4));
 
-        std::shared_ptr<Vessel<2> > p_vessel1(Vessel<2>::Create(p_segment1));
-        std::shared_ptr<Vessel<2> > p_vessel2(Vessel<2>::Create(p_segment2));
-        std::shared_ptr<Vessel<2> > p_vessel3(Vessel<2>::Create(p_segment3));
+        auto p_vessel1(Vessel<2>::Create(p_segment1));
+        auto p_vessel2(Vessel<2>::Create(p_segment2));
+        auto p_vessel3(Vessel<2>::Create(p_segment3));
         p_vessel1->GetFlowProperties()->SetFlowRate(-1.0*unit::metre_cubed_per_second);
         p_vessel2->GetFlowProperties()->SetFlowRate(-3.0*unit::metre_cubed_per_second);
         p_vessel3->GetFlowProperties()->SetFlowRate(-1.0*unit::metre_cubed_per_second);
 
-        std::shared_ptr<VesselNetwork<2> > p_network = std::shared_ptr<VesselNetwork<2> >(new VesselNetwork<2>);
+        auto p_network = VesselNetwork<2>::Create();
         p_network->AddVessel(p_vessel1);
         p_network->AddVessel(p_vessel2);
         p_network->AddVessel(p_vessel3);
 
-        std::shared_ptr<AlarconHaematocritSolver<2> > p_haematocrit_calculator(new AlarconHaematocritSolver<2>());
+        auto p_haematocrit_calculator = AlarconHaematocritSolver<2>::Create();
         p_haematocrit_calculator->SetVesselNetwork(p_network);
         p_haematocrit_calculator->Calculate();
 
-        TS_ASSERT_DELTA(p_vessel1->GetFlowProperties()->GetHaematocrit(),0.0, 1e-6);
-        TS_ASSERT_DELTA(p_vessel2->GetFlowProperties()->GetHaematocrit(),0.45, 1e-6);
-        TS_ASSERT_DELTA(p_vessel3->GetFlowProperties()->GetHaematocrit(),0.45, 1e-6);
+        TS_ASSERT_DELTA(p_vessel1->GetFlowProperties()->GetHaematocrit(), 0.0, 1e-6);
+        TS_ASSERT_DELTA(p_vessel2->GetFlowProperties()->GetHaematocrit(), 0.45, 1e-6);
+        TS_ASSERT_DELTA(p_vessel3->GetFlowProperties()->GetHaematocrit(), 0.45, 1e-6);
     }
 
     void TestHexagonalNetwork() throw(Exception)
     {
         // Specify the network dimensions
-        QLength vessel_length = 80.0 * 1_um;
+        QLength vessel_length = 80.0_um;
+        QLength width = 800.0_um;
+        QLength height = 1000.0_um;
 
         // Generate the network
-        VesselNetworkGenerator<2> vascular_network_generator;
-        std::shared_ptr<VesselNetwork<2> > vascular_network = vascular_network_generator.GenerateHexagonalNetwork(800.0* 1_um,
-                                                                                                                        1000.0* 1_um,
-                                                                                                                        vessel_length);
-        std::vector<std::shared_ptr<VesselNode<2> > > nodes;
-        nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(0.0_um)));
-        nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(5.0_um)));
-        std::shared_ptr<VesselSegment<2> > p_segment(VesselSegment<2>::Create(nodes[0], nodes[1]));
+        VesselNetworkGenerator<2> network_generator;
+        auto p_network = network_generator.GenerateHexagonalNetwork(width, height, vessel_length);
 
-        double radius = 10.0;
-        p_segment->SetRadius(radius*1_um);
-        double haematocrit = 0.45;
+        // Assign flow properties and boundary conditions
+        QLength radius = 10_um;
+        QDimensionless haematocrit = 0.45;
+        QPressure inflow_pressure = 3320.0_Pa;
+        QPressure outflow_pressure = 2090.0_Pa;
+        QDynamicViscosity reference_viscosity = 1.e-3*unit::poiseuille;
+
+        auto p_segment = p_network->GetVesselSegments()[0];
+        p_segment->SetRadius(radius);
         p_segment->GetFlowProperties()->SetHaematocrit(haematocrit);
-        VesselNetworkPropertyManager<2>::SetSegmentProperties(vascular_network, p_segment);
+        p_segment->GetFlowProperties()->SetViscosity(reference_viscosity);
+        VesselNetworkPropertyManager<2>::AssignInflows(p_network, Vertex<2>(0.0, 0.0), vessel_length/2.0);
 
-        std::pair<Vertex<2>, Vertex<2> > network_extents = VesselNetworkGeometryCalculator<2>::GetExtents(vascular_network);
-        double y_middle = (network_extents.first.Convert(1_um)[1]) / 2.0;
-        double x_middle = (network_extents.first.Convert(1_um)[0]) / 2.0;
+        // Top right corner
+        VesselNetworkPropertyManager<2>::AssignOutflows(p_network, Vertex<2>(640.0_um, 960.0_um), vessel_length/2.0);
+        VesselNetworkPropertyManager<2>::SetInflowPressures(p_network, inflow_pressure);
+        VesselNetworkPropertyManager<2>::SetOutflowPressures(p_network, outflow_pressure);
+        VesselNetworkPropertyManager<2>::SetSegmentProperties(p_network, p_segment);
 
-        std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
-
-        std::vector<std::shared_ptr<Vessel<2> > > vessels = vascular_network->GetVessels();
-
-        for (vessel_iterator = vessels.begin(); vessel_iterator != vessels.end(); vessel_iterator++)
-        {
-            if((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
-            {
-                if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[1] >  y_middle)
-                {
-                    if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] >  x_middle)
-                    {
-                        (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
-                        (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);
-                    }
-                }
-            }
-            if((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
-            {
-                if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[1] >  y_middle)
-                {
-                    if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] >  x_middle)
-                    {
-                        (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
-                        (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);
-                    }
-                }
-            }
-            if((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
-            {
-                if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[1] <=  y_middle)
-                {
-                    if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] <  x_middle)
-                    {
-                        (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsOutputNode(true);
-                        (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
-                    }
-                }
-            }
-            if((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
-            {
-                if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[1] <=  y_middle)
-                {
-                    if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] <  x_middle)
-                    {
-                        (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
-                        (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
-                    }
-                }
-            }
-        }
-
-        std::vector<std::shared_ptr<VesselSegment<2> > > segments = vascular_network->GetVesselSegments();
-        for(unsigned idx=0; idx<segments.size(); idx++)
-        {
-            segments[idx]->GetFlowProperties()->SetViscosity(1.e-3*unit::poiseuille);
-        }
-
+        // Set up solvers and calculators
         VesselImpedanceCalculator<2> impedance_calculator;
-        impedance_calculator.SetVesselNetwork(vascular_network);
+        impedance_calculator.SetVesselNetwork(p_network);
         impedance_calculator.Calculate();
-        FlowSolver<2> solver;
-        solver.SetVesselNetwork(vascular_network);
-        solver.SetUp();
-        solver.Solve();
 
-        OutputFileHandler output_file_handler("TestHaematocritSolver", false);
-        std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("HexNet.vtp");
-        vascular_network->Write(output_filename);
+        FlowSolver<2> flow_solver;
+        flow_solver.SetVesselNetwork(p_network);
+        flow_solver.SetUp();
 
-        std::shared_ptr<AlarconHaematocritSolver<2> > p_haematocrit_calculator(new AlarconHaematocritSolver<2>());
-        p_haematocrit_calculator->SetVesselNetwork(vascular_network);
-        p_haematocrit_calculator->Calculate();
+        AlarconHaematocritSolver<2> haematocrit_solver;
+        haematocrit_solver.SetVesselNetwork(p_network);
 
-        std::string output_filename2 = output_file_handler.GetOutputDirectoryFullPath().append("HexNetHemo.vtp");
-        vascular_network->Write(output_filename2);
+        ViscosityCalculator<2> viscosity_calculator;
+        viscosity_calculator.SetVesselNetwork(p_network);
+        viscosity_calculator.SetPlasmaViscosity(reference_viscosity);
+
+        // Iterate until the haematocrit value converges
+        OutputFileHandler output_file_handler("TestAlarconHaematocritSolver");
+        unsigned max_iter = 1000;
+        double tolerance = 1.e-3;
+
+        std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
+        std::vector<double> previous_haematocrit(segments.size(), double(haematocrit));
+        for(unsigned idx=0;idx<max_iter;idx++)
+        {
+            impedance_calculator.Calculate();
+
+            flow_solver.SetUp();
+            flow_solver.Solve();
+
+            haematocrit_solver.Calculate();
+
+            viscosity_calculator.Calculate();
+
+            // Get the residual
+            double max_difference = 0.0;
+            double h_for_max = 0.0;
+            double prev_for_max = 0.0;
+            for(unsigned jdx=0;jdx<segments.size();jdx++)
+            {
+                double current_haematocrit = segments[jdx]->GetFlowProperties()->GetHaematocrit();
+                double difference = std::abs(current_haematocrit - previous_haematocrit[jdx]);
+                if(difference>max_difference)
+                {
+                    max_difference = difference;
+                    h_for_max = current_haematocrit;
+                    prev_for_max = previous_haematocrit[jdx];
+                }
+                previous_haematocrit[jdx] = current_haematocrit;
+            }
+            std::cout << h_for_max << "," << prev_for_max << std::endl;
+            if(max_difference<=tolerance)
+            {
+                std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
+                break;
+            }
+            else
+            {
+                // Output intermediate results
+                if(idx%1==0)
+                {
+                    std::cout << "Max Difference at iter: " << idx << " is " << max_difference << std::endl;
+                    std::string file_suffix = "IntermediateHaematocrit_" + std::to_string(idx) + ".vtp";
+                    std::string output_file = output_file_handler.GetOutputDirectoryFullPath().append(file_suffix);
+                    p_network->Write(output_file);
+                }
+            }
+
+            if(idx==max_iter-1)
+            {
+                EXCEPTION("Did not converge after " + std::to_string(idx) + " iterations.");
+            }
+        }
+
+        // Write the final result
+        std::string output_file = output_file_handler.GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
+        p_network->Write(output_file);
     }
 };
 
