@@ -332,6 +332,7 @@ constexpr QRate per_hour = (1.0/60.0)*per_minute;
 // Length
 constexpr QLength metres(1.0, "m");
 constexpr QLength millimetres = metres / 1.e3;
+constexpr QLength centimetres = metres / 10.0;
 constexpr QLength microns = metres / 1.e6;
 constexpr QArea metres_squared = metres*metres;
 constexpr QVolume metres_cubed = metres*metres_squared;
@@ -342,6 +343,7 @@ constexpr QPerArea per_metre_squared = per_metre*per_metre;
 
 // Mass
 constexpr QMass kg(1.0);
+constexpr QMass grams = kg/1000.0;
 constexpr QMassFlowRate kg_per_second(1.0);
 constexpr QMassFlux kg_per_metre_squred_per_second(1.0);
 

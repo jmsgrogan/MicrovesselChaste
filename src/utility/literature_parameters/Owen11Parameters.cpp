@@ -41,7 +41,6 @@ std::string bib_info = "@article{Owen2011, \n author = {Owen, Markus R and Stamp
         "\n title = {{Mathematical modeling predicts synergistic antitumor effects of combining a macrophage-based, hypoxia-targeted gene therapy with chemotherapy.}},"
         "\n volume = {71}, \n year = {2011}}";
 
-QPressure mmHg(1.0*unit::mmHg);
 QPressure inlet_pressure(25.0 * unit::mmHg);
 const std::shared_ptr<ParameterInstance<QPressure> > Owen11Parameters::mpInletPressure =
         std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (inlet_pressure,
@@ -57,10 +56,8 @@ const std::shared_ptr<ParameterInstance<QPressure> > Owen11Parameters::mpOutletP
                                                                                    "Vessel network outlet pressure",
                                                                                    "P_{out}",
                                                                                    bib_info));
-QLength cm (0.01*unit::metres);
-QMass g(1.e-3 *unit::kg);
 QTime min(60.0*unit::seconds);
-QDynamicViscosity plasma_visocity(0.72*g/(cm*min));
+QDynamicViscosity plasma_visocity(0.72*unit::grams/(unit::centimetres*min));
 const std::shared_ptr<ParameterInstance<QDynamicViscosity> > Owen11Parameters::mpPlasmaViscosity =
         std::shared_ptr<ParameterInstance<QDynamicViscosity> >(new ParameterInstance<QDynamicViscosity> (plasma_visocity,
                                                                                    "Owen11_PlasmaViscosity",
@@ -90,36 +87,35 @@ const std::shared_ptr<ParameterInstance<QTime> > Owen11Parameters::mpTimeToDeath
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QPressure> > Owen11Parameters::mpOxygenPartialPressureAtHalfMaxCycleRateNormal =
-        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (3.0*mmHg,
+        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (3.0*unit::mmHg,
                                                                                    "Owen11_OxygenAtHalfMaxCycleRateNormal",
                                                                                    "Oxygen partial pressure at half max cell cycle rate normal",
                                                                                    "C_{\\phi}^{normal}",
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QPressure> > Owen11Parameters::mpOxygenPartialPressureAtHalfMaxCycleRateCancer =
-        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (1.4*mmHg,
+        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (1.4*unit::mmHg,
                                                                                    "Owen11_OxygenAtHalfMaxCycleRateCancer",
                                                                                    "Oxygen partial pressure at half max cell cycle rate cancer",
                                                                                    "C_{\\phi}^{cancer}",
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QPressure> > Owen11Parameters::mpOxygenPartialPressureAtQuiescence =
-        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (8.9*mmHg,
+        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (8.9*unit::mmHg,
                                                                                    "Owen11_OxygenAtQuiescence",
                                                                                    "Oxygen partial pressure at quiescence",
                                                                                    "C^{enter}_{quiesc}",
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QPressure> > Owen11Parameters::mpOxygenPartialPressureLeaveQuiescence =
-        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (9.8*mmHg,
+        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (9.8*unit::mmHg,
                                                                                    "Owen11_OxygenLeaveQuiescence",
                                                                                    "Oxygen partial pressure to leave quiescence",
                                                                                    "C^{leave}_{quiesc}",
                                                                                    bib_info));
 
-QArea micron_sq(1_um);
-QConcentration nano_molar(1.e-9 *unit::mole_per_metre_cubed);
-QDiffusivityPerConcentration chemotactic_sensitivty(2.e4*micron_sq/(min*nano_molar));
+QArea micron_sq(1_um*1_um);
+QDiffusivityPerConcentration chemotactic_sensitivty(2.e4*micron_sq/(min*unit::nanomolar));
 const std::shared_ptr<ParameterInstance<QDiffusivityPerConcentration> > Owen11Parameters::mpChemotacticSensitivity =
         std::shared_ptr<ParameterInstance<QDiffusivityPerConcentration> >(new ParameterInstance<QDiffusivityPerConcentration> (chemotactic_sensitivty,
                                                                                    "Owen11_ChemotacticSensitivity",
@@ -149,14 +145,14 @@ const std::shared_ptr<ParameterInstance<QDiffusivity>  > Owen11Parameters::mpCel
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QMembranePermeability> > Owen11Parameters::mpVesselOxygenPermeability =
-        std::shared_ptr<ParameterInstance<QMembranePermeability> >(new ParameterInstance<QMembranePermeability> (6.0*cm/min,
+        std::shared_ptr<ParameterInstance<QMembranePermeability> >(new ParameterInstance<QMembranePermeability> (6.0*unit::centimetres/min,
                                                                                    "Owen11_VesselOxygenPermeability",
                                                                                    "Vessel permeability to oxygen",
                                                                                    "\\psi_{c}",
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QMembranePermeability> > Owen11Parameters::mpVesselVegfPermeability =
-        std::shared_ptr<ParameterInstance<QMembranePermeability> >(new ParameterInstance<QMembranePermeability> (1.e-5*cm/min,
+        std::shared_ptr<ParameterInstance<QMembranePermeability> >(new ParameterInstance<QMembranePermeability> (1.e-5*unit::centimetres/min,
                                                                                    "Owen11_VesselVegfPermeability",
                                                                                    "Vessel permeability to vegf",
                                                                                    "\\psi_{v}",
@@ -177,15 +173,14 @@ const std::shared_ptr<ParameterInstance<QRate> > Owen11Parameters::mpMaximumSpro
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QConcentration> > Owen11Parameters::mpVegfConventrationAtHalfMaxProbSprouting =
-        std::shared_ptr<ParameterInstance<QConcentration> >(new ParameterInstance<QConcentration> (0.5*nano_molar,
+        std::shared_ptr<ParameterInstance<QConcentration> >(new ParameterInstance<QConcentration> (0.5*unit::nanomolar,
                                                                                    "Owen11_VegfConventrationAtHalfMaxProbSprouting",
                                                                                    "VEGF concentration at half maximal vessel sprouting probability",
                                                                                    "V_{sprout}",
                                                                                    bib_info));
 
-QLength um(1_um);
 const std::shared_ptr<ParameterInstance<QLength>  > Owen11Parameters::mpSproutingExclusionRadius =
-        std::shared_ptr<ParameterInstance<QLength>  >(new ParameterInstance<QLength>  (80.0 * um,
+        std::shared_ptr<ParameterInstance<QLength>  >(new ParameterInstance<QLength>  (80.0_um,
                                                                                    "Owen11_SproutingExclusionRadius",
                                                                                    "Sprouting exclusion radius",
                                                                                    "R_{ex}",
@@ -198,9 +193,9 @@ const std::shared_ptr<ParameterInstance<QTime> > Owen11Parameters::mpMaxTimeWith
                                                                                    "T_{prune}",
                                                                                    bib_info));
 
-QForce dyne(g*cm/(unit::seconds*unit::seconds));
+QForce dyne(unit::grams*unit::centimetres/(unit::seconds*unit::seconds));
 const std::shared_ptr<ParameterInstance<QPressure> > Owen11Parameters::mpCriticalWallShearStress =
-        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (8.0 * dyne/(cm*cm),
+        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (8.0 * dyne/(unit::centimetres*unit::centimetres),
                                                                                    "Owen11_CriticalWallShearStress",
                                                                                    "Critical wall shear stress for vessel pruning",
                                                                                    "\\tau_{wall}",
@@ -222,21 +217,21 @@ const std::shared_ptr<ParameterInstance<QTime> > Owen11Parameters::mpSimulationD
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QLength>  > Owen11Parameters::mpLatticeSpacing =
-        std::shared_ptr<ParameterInstance<QLength>  >(new ParameterInstance<QLength>  (40.0*um,
+        std::shared_ptr<ParameterInstance<QLength>  >(new ParameterInstance<QLength>  (40.0_um,
                                                                                    "Owen11_LatticeSpacing",
                                                                                    "Lattice spacing",
                                                                                    "\\Delta x",
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QDiffusivity>  > Owen11Parameters::mpOxygenDiffusivity =
-        std::shared_ptr<ParameterInstance<QDiffusivity>  >(new ParameterInstance<QDiffusivity>  (0.00145*cm*cm/min,
+        std::shared_ptr<ParameterInstance<QDiffusivity>  >(new ParameterInstance<QDiffusivity>  (0.00145*unit::centimetres*unit::centimetres/min,
                                                                                    "Owen11_OxygenDiffusivity",
                                                                                    "Oxygen diffusivity ",
                                                                                    "D_{c}",
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QDiffusivity>  > Owen11Parameters::mpVegfDiffusivity =
-        std::shared_ptr<ParameterInstance<QDiffusivity>  >(new ParameterInstance<QDiffusivity>  (1.e-5*cm*cm/min,
+        std::shared_ptr<ParameterInstance<QDiffusivity>  >(new ParameterInstance<QDiffusivity>  (1.e-5*unit::centimetres*unit::centimetres/min,
                                                                                    "Owen11_VegfDiffusivity",
                                                                                    "Vegf diffusivity ",
                                                                                    "D_{v}",
@@ -271,7 +266,7 @@ const std::shared_ptr<ParameterInstance<QRate> > Owen11Parameters::mpP53MaxDegra
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QPressure> > Owen11Parameters::mpOxygenTensionForHalfMaxP53Degradation =
-        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (4.44*mmHg,
+        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (4.44*unit::mmHg,
                                                                                    "Owen11_OxygenTensionForHalfMaxP53Degradation",
                                                                                    "Tissue oxygen tension for half-max p53 degradation",
                                                                                    "C_{p53}",
@@ -306,7 +301,7 @@ const std::shared_ptr<ParameterInstance<QDimensionless> > Owen11Parameters::mpVe
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QPressure> > Owen11Parameters::mpOxygenTensionForHalfMaxVegfDegradation =
-        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (4.44*mmHg,
+        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (4.44*unit::mmHg,
                                                                                    "Owen11_OxygenTensionForHalfMaxVegfDegradation",
                                                                                    "Tissue oxygen tension for half-max vegf degradation",
                                                                                    "C_{VEGF}",
@@ -320,7 +315,7 @@ const std::shared_ptr<ParameterInstance<QTime> > Owen11Parameters::mpVesselRadiu
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QConcentrationFlowRate> > Owen11Parameters::mpCellVegfSecretionRate =
-        std::shared_ptr<ParameterInstance<QConcentrationFlowRate> >(new ParameterInstance<QConcentrationFlowRate> (0.01*nano_molar/min,
+        std::shared_ptr<ParameterInstance<QConcentrationFlowRate> >(new ParameterInstance<QConcentrationFlowRate> (0.01*unit::nanomolar/min,
                                                                                    "Owen11_CellVegfSecretionRate",
                                                                                    "Cell vegf secretion rate",
                                                                                    "k_v^{cell}",
@@ -341,7 +336,7 @@ const std::shared_ptr<ParameterInstance<QLength>  > Owen11Parameters::mpMaximumR
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QFlowRate> > Owen11Parameters::mpReferenceFlowRateForMetabolicStimulus =
-        std::shared_ptr<ParameterInstance<QFlowRate> >(new ParameterInstance<QFlowRate> (4.e-5*cm*cm*cm/min,
+        std::shared_ptr<ParameterInstance<QFlowRate> >(new ParameterInstance<QFlowRate> (4.e-5*unit::centimetres*unit::centimetres*unit::centimetres/min,
                                                                                    "Owen11_ReferenceFlowRateForMetabolicStimulus",
                                                                                    "Reference flow rate for metabolic stimulus",
                                                                                    "Q_{ref}",
@@ -369,7 +364,7 @@ const std::shared_ptr<ParameterInstance<QRate> > Owen11Parameters::mpBasalMetabo
                                                                                    bib_info));
 
 const std::shared_ptr<ParameterInstance<QPressure> > Owen11Parameters::mpReferencePartialPressure =
-        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (20.0*mmHg,
+        std::shared_ptr<ParameterInstance<QPressure> >(new ParameterInstance<QPressure> (20.0*unit::mmHg,
                                                                                    "Owen11_ReferencePartialPressure",
                                                                                    "Reference partial pressure of inlet haematocrit vessels",
                                                                                    "C_{Ref}",

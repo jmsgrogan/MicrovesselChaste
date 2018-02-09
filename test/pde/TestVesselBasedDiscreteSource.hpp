@@ -187,8 +187,7 @@ public:
         QLength vessel_length(100.0_um);
         QLength reference_length(1.0_um);
         VesselNetworkGenerator<2> generator;
-        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length,
-                Vertex<2>());
+        std::shared_ptr<VesselNetwork<2> > p_network = generator.GenerateSingleVessel(vessel_length, Vertex<2>());
 
         p_network->GetVessels()[0]->GetFlowProperties()->SetHaematocrit(0.45);
 
