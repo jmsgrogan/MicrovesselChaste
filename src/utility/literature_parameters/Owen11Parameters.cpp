@@ -117,8 +117,8 @@ const std::shared_ptr<ParameterInstance<QPressure> > Owen11Parameters::mpOxygenP
                                                                                    "C^{leave}_{quiesc}",
                                                                                    bib_info));
 
-QArea micron_sq(1_um);
-QConcentration nano_molar(1.e-9 *unit::mole_per_metre_cubed);
+QArea micron_sq(1_um*1_um);
+QConcentration nano_molar(1.e-6 *unit::mole_per_metre_cubed);
 QDiffusivityPerConcentration chemotactic_sensitivty(2.e4*micron_sq/(min*nano_molar));
 const std::shared_ptr<ParameterInstance<QDiffusivityPerConcentration> > Owen11Parameters::mpChemotacticSensitivity =
         std::shared_ptr<ParameterInstance<QDiffusivityPerConcentration> >(new ParameterInstance<QDiffusivityPerConcentration> (chemotactic_sensitivty,
