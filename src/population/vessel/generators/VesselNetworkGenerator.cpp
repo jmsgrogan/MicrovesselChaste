@@ -741,6 +741,1825 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateHexago
     return pVesselNetwork;
 }
 
+
+
+template<unsigned DIM>
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateHexagonalNetworkEquilateral(QLength width,
+                                                                                           QLength height,
+                                                                                           QLength vessel_length,
+                                                                                           bool fillDomain)
+{
+    // Vessels are laid out on a regular grid in a hexagonal pattern.
+    // The repeating unit looks like this:
+    //    \_/
+    //    / \_
+    // There is an extra set of lines along the top to 'close' the pattern.
+    QLength unit_height = sqrt(2.0) * vessel_length;
+    QLength unit_width = (2.0+sqrt(2.0)) * vessel_length;
+
+    // The pattern may not reach the extents of the target area.
+    unsigned units_in_x_direction = floor(width/ unit_width);
+    unsigned units_in_y_direction = floor(height/ unit_height);
+    bool extended_in_x = false;
+    bool extended_in_y = false;
+
+    if(fillDomain and width/unit_width > float(units_in_x_direction))
+    {
+        units_in_x_direction+=1;
+        extended_in_x = true;
+    }
+    if(fillDomain and height/unit_height > float(units_in_y_direction))
+    {
+        units_in_y_direction+=1;
+        extended_in_y=true;
+    }
+
+    // If the number of units is less than 1, just make a single unit in that direction
+    if (units_in_x_direction < 1)
+    {
+        units_in_x_direction = 1;
+    }
+
+    if (units_in_y_direction < 1)
+    {
+        units_in_x_direction = 1;
+    }
+
+    // Create vessels by looping over the units, x direction is inside loop.
+    std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork = VesselNetwork<DIM>::Create();
+    for(unsigned jdx = 0; jdx<units_in_y_direction; jdx++)
+    {
+        for(unsigned idx=0; idx<units_in_x_direction; idx++)
+        {
+            pVesselNetwork->AddVessel(Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + 0.0,
+                                                                                  double(jdx)*unit_height + 0.0),
+                                                                           VesselNode<DIM>::Create(double(idx)*unit_width + vessel_length/sqrt(2.0),
+                                                                                                   double(jdx)*unit_height + vessel_length/sqrt(2.0))));
+
+            pVesselNetwork->AddVessel(Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + 0.0,
+                                                                                  double(jdx)*unit_height + sqrt(2.0)*vessel_length),
+                                                                           VesselNode<DIM>::Create(double(idx)*unit_width + vessel_length/sqrt(2.0),
+                                                                                                   double(jdx)*unit_height + vessel_length/sqrt(2.0))));
+
+            pVesselNetwork->AddVessel(Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + vessel_length/sqrt(2.0),
+                                                                                  double(jdx)*unit_height + vessel_length/sqrt(2.0)),
+                                                                           VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+1.0/sqrt(2.0))*vessel_length,
+                                                                                                   double(jdx)*unit_height + vessel_length/sqrt(2.0))));
+
+            pVesselNetwork->AddVessel(Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+1.0/sqrt(2.0))*vessel_length,
+                                                                                  double(jdx)*unit_height + vessel_length/sqrt(2.0)),
+                                                                           VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+sqrt(2.0))*vessel_length,
+                                                                                                   double(jdx)*unit_height + sqrt(2.0)*vessel_length)));
+
+            pVesselNetwork->AddVessel(Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+1.0/sqrt(2.0))*vessel_length,
+                                                                                  double(jdx)*unit_height + vessel_length/sqrt(2.0)),
+                                                                           VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+sqrt(2.0))*vessel_length,
+                                                                                                   double(jdx)*unit_height + 0.0)));
+
+            pVesselNetwork->AddVessel(Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+sqrt(2.0))*vessel_length,
+                                                                                  double(jdx)*unit_height + 0.0),
+                                                                           VesselNode<DIM>::Create(double(idx)*unit_width + (2.0+sqrt(2.0))*vessel_length,
+                                                                                                   double(jdx)*unit_height + 0.0)));
+        }
+    }
+
+    // Add an extra line of vessels along the top
+    for(unsigned idx=0; idx<units_in_x_direction; idx++)
+    {
+        pVesselNetwork->AddVessel(Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+sqrt(2.0))*vessel_length,
+                                                                              double(units_in_y_direction)*unit_height),
+                                                                       VesselNode<DIM>::Create(double(idx)*unit_width + (2.0+sqrt(2.0))*vessel_length,
+                                                                                               double(units_in_y_direction)*unit_height)));
+    }
+
+    pVesselNetwork->MergeCoincidentNodes();
+    pVesselNetwork->UpdateAll();
+
+    // Remove vessels with both nodes outside of the bounds
+    std::vector<std::shared_ptr<Vessel<DIM> > > vessels = pVesselNetwork->GetVessels();
+    for(unsigned idx=0; idx<vessels.size(); idx++)
+    {
+        double x_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength)[0];
+        double y_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength)[1];
+        double x_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength)[0];
+        double y_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength)[1];
+        if(extended_in_x and x_loc_0>width/mReferenceLength and x_loc_1>width/mReferenceLength)
+        {
+            pVesselNetwork->RemoveVessel(vessels[idx], true);
+            pVesselNetwork->UpdateAll();
+        }
+        else if(extended_in_y and y_loc_0>height/mReferenceLength and y_loc_1>height/mReferenceLength)
+        {
+            pVesselNetwork->RemoveVessel(vessels[idx], true);
+            pVesselNetwork->UpdateAll();
+        }
+    }
+
+//    // Move single nodes outside the bounds to the bounds
+//    // Remove vessels with both nodes outside of the bounds
+//    vessels = pVesselNetwork->GetVessels();
+//    for(unsigned idx=0; idx<vessels.size(); idx++)
+//    {
+//        c_vector<double, DIM> loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength);
+//        c_vector<double, DIM> loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength);
+//
+//        if(loc_0[0]>width/mReferenceLength)
+//        {
+//            if(DIM==2)
+//            {
+//                vessels[idx]->GetStartNode()->SetLocation(width/mReferenceLength, loc_0[1], 0.0, mReferenceLength);
+//            }
+//            else
+//            {
+//                vessels[idx]->GetStartNode()->SetLocation(width/mReferenceLength, loc_0[1], loc_0[2], mReferenceLength);
+//            }
+//        }
+//        if(loc_1[0]>width/mReferenceLength)
+//        {
+//            if(DIM==2)
+//            {
+//                vessels[idx]->GetEndNode()->SetLocation(width/mReferenceLength, loc_1[1], 0.0, mReferenceLength);
+//            }
+//            else
+//            {
+//                vessels[idx]->GetEndNode()->SetLocation(width/mReferenceLength, loc_1[1], loc_1[2], mReferenceLength);
+//            }
+//        }
+//
+//        if(loc_0[1]>height/mReferenceLength)
+//        {
+//            if(DIM==2)
+//            {
+//                vessels[idx]->GetStartNode()->SetLocation(loc_0[0], height/mReferenceLength, 0.0, mReferenceLength);
+//            }
+//            else
+//            {
+//                vessels[idx]->GetStartNode()->SetLocation(loc_0[0], height/mReferenceLength, loc_0[2], mReferenceLength);
+//            }
+//        }
+//        if(loc_1[1]>height/mReferenceLength)
+//        {
+//            if(DIM==2)
+//            {
+//                vessels[idx]->GetEndNode()->SetLocation(loc_1[0], height/mReferenceLength, 0.0, mReferenceLength);
+//            }
+//            else
+//            {
+//                vessels[idx]->GetEndNode()->SetLocation(loc_1[0], height/mReferenceLength, loc_1[2], mReferenceLength);
+//            }
+//        }
+//    }
+
+    pVesselNetwork->UpdateAll();
+
+    return pVesselNetwork;
+}
+
+template<unsigned DIM>
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateHexagonalNetworkRadius(QLength width,
+                                                                                           QLength height,
+                                                                                           QLength vessel_length,
+											   QLength main_radius,
+                                                                                           bool fillDomain)
+{
+    // Vessels are laid out on a regular grid in a hexagonal pattern.
+    // The repeating unit looks like this:
+    //    \_/
+    //    / \_
+    // There is an extra set of lines along the top to 'close' the pattern.
+    QLength unit_height = sqrt(2.0) * vessel_length;
+    QLength unit_width = (2.0+sqrt(2.0)) * vessel_length;
+
+    // The pattern may not reach the extents of the target area.
+    unsigned units_in_x_direction = floor(width/ unit_width);
+    unsigned units_in_y_direction = floor(height/ unit_height);
+    std::cout << units_in_x_direction << "\n";
+    std::cout << units_in_y_direction << "\n";
+    bool extended_in_x = false;
+    bool extended_in_y = false;
+
+    if(fillDomain and width/unit_width > float(units_in_x_direction))
+    {
+        units_in_x_direction+=1;
+        extended_in_x = true;
+    }
+    if(fillDomain and height/unit_height > float(units_in_y_direction))
+    {
+        units_in_y_direction+=1;
+        extended_in_y=true;
+    }
+
+    // If the number of units is less than 1, just make a single unit in that direction
+    if (units_in_x_direction < 1)
+    {
+        units_in_x_direction = 1;
+    }
+
+    if (units_in_y_direction < 1)
+    {
+        units_in_x_direction = 1;
+    }
+
+    // Create vessels by looping over the units, x direction is inside loop.
+
+    std::cout << units_in_x_direction << "\n";
+    std::cout << units_in_y_direction << "\n";
+    std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork = VesselNetwork<DIM>::Create();
+    std::shared_ptr<Vessel<DIM> >   pAuxVessel;
+    for(unsigned jdx = 0; jdx<units_in_y_direction; jdx++)
+    {
+        for(unsigned idx=0; idx<units_in_x_direction; idx++)
+        {
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + 0.0,
+                                                                                  double(jdx)*unit_height + 0.0),
+                                                                           VesselNode<DIM>::Create(double(idx)*unit_width + vessel_length/sqrt(2.0),
+                                                                                                   double(jdx)*unit_height + vessel_length/sqrt(2.0)));
+	    
+	    
+		    if(2.0*double(idx)+double(jdx) < double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)                    
+		    {
+                        pAuxVessel->SetOwnerRank(2*idx+jdx);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx))/3.0));
+                    }
+		    if(2.0*double(idx)+double(jdx) == double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)                    
+		    {
+			  if(jdx<units_in_y_direction-1)
+			  {
+                          pAuxVessel->SetOwnerRank(2*idx+jdx);
+                          pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx))/3.0));
+			  }
+			  else
+			  {
+			  pAuxVessel->SetOwnerRank(2*idx+jdx);
+                          pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx))/3.0));
+			  }
+                    }
+		     if(2.0*double(idx)+double(jdx) > double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)
+		    {
+			if(jdx>0)
+			{
+		  	pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)+(units_in_y_direction-1)-(2*idx+jdx)+2);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)+(double(units_in_y_direction)-1.0)-(2.0*double(idx)+double(jdx))+2.0)/3.0));
+		    	}
+			else
+			{
+			pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)+(units_in_y_direction-1)-(2*idx+jdx)+1);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)+(double(units_in_y_direction)-1.0)-(2.0*double(idx)+double(jdx))+1.0)/3.0));
+			}
+			
+		    }
+            
+
+
+	    pVesselNetwork->AddVessel(pAuxVessel);
+
+
+            
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + 0.0,
+                                                                                  double(jdx)*unit_height + sqrt(2.0)*vessel_length),
+                                                                           VesselNode<DIM>::Create(double(idx)*unit_width + vessel_length/sqrt(2.0),
+                                                                                                   double(jdx)*unit_height + vessel_length/sqrt(2.0)));
+
+
+
+		    if(2.0*double(idx)+double(jdx) < double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)                    
+		    {
+			if(jdx<units_in_y_direction-1)
+			{
+                        pAuxVessel->SetOwnerRank(2*idx+jdx+1);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx)+1.0)/3.0));
+			}
+			else
+			{
+                        pAuxVessel->SetOwnerRank(2*idx+jdx-1);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx)-1.0)/3.0));
+			}
+                    }
+		    if(double(2*idx+jdx) == double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)                    
+		    {
+			if(jdx<units_in_y_direction-1)
+			{
+                        pAuxVessel->SetOwnerRank(2*idx+jdx);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx))/3.0));
+			}
+			else
+			{
+			pAuxVessel->SetOwnerRank(2*idx+jdx-1);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx)-1.0)/3.0));
+			}
+                    }
+		     if(double(2*idx+jdx) > double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)
+		    {
+
+			if(jdx>0)
+			{
+		  	pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)+(units_in_y_direction-1)-(2*idx+jdx)+2);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)+(double(units_in_y_direction)-1.0)-(2.0*double(idx)+double(jdx))+2.0)/3.0));
+		    	}
+			else
+			{
+			pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)+(units_in_y_direction-1)-(2*idx+jdx)+2);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)+(double(units_in_y_direction)-1.0)-(2.0*double(idx)+double(jdx))+2.0)/3.0));
+			}
+
+		    }
+
+
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + vessel_length/sqrt(2.0),
+                                                                                                   double(jdx)*unit_height + vessel_length/sqrt(2.0)),
+                                                                           VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+1.0/sqrt(2.0))*vessel_length,
+                                                                                  double(jdx)*unit_height + vessel_length/sqrt(2.0)));
+
+
+
+		    if(double(2*idx+jdx) < double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)                    
+		    {
+			//if((jdx==units_in_y_direction-1) && (idx==0))
+			if(jdx==units_in_y_direction-1)
+			{
+                        pAuxVessel->SetOwnerRank(2*idx+jdx);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx))/3.0));
+			}
+			else
+			{
+                        pAuxVessel->SetOwnerRank(2*idx+jdx+1);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx)+1.0)/3.0));			
+			}
+                    }
+		    if(double(2*idx+jdx) == double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)                    
+		    {
+                        pAuxVessel->SetOwnerRank(2*idx+jdx);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx))/3.0));
+                    }
+		     if(double(2*idx+jdx) > double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)
+		    {
+			if(jdx>0)
+			{
+		  	pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)+(units_in_y_direction-1)-(2*idx+jdx)+1);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)+(double(units_in_y_direction)-1.0)-(2.0*double(idx)+double(jdx))+1.0)/3.0));
+		    	}
+			else
+			{
+			pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)+(units_in_y_direction-1)-(2*idx+jdx));
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)+(double(units_in_y_direction)-1.0)-(2.0*double(idx)+double(jdx)))/3.0));
+			}		  
+		    }
+
+            pVesselNetwork->AddVessel(pAuxVessel);
+            
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+1.0/sqrt(2.0))*vessel_length,
+                                                                                  double(jdx)*unit_height + vessel_length/sqrt(2.0)),
+                                                                           VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+sqrt(2.0))*vessel_length,
+                                                                                                   double(jdx)*unit_height + sqrt(2.0)*vessel_length));
+
+
+
+		    if(double(2*idx+jdx) < double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)                    
+		    {
+			if(jdx==units_in_y_direction-1)
+			{
+                        pAuxVessel->SetOwnerRank(2*idx+jdx+1);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx)+1.0)/3.0));
+			}
+			else
+			{
+                        pAuxVessel->SetOwnerRank(2*idx+jdx+2);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx)+2.0)/3.0));
+			}
+                    }
+		    if(double(2*idx+jdx) == double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)                    
+		    {
+                        //pAuxVessel->SetOwnerRank(2*idx+jdx+1);
+			pAuxVessel->SetOwnerRank(2*idx+jdx);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx))/3.0));
+                    }
+		     if(double(2*idx+jdx) > double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)
+		    {
+		  	pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)+(units_in_y_direction-1)-(2*idx+jdx));
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)+(double(units_in_y_direction)-1.0)-(2.0*double(idx)+double(jdx)))/3.0));
+		    }
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+           
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+1.0/sqrt(2.0))*vessel_length,
+                                                                                  double(jdx)*unit_height + vessel_length/sqrt(2.0)),
+                                                                           VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+sqrt(2.0))*vessel_length,
+                                                                                                   double(jdx)*unit_height + 0.0));
+
+
+		    if(double(2*idx+jdx) < double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)                    
+		    {
+			if(jdx==units_in_y_direction-1)
+			{
+                        pAuxVessel->SetOwnerRank(2*idx+jdx+2);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx)+2.0)/3.0));
+			}
+			else
+			{
+                        pAuxVessel->SetOwnerRank(2*idx+jdx+2);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx)+2.0)/3.0));
+			}
+                    }
+		    if(double(2*idx+jdx) == double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)                    
+		    {
+                        //pAuxVessel->SetOwnerRank(2*idx+jdx+1);
+
+		        if(jdx>0)
+			{
+			pAuxVessel->SetOwnerRank(2*idx+jdx);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx))/3.0));
+			}
+			else
+			{
+			pAuxVessel->SetOwnerRank(2*idx+jdx-1);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx)-1.0)/3.0));
+			}
+		    }
+		     if(double(2*idx+jdx) > double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)
+		    {
+			if(jdx>0)
+			{
+		  	pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)+(units_in_y_direction-1)-(2*idx+jdx)+1);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)+(double(units_in_y_direction)-1.0)-(2.0*double(idx)+double(jdx))+1.0)/3.0));
+		    	}
+			else
+			{
+			pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)+(units_in_y_direction-1)-(2*idx+jdx)-1);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)+(double(units_in_y_direction)-1.0)-(2.0*double(idx)+double(jdx))-1.0)/3.0));
+			}
+		    }
+
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+            
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+sqrt(2.0))*vessel_length,
+                                                                                  double(jdx)*unit_height + 0.0),
+                                                                           VesselNode<DIM>::Create(double(idx)*unit_width + (2.0+sqrt(2.0))*vessel_length,
+                                                                                                   double(jdx)*unit_height + 0.0));
+
+
+ 		    if(double(2*idx+jdx) < double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)                    
+		    {
+			if(jdx==units_in_y_direction-1)
+			{
+                        pAuxVessel->SetOwnerRank(2*idx+jdx+2);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx)+2.0)/3.0));
+			}
+			else
+			{
+                        pAuxVessel->SetOwnerRank(2*idx+jdx+2);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx)+2.0)/3.0));
+			}
+                    }
+		    if(double(2*idx+jdx) == double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)                    
+		    {
+                        //pAuxVessel->SetOwnerRank(2*idx+jdx+1);
+			if(jdx>0)
+			{
+			pAuxVessel->SetOwnerRank(2*idx+jdx);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx))/3.0));
+			}
+			else
+			{
+			pAuxVessel->SetOwnerRank(2*idx+jdx-1);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*double(idx)+double(jdx)-1.0)/3.0));
+			}
+                    }
+		     if(double(2*idx+jdx) > double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)
+		    {
+			if(jdx>0)
+			{
+		  	pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)+(units_in_y_direction-1)-(2*idx+jdx)+1);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)+(double(units_in_y_direction)-1.0)-(2.0*double(idx)+double(jdx))+1.0)/3.0));
+		    	}
+			else
+			{
+			pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)+(units_in_y_direction-1)-(2*idx+jdx)-1);
+                        pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)+(double(units_in_y_direction)-1.0)-(2.0*double(idx)+double(jdx))-1.0)/3.0));
+			}
+		    }
+
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+            
+	   
+        }
+    }
+
+    // Add an extra line of vessels along the top
+    for(unsigned idx=0; idx<units_in_x_direction; idx++)
+    {
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+sqrt(2.0))*vessel_length,
+                                                                              double(units_in_y_direction)*unit_height),
+                                                                       VesselNode<DIM>::Create(double(idx)*unit_width + (2.0+sqrt(2.0))*vessel_length,
+                                                                                               double(units_in_y_direction)*unit_height));
+	    
+
+            if(double(2*idx+units_in_y_direction) >= double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)
+	    {
+	    pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)-2*idx);
+            pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)-2.0*double(idx))/3.0));
+	    }
+	    else
+	    {
+            pAuxVessel->SetOwnerRank(units_in_y_direction+idx);
+            pAuxVessel->SetRadius(main_radius/pow(2.0,(double(idx)+double(units_in_y_direction))/3.0));
+	    }
+            pVesselNetwork->AddVessel(pAuxVessel);
+    }
+
+    pVesselNetwork->MergeCoincidentNodes();
+    pVesselNetwork->UpdateAll();
+
+    // Remove vessels with both nodes outside of the bounds
+    std::vector<std::shared_ptr<Vessel<DIM> > > vessels = pVesselNetwork->GetVessels();
+    for(unsigned idx=0; idx<vessels.size(); idx++)
+    {
+        double x_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength)[0];
+        double y_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength)[1];
+        double x_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength)[0];
+        double y_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength)[1];
+        if(extended_in_x and x_loc_0>width/mReferenceLength and x_loc_1>width/mReferenceLength)
+        {
+            pVesselNetwork->RemoveVessel(vessels[idx], true);
+            pVesselNetwork->UpdateAll();
+        }
+        else if(extended_in_y and y_loc_0>height/mReferenceLength and y_loc_1>height/mReferenceLength)
+        {
+            pVesselNetwork->RemoveVessel(vessels[idx], true);
+            pVesselNetwork->UpdateAll();
+        }
+    }
+
+//    // Move single nodes outside the bounds to the bounds
+//    // Remove vessels with both nodes outside of the bounds
+//    vessels = pVesselNetwork->GetVessels();
+//    for(unsigned idx=0; idx<vessels.size(); idx++)
+//    {
+//        c_vector<double, DIM> loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength);
+//        c_vector<double, DIM> loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength);
+//
+//        if(loc_0[0]>width/mReferenceLength)
+//        {
+//            if(DIM==2)
+//            {
+//                vessels[idx]->GetStartNode()->SetLocation(width/mReferenceLength, loc_0[1], 0.0, mReferenceLength);
+//            }
+//            else
+//            {
+//                vessels[idx]->GetStartNode()->SetLocation(width/mReferenceLength, loc_0[1], loc_0[2], mReferenceLength);
+//            }
+//        }
+//        if(loc_1[0]>width/mReferenceLength)
+//        {
+//            if(DIM==2)
+//            {
+//                vessels[idx]->GetEndNode()->SetLocation(width/mReferenceLength, loc_1[1], 0.0, mReferenceLength);
+//            }
+//            else
+//            {
+//                vessels[idx]->GetEndNode()->SetLocation(width/mReferenceLength, loc_1[1], loc_1[2], mReferenceLength);
+//            }
+//        }
+//
+//        if(loc_0[1]>height/mReferenceLength)
+//        {
+//            if(DIM==2)
+//            {
+//                vessels[idx]->GetStartNode()->SetLocation(loc_0[0], height/mReferenceLength, 0.0, mReferenceLength);
+//            }
+//            else
+//            {
+//                vessels[idx]->GetStartNode()->SetLocation(loc_0[0], height/mReferenceLength, loc_0[2], mReferenceLength);
+//            }
+//        }
+//        if(loc_1[1]>height/mReferenceLength)
+//        {
+//            if(DIM==2)
+//            {
+//                vessels[idx]->GetEndNode()->SetLocation(loc_1[0], height/mReferenceLength, 0.0, mReferenceLength);
+//            }
+//            else
+//            {
+//                vessels[idx]->GetEndNode()->SetLocation(loc_1[0], height/mReferenceLength, loc_1[2], mReferenceLength);
+//            }
+//        }
+//    }
+
+    pVesselNetwork->UpdateAll();
+
+    return pVesselNetwork;
+}
+
+
+
+template<unsigned DIM>
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateDichotomousNetwork(unsigned order,
+                                                                                           QLength main_length,
+											   QLength main_radius,
+                                                                                           bool fillDomain)
+{
+
+    QLength domain_length = (1.0+double(order))*2.0*main_length;
+    // Vessels are laid out on a regular grid in dichotomous pattern
+    // The repeating unit looks like this:
+    //     ___
+    //    |
+    //    |___
+    //
+    // There is an extra set of lines along the top to 'close' the pattern.
+    //QLength unit_height = sqrt(2.0) * vessel_length;
+    //QLength unit_width = (2.0+sqrt(2.0)) * vessel_length;
+
+    // The pattern may not reach the extents of the target area.
+    //unsigned units_in_x_direction = floor(width/ unit_width);
+    //unsigned units_in_y_direction = floor(height/ unit_height);
+    //std::cout << units_in_x_direction << "\n";
+    //std::cout << units_in_y_direction << "\n";
+    //bool extended_in_x = false;
+    //bool extended_in_y = false;
+
+    //if(fillDomain and width/unit_width > float(units_in_x_direction))
+    //{
+    //    units_in_x_direction+=1;
+    //    extended_in_x = true;
+    //}
+    //if(fillDomain and height/unit_height > float(units_in_y_direction))
+    //{
+    //    units_in_y_direction+=1;
+    //    extended_in_y=true;
+    //}
+
+    // If the number of units is less than 1, just make a single unit in that direction
+    //if (units_in_x_direction < 1)
+    //{
+    //   units_in_x_direction = 1;
+    //}
+
+    //if (units_in_y_direction < 1)
+    //{
+     //   units_in_x_direction = 1;
+    //}
+
+    // Create vessels by looping over the units, x direction is inside loop.
+
+    //std::cout << units_in_x_direction << "\n";
+    //std::cout << units_in_y_direction << "\n";
+    std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork = VesselNetwork<DIM>::Create();
+    std::shared_ptr<Vessel<DIM> >   pAuxVessel;
+
+    for(unsigned i=0; i<order; i++)
+    {
+	    for(unsigned j=0; j<pow(2,i); j++)
+	    {
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create((double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create((double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(main_radius/pow(2.0,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create((double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create((double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(main_radius/pow(2.0,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create((double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create((double(i)+2.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(main_radius/pow(2.0,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create((double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create((double(i)+2.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(main_radius/pow(2.0,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+
+
+
+
+
+
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length-(double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create(domain_length-(double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(main_radius/pow(2.0,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length-(double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create(domain_length-(double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(main_radius/pow(2.0,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length-(double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create(domain_length-(double(i)+2.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(main_radius/pow(2.0,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length-(double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create(domain_length-(double(i)+2.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(main_radius/pow(2.0,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+            }
+	   
+    }
+
+    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(0.0*main_length,
+                                                                                  2.0*main_length),
+                                                                           VesselNode<DIM>::Create(1.0*main_length,
+                                                                                  2.0*main_length));
+    pAuxVessel->SetOwnerRank(0);
+    pAuxVessel->SetRadius(main_radius);
+    pVesselNetwork->AddVessel(pAuxVessel);
+
+
+    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length,
+                                                                                  2.0*main_length),
+                                                                           VesselNode<DIM>::Create(domain_length-1.0*main_length,
+                                                                                  2.0*main_length));
+    pAuxVessel->SetOwnerRank(0);
+    pAuxVessel->SetRadius(main_radius);
+    pVesselNetwork->AddVessel(pAuxVessel);
+
+
+    // Add an extra line of vessels along the top
+    //for(unsigned idx=0; idx<units_in_x_direction; idx++)
+    //{
+
+	//    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+sqrt(2.0))*vessel_length,
+        //                                                                      double(units_in_y_direction)*unit_height),
+         //                                                              VesselNode<DIM>::Create(double(idx)*unit_width + (2.0+sqrt(2.0))*vessel_length,
+         //                                                                                      double(units_in_y_direction)*unit_height));
+	 //   
+
+            //if(double(2*idx+units_in_y_direction) >= double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)
+	    //{
+	    //pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)-2*idx);
+            //pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)-2.0*double(idx))/3.0));
+	   // }
+	    //else
+	    //{
+            //pAuxVessel->SetOwnerRank(units_in_y_direction+idx);
+            //pAuxVessel->SetRadius(main_radius/pow(2.0,(double(idx)+double(units_in_y_direction))/3.0));
+	   // }
+            //pVesselNetwork->AddVessel(pAuxVessel);
+    //}
+
+    pVesselNetwork->MergeCoincidentNodes();
+    pVesselNetwork->UpdateAll();
+
+    // Remove vessels with both nodes outside of the bounds
+    //std::vector<std::shared_ptr<Vessel<DIM> > > vessels = pVesselNetwork->GetVessels();
+    //for(unsigned idx=0; idx<vessels.size(); idx++)
+    //{
+    //    double x_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength)[0];
+    //    double y_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength)[1];
+    //    double x_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength)[0];
+    //    double y_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength)[1];
+    //    if(extended_in_x and x_loc_0>width/mReferenceLength and x_loc_1>width/mReferenceLength)
+    //    {
+     //       pVesselNetwork->RemoveVessel(vessels[idx], true);
+     //       pVesselNetwork->UpdateAll();
+     //   }
+     //   else if(extended_in_y and y_loc_0>height/mReferenceLength and y_loc_1>height/mReferenceLength)
+     //   {
+     //       pVesselNetwork->RemoveVessel(vessels[idx], true);
+     //       pVesselNetwork->UpdateAll();
+      //  }
+    //}
+
+//    pVesselNetwork->UpdateAll();
+
+    return pVesselNetwork;
+}
+
+
+template<unsigned DIM>
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateDichotomousNetworkUneven(unsigned order,
+                                                                                           QLength main_length,
+											   QLength main_radius,
+											   double alpha,
+                                                                                           bool fillDomain)
+{
+
+    QLength domain_length = (1.0+double(order))*2.0*main_length;
+    // Vessels are laid out on a regular grid in dichotomous pattern
+    // The repeating unit looks like this:
+    //     ___
+    //    |
+    //    |___
+    //
+    // There is an extra set of lines along the top to 'close' the pattern.
+    //QLength unit_height = sqrt(2.0) * vessel_length;
+    //QLength unit_width = (2.0+sqrt(2.0)) * vessel_length;
+
+    // The pattern may not reach the extents of the target area.
+    //unsigned units_in_x_direction = floor(width/ unit_width);
+    //unsigned units_in_y_direction = floor(height/ unit_height);
+    //std::cout << units_in_x_direction << "\n";
+    //std::cout << units_in_y_direction << "\n";
+    //bool extended_in_x = false;
+    //bool extended_in_y = false;
+
+    //if(fillDomain and width/unit_width > float(units_in_x_direction))
+    //{
+    //    units_in_x_direction+=1;
+    //    extended_in_x = true;
+    //}
+    //if(fillDomain and height/unit_height > float(units_in_y_direction))
+    //{
+    //    units_in_y_direction+=1;
+    //    extended_in_y=true;
+    //}
+
+    // If the number of units is less than 1, just make a single unit in that direction
+    //if (units_in_x_direction < 1)
+    //{
+    //   units_in_x_direction = 1;
+    //}
+
+    //if (units_in_y_direction < 1)
+    //{
+     //   units_in_x_direction = 1;
+    //}
+
+    // Create vessels by looping over the units, x direction is inside loop.
+
+    //std::cout << units_in_x_direction << "\n";
+    //std::cout << units_in_y_direction << "\n";
+    std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork = VesselNetwork<DIM>::Create();
+    std::shared_ptr<Vessel<DIM> >   pAuxVessel;
+
+    for(unsigned i=0; i<order; i++)
+    {
+	    for(unsigned j=0; j<pow(2,i); j++)
+	    {
+	    unsigned aux = j;
+	    unsigned count=0;
+	    while(aux>0)
+	    {
+	    count+=aux%2;
+	    aux/=2;
+	    std::cout << "Count is  " << count << "  and aux is  " << aux << "\n";
+	    }
+		
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create((double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create((double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count)+1.0)*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create((double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create((double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count))*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create((double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create((double(i)+2.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count)+1.0)*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create((double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create((double(i)+2.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count))*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+
+
+
+
+
+
+
+	    pAuxVessel = Vessel<DIM>::Create(
+                                                                           VesselNode<DIM>::Create(domain_length-(double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))),
+VesselNode<DIM>::Create(domain_length-(double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count)+1.0)*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+
+	    pAuxVessel = Vessel<DIM>::Create(
+                                                                           VesselNode<DIM>::Create(domain_length-(double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))),
+VesselNode<DIM>::Create(domain_length-(double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count))*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+	    pAuxVessel = Vessel<DIM>::Create(
+                                                                           VesselNode<DIM>::Create(domain_length-(double(i)+2.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))),
+VesselNode<DIM>::Create(domain_length-(double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count)+1.0)*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+	    pAuxVessel = Vessel<DIM>::Create(
+                                                                           VesselNode<DIM>::Create(domain_length-(double(i)+2.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))),
+VesselNode<DIM>::Create(domain_length-(double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count))*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+            }
+	   
+    }
+
+    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(0.0*main_length,
+                                                                                  2.0*main_length),
+                                                                           VesselNode<DIM>::Create(1.0*main_length,
+                                                                                  2.0*main_length));
+    pAuxVessel->SetOwnerRank(0);
+    pAuxVessel->SetRadius(main_radius);
+    pVesselNetwork->AddVessel(pAuxVessel);
+
+
+    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length,
+                                                                                  2.0*main_length),
+                                                                           VesselNode<DIM>::Create(domain_length-1.0*main_length,
+                                                                                  2.0*main_length));
+    pAuxVessel->SetOwnerRank(0);
+    pAuxVessel->SetRadius(main_radius);
+    pVesselNetwork->AddVessel(pAuxVessel);
+
+
+    // Add an extra line of vessels along the top
+    //for(unsigned idx=0; idx<units_in_x_direction; idx++)
+    //{
+
+	//    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+sqrt(2.0))*vessel_length,
+        //                                                                      double(units_in_y_direction)*unit_height),
+         //                                                              VesselNode<DIM>::Create(double(idx)*unit_width + (2.0+sqrt(2.0))*vessel_length,
+         //                                                                                      double(units_in_y_direction)*unit_height));
+	 //   
+
+            //if(double(2*idx+units_in_y_direction) >= double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)
+	    //{
+	    //pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)-2*idx);
+            //pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)-2.0*double(idx))/3.0));
+	   // }
+	    //else
+	    //{
+            //pAuxVessel->SetOwnerRank(units_in_y_direction+idx);
+            //pAuxVessel->SetRadius(main_radius/pow(2.0,(double(idx)+double(units_in_y_direction))/3.0));
+	   // }
+            //pVesselNetwork->AddVessel(pAuxVessel);
+    //}
+
+    pVesselNetwork->MergeCoincidentNodes();
+    pVesselNetwork->UpdateAll();
+
+    // Remove vessels with both nodes outside of the bounds
+    //std::vector<std::shared_ptr<Vessel<DIM> > > vessels = pVesselNetwork->GetVessels();
+    //for(unsigned idx=0; idx<vessels.size(); idx++)
+    //{
+    //    double x_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength)[0];
+    //    double y_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength)[1];
+    //    double x_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength)[0];
+    //    double y_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength)[1];
+    //    if(extended_in_x and x_loc_0>width/mReferenceLength and x_loc_1>width/mReferenceLength)
+    //    {
+     //       pVesselNetwork->RemoveVessel(vessels[idx], true);
+     //       pVesselNetwork->UpdateAll();
+     //   }
+     //   else if(extended_in_y and y_loc_0>height/mReferenceLength and y_loc_1>height/mReferenceLength)
+     //   {
+     //       pVesselNetwork->RemoveVessel(vessels[idx], true);
+     //       pVesselNetwork->UpdateAll();
+      //  }
+    //}
+
+//    pVesselNetwork->UpdateAll();
+
+    return pVesselNetwork;
+}
+
+
+template<unsigned DIM>
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateDichotomousNetworkUnevenNoCorners(unsigned order,
+                                                                                           QLength main_length,
+											   QLength main_radius,
+											   double alpha,
+                                                                                           bool fillDomain)
+{
+
+    QLength domain_length = (1.0+double(order))*2.0*main_length;
+    // Vessels are laid out on a regular grid in dichotomous pattern
+    // The repeating unit looks like this:
+    //     ___
+    //    |
+    //    |___
+    //
+    // There is an extra set of lines along the top to 'close' the pattern.
+    //QLength unit_height = sqrt(2.0) * vessel_length;
+    //QLength unit_width = (2.0+sqrt(2.0)) * vessel_length;
+
+    // The pattern may not reach the extents of the target area.
+    //unsigned units_in_x_direction = floor(width/ unit_width);
+    //unsigned units_in_y_direction = floor(height/ unit_height);
+    //std::cout << units_in_x_direction << "\n";
+    //std::cout << units_in_y_direction << "\n";
+    //bool extended_in_x = false;
+    //bool extended_in_y = false;
+
+    //if(fillDomain and width/unit_width > float(units_in_x_direction))
+    //{
+    //    units_in_x_direction+=1;
+    //    extended_in_x = true;
+    //}
+    //if(fillDomain and height/unit_height > float(units_in_y_direction))
+    //{
+    //    units_in_y_direction+=1;
+    //    extended_in_y=true;
+    //}
+
+    // If the number of units is less than 1, just make a single unit in that direction
+    //if (units_in_x_direction < 1)
+    //{
+    //   units_in_x_direction = 1;
+    //}
+
+    //if (units_in_y_direction < 1)
+    //{
+     //   units_in_x_direction = 1;
+    //}
+
+    // Create vessels by looping over the units, x direction is inside loop.
+
+    //std::cout << units_in_x_direction << "\n";
+    //std::cout << units_in_y_direction << "\n";
+    std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork = VesselNetwork<DIM>::Create();
+    std::shared_ptr<Vessel<DIM> >   pAuxVessel;
+
+    for(unsigned i=0; i<order; i++)
+    {
+	    for(unsigned j=0; j<pow(2,i); j++)
+	    {
+	    unsigned aux = j;
+	    unsigned count=0;
+	    while(aux>0)
+	    {
+	    count+=aux%2;
+	    aux/=2;
+	    std::cout << "Count is  " << count << "  and aux is  " << aux << "\n";
+	    }
+		
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create((double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+  					     VesselNode<DIM>::Create((double(i)+2.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count)+1.0)*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+	  
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create((double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                             VesselNode<DIM>::Create((double(i)+2.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count))*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+
+
+
+
+
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length-(double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create(domain_length-(double(i)+2.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count)+1.0)*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length-(double(i)+1.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create(domain_length-(double(i)+2.0)*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count))*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+            }
+	   
+    }
+
+    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(0.0*main_length,
+                                                                                  2.0*main_length),
+                                                                           VesselNode<DIM>::Create(1.0*main_length,
+                                                                                  2.0*main_length));
+    pAuxVessel->SetOwnerRank(0);
+    pAuxVessel->SetRadius(main_radius);
+    pVesselNetwork->AddVessel(pAuxVessel);
+
+
+    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length,
+                                                                                  2.0*main_length),
+                                                                           VesselNode<DIM>::Create(domain_length-1.0*main_length,
+                                                                                  2.0*main_length));
+    pAuxVessel->SetOwnerRank(0);
+    pAuxVessel->SetRadius(main_radius);
+    pVesselNetwork->AddVessel(pAuxVessel);
+
+
+    // Add an extra line of vessels along the top
+    //for(unsigned idx=0; idx<units_in_x_direction; idx++)
+    //{
+
+	//    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+sqrt(2.0))*vessel_length,
+        //                                                                      double(units_in_y_direction)*unit_height),
+         //                                                              VesselNode<DIM>::Create(double(idx)*unit_width + (2.0+sqrt(2.0))*vessel_length,
+         //                                                                                      double(units_in_y_direction)*unit_height));
+	 //   
+
+            //if(double(2*idx+units_in_y_direction) >= double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)
+	    //{
+	    //pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)-2*idx);
+            //pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)-2.0*double(idx))/3.0));
+	   // }
+	    //else
+	    //{
+            //pAuxVessel->SetOwnerRank(units_in_y_direction+idx);
+            //pAuxVessel->SetRadius(main_radius/pow(2.0,(double(idx)+double(units_in_y_direction))/3.0));
+	   // }
+            //pVesselNetwork->AddVessel(pAuxVessel);
+    //}
+
+    pVesselNetwork->MergeCoincidentNodes();
+    pVesselNetwork->UpdateAll();
+
+    // Remove vessels with both nodes outside of the bounds
+    //std::vector<std::shared_ptr<Vessel<DIM> > > vessels = pVesselNetwork->GetVessels();
+    //for(unsigned idx=0; idx<vessels.size(); idx++)
+    //{
+    //    double x_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength)[0];
+    //    double y_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength)[1];
+    //    double x_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength)[0];
+    //    double y_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength)[1];
+    //    if(extended_in_x and x_loc_0>width/mReferenceLength and x_loc_1>width/mReferenceLength)
+    //    {
+     //       pVesselNetwork->RemoveVessel(vessels[idx], true);
+     //       pVesselNetwork->UpdateAll();
+     //   }
+     //   else if(extended_in_y and y_loc_0>height/mReferenceLength and y_loc_1>height/mReferenceLength)
+     //   {
+     //       pVesselNetwork->RemoveVessel(vessels[idx], true);
+     //       pVesselNetwork->UpdateAll();
+      //  }
+    //}
+
+//    pVesselNetwork->UpdateAll();
+
+    return pVesselNetwork;
+}
+
+
+template<unsigned DIM>
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateDichotomousNetworkUnevenNoCornersVaryDistance(unsigned order,
+                                                                                           QLength main_length,
+											   QLength main_radius,
+											   double alpha,
+											   double theta,
+                                                                                           bool fillDomain)
+{
+
+    //QLength domain_length = (1.0+double(order))*2.0*main_length;
+    QLength domain_length = ((1.0-pow(theta,double(order)+1.0))/(1.0-theta))*2.0*main_length;
+    // Vessels are laid out on a regular grid in dichotomous pattern
+    // The repeating unit looks like this:
+    //     ___
+    //    |
+    //    |___
+    //
+    // There is an extra set of lines along the top to 'close' the pattern.
+    //QLength unit_height = sqrt(2.0) * vessel_length;
+    //QLength unit_width = (2.0+sqrt(2.0)) * vessel_length;
+
+    // The pattern may not reach the extents of the target area.
+    //unsigned units_in_x_direction = floor(width/ unit_width);
+    //unsigned units_in_y_direction = floor(height/ unit_height);
+    //std::cout << units_in_x_direction << "\n";
+    //std::cout << units_in_y_direction << "\n";
+    //bool extended_in_x = false;
+    //bool extended_in_y = false;
+
+    //if(fillDomain and width/unit_width > float(units_in_x_direction))
+    //{
+    //    units_in_x_direction+=1;
+    //    extended_in_x = true;
+    //}
+    //if(fillDomain and height/unit_height > float(units_in_y_direction))
+    //{
+    //    units_in_y_direction+=1;
+    //    extended_in_y=true;
+    //}
+
+    // If the number of units is less than 1, just make a single unit in that direction
+    //if (units_in_x_direction < 1)
+    //{
+    //   units_in_x_direction = 1;
+    //}
+
+    //if (units_in_y_direction < 1)
+    //{
+     //   units_in_x_direction = 1;
+    //}
+
+    // Create vessels by looping over the units, x direction is inside loop.
+
+    //std::cout << units_in_x_direction << "\n";
+    //std::cout << units_in_y_direction << "\n";
+    std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork = VesselNetwork<DIM>::Create();
+    std::shared_ptr<Vessel<DIM> >   pAuxVessel;
+
+    for(unsigned i=0; i<order; i++)
+    {
+	    for(unsigned j=0; j<pow(2,i); j++)
+	    {
+	    unsigned aux = j;
+	    unsigned count=0;
+	    while(aux>0)
+	    {
+	    count+=aux%2;
+	    aux/=2;
+	    std::cout << "Count is  " << count << "  and aux is  " << aux << "\n";
+	    }
+		
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(((1.0-pow(theta,double(i)+1.0))/(1.0-theta))*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+  					     VesselNode<DIM>::Create(((1.0-pow(theta,double(i)+2.0))/(1.0-theta))*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count)+1.0)*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+	    
+	    pAuxVessel->SetDistToPrevBif(main_length*sqrt(pow(theta,2.0*double(i))+pow(0.5,2.0*(double(i)-1))));
+            
+	    if(j % 2 == 0)
+	    {
+	    pAuxVessel->SetPreference(1);
+	    }
+	    else
+	    {
+	    pAuxVessel->SetPreference(0);
+	    }
+
+	    pVesselNetwork->AddVessel(pAuxVessel);
+   
+	  
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(((1.0-pow(theta,double(i)+1.0))/(1.0-theta))*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                             VesselNode<DIM>::Create(((1.0-pow(theta,double(i)+2.0))/(1.0-theta))*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count))*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+
+	    pAuxVessel->SetDistToPrevBif(main_length*sqrt(pow(theta,2.0*double(i))+pow(0.5,2.0*(double(i)-1))));
+
+	    if(j % 2 == 0)
+	    {
+	    pAuxVessel->SetPreference(0);
+	    }
+	    else
+	    {
+	    pAuxVessel->SetPreference(1);
+	    }
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+
+
+
+
+
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length-((1.0-pow(theta,double(i)+1.0))/(1.0-theta))*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create(domain_length-((1.0-pow(theta,double(i)+2.0))/(1.0-theta))*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count)+1.0)*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length-((1.0-pow(theta,double(i)+1.0))/(1.0-theta))*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create(domain_length-((1.0-pow(theta,double(i)+2.0))/(1.0-theta))*main_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count))*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+            }
+	   
+    }
+
+    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(0.0*main_length,
+                                                                                  2.0*main_length),
+                                                                           VesselNode<DIM>::Create(1.0*main_length,
+                                                                                  2.0*main_length));
+    pAuxVessel->SetOwnerRank(0);
+    pAuxVessel->SetRadius(main_radius);
+    pVesselNetwork->AddVessel(pAuxVessel);
+
+
+    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length,
+                                                                                  2.0*main_length),
+                                                                           VesselNode<DIM>::Create(domain_length-1.0*main_length,
+                                                                                  2.0*main_length));
+    pAuxVessel->SetOwnerRank(0);
+    pAuxVessel->SetRadius(main_radius);
+    pVesselNetwork->AddVessel(pAuxVessel);
+
+
+    // Add an extra line of vessels along the top
+    //for(unsigned idx=0; idx<units_in_x_direction; idx++)
+    //{
+
+	//    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+sqrt(2.0))*vessel_length,
+        //                                                                      double(units_in_y_direction)*unit_height),
+         //                                                              VesselNode<DIM>::Create(double(idx)*unit_width + (2.0+sqrt(2.0))*vessel_length,
+         //                                                                                      double(units_in_y_direction)*unit_height));
+	 //   
+
+            //if(double(2*idx+units_in_y_direction) >= double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)
+	    //{
+	    //pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)-2*idx);
+            //pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)-2.0*double(idx))/3.0));
+	   // }
+	    //else
+	    //{
+            //pAuxVessel->SetOwnerRank(units_in_y_direction+idx);
+            //pAuxVessel->SetRadius(main_radius/pow(2.0,(double(idx)+double(units_in_y_direction))/3.0));
+	   // }
+            //pVesselNetwork->AddVessel(pAuxVessel);
+    //}
+
+    pVesselNetwork->MergeCoincidentNodes();
+    pVesselNetwork->UpdateAll();
+
+    // Remove vessels with both nodes outside of the bounds
+    //std::vector<std::shared_ptr<Vessel<DIM> > > vessels = pVesselNetwork->GetVessels();
+    //for(unsigned idx=0; idx<vessels.size(); idx++)
+    //{
+    //    double x_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength)[0];
+    //    double y_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength)[1];
+    //    double x_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength)[0];
+    //    double y_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength)[1];
+    //    if(extended_in_x and x_loc_0>width/mReferenceLength and x_loc_1>width/mReferenceLength)
+    //    {
+     //       pVesselNetwork->RemoveVessel(vessels[idx], true);
+     //       pVesselNetwork->UpdateAll();
+     //   }
+     //   else if(extended_in_y and y_loc_0>height/mReferenceLength and y_loc_1>height/mReferenceLength)
+     //   {
+     //       pVesselNetwork->RemoveVessel(vessels[idx], true);
+     //       pVesselNetwork->UpdateAll();
+      //  }
+    //}
+
+//    pVesselNetwork->UpdateAll();
+
+    return pVesselNetwork;
+}
+
+
+
+template<unsigned DIM>
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateDichotomousNetworkUnevenNoCornersVaryDistanceLengthsFollowRadii(unsigned order,
+                                                                                           QLength main_length,
+											   QLength main_radius,
+											   double alpha,
+											   double theta,
+											   double lambda,
+                                                                                           bool fillDomain)
+{
+
+    double dimless_length = 1.0;
+
+    for(unsigned i_aux3=1; i_aux3<order+1; i_aux3++)
+    	{
+	dimless_length += sqrt(pow(2.0,-2.0*double(i_aux3)/3.0)-pow(2.0, -2.0*double(i_aux3)));
+    	}
+    
+    QLength domain_length = dimless_length*2.0*lambda*main_radius;
+    
+    std::cout << "Domain length is:" << domain_length << "\n";
+    // Vessels are laid out on a regular grid in dichotomous pattern
+    // The repeating unit looks like this:
+    //     ___
+    //    |
+    //    |___
+    //
+    // There is an extra set of lines along the top to 'close' the pattern.
+    //QLength unit_height = sqrt(2.0) * vessel_length;
+    //QLength unit_width = (2.0+sqrt(2.0)) * vessel_length;
+
+    // The pattern may not reach the extents of the target area.
+    //unsigned units_in_x_direction = floor(width/ unit_width);
+    //unsigned units_in_y_direction = floor(height/ unit_height);
+    //std::cout << units_in_x_direction << "\n";
+    //std::cout << units_in_y_direction << "\n";
+    //bool extended_in_x = false;
+    //bool extended_in_y = false;
+
+    //if(fillDomain and width/unit_width > float(units_in_x_direction))
+    //{
+    //    units_in_x_direction+=1;
+    //    extended_in_x = true;
+    //}
+    //if(fillDomain and height/unit_height > float(units_in_y_direction))
+    //{
+    //    units_in_y_direction+=1;
+    //    extended_in_y=true;
+    //}
+
+    // If the number of units is less than 1, just make a single unit in that direction
+    //if (units_in_x_direction < 1)
+    //{
+    //   units_in_x_direction = 1;
+    //}
+
+    //if (units_in_y_direction < 1)
+    //{
+     //   units_in_x_direction = 1;
+    //}
+
+    // Create vessels by looping over the units, x direction is inside loop.
+
+    //std::cout << units_in_x_direction << "\n";
+    //std::cout << units_in_y_direction << "\n";
+    std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork = VesselNetwork<DIM>::Create();
+    std::shared_ptr<Vessel<DIM> >   pAuxVessel;
+
+    for(unsigned i=0; i<order; i++)
+    {
+
+    double aux_dimless_length = 1.0;
+
+    for(unsigned i_aux2=0; i_aux2<i; i_aux2++)
+    	{
+	aux_dimless_length += sqrt(pow(2.0,-2.0*(double(i_aux2)+1.0)/3.0)-pow(2.0, -2.0*(double(i_aux2)+1.0)));
+    	}
+    
+    QLength aux_dimensional_length = aux_dimless_length*lambda*main_radius;
+    
+    std::cout << "Auxiliary dimensional length is is:" << aux_dimensional_length << "\n";
+	    for(unsigned j=0; j<pow(2,i); j++)
+	    {
+	    unsigned aux = j;
+	    unsigned count=0;
+	    while(aux>0)
+	    {
+	    count+=aux%2;
+	    aux/=2;
+	    std::cout << "Count is  " << count << "  and aux is  " << aux << "\n";
+	    }
+		
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(aux_dimensional_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+  					     VesselNode<DIM>::Create((aux_dimless_length+sqrt(pow(2.0,-2.0*(double(i)+1.0)/3.0)-pow(2.0, -2.0*(double(i)+1.0))))*lambda*main_radius,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count)+1.0)*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+	    
+	    pAuxVessel->SetDistToPrevBif(lambda*pow(alpha,double(count))*main_radius/pow(1.0+alpha*alpha*alpha,double(i)/3.0));
+            
+	    if(j % 2 == 0)
+	    {
+	    pAuxVessel->SetPreference(1);
+	    }
+	    else
+	    {
+	    pAuxVessel->SetPreference(0);
+	    }
+
+	    pVesselNetwork->AddVessel(pAuxVessel);
+   
+	  
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(aux_dimensional_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                             VesselNode<DIM>::Create((aux_dimless_length+sqrt(pow(2.0,-2.0*(double(i)+1.0)/3.0)-pow(2.0, -2.0*(double(i)+1.0))))*lambda*main_radius,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count))*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+
+	    pAuxVessel->SetDistToPrevBif(lambda*pow(alpha,double(count))*main_radius/pow(1.0+alpha*alpha*alpha,double(i)/3.0));
+
+	    if(j % 2 == 0)
+	    {
+	    pAuxVessel->SetPreference(0);
+	    }
+	    else
+	    {
+	    pAuxVessel->SetPreference(1);
+	    }
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+
+
+
+
+
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length-aux_dimensional_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create(domain_length-(aux_dimless_length+sqrt(pow(2.0,-2.0*(double(i)+1.0)/3.0)-pow(2.0, -2.0*(double(i)+1.0))))*lambda*main_radius,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count)+1.0)*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length-aux_dimensional_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create(domain_length-(aux_dimless_length+sqrt(pow(2.0,-2.0*(double(i)+1.0)/3.0)-pow(2.0, -2.0*(double(i)+1.0))))*lambda*main_radius,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))));
+	    pAuxVessel->SetOwnerRank(i+1);
+            pAuxVessel->SetRadius(pow(alpha,double(count))*main_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+            }
+	   
+    }
+
+    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(0.0*main_length,
+                                                                                  2.0*main_length),
+                                                                           VesselNode<DIM>::Create(2.0*main_length,
+                                                                                  2.0*main_length));
+    pAuxVessel->SetOwnerRank(0);
+    pAuxVessel->SetRadius(main_radius);
+    pVesselNetwork->AddVessel(pAuxVessel);
+
+
+    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length,
+                                                                                  2.0*main_length),
+                                                                           VesselNode<DIM>::Create(domain_length-2.0*main_length,
+                                                                                  2.0*main_length));
+    pAuxVessel->SetOwnerRank(0);
+    pAuxVessel->SetRadius(main_radius);
+    pVesselNetwork->AddVessel(pAuxVessel);
+
+
+    // Add an extra line of vessels along the top
+    //for(unsigned idx=0; idx<units_in_x_direction; idx++)
+    //{
+
+	//    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(double(idx)*unit_width + (1.0+sqrt(2.0))*vessel_length,
+        //                                                                      double(units_in_y_direction)*unit_height),
+         //                                                              VesselNode<DIM>::Create(double(idx)*unit_width + (2.0+sqrt(2.0))*vessel_length,
+         //                                                                                      double(units_in_y_direction)*unit_height));
+	 //   
+
+            //if(double(2*idx+units_in_y_direction) >= double((units_in_y_direction -1 + 2*(units_in_x_direction -1)))/2.0)
+	    //{
+	    //pAuxVessel->SetOwnerRank(2*(units_in_x_direction-1)-2*idx);
+            //pAuxVessel->SetRadius(main_radius/pow(2.0,(2.0*(double(units_in_x_direction)-1.0)-2.0*double(idx))/3.0));
+	   // }
+	    //else
+	    //{
+            //pAuxVessel->SetOwnerRank(units_in_y_direction+idx);
+            //pAuxVessel->SetRadius(main_radius/pow(2.0,(double(idx)+double(units_in_y_direction))/3.0));
+	   // }
+            //pVesselNetwork->AddVessel(pAuxVessel);
+    //}
+
+    pVesselNetwork->MergeCoincidentNodes();
+    pVesselNetwork->UpdateAll();
+
+    // Remove vessels with both nodes outside of the bounds
+    //std::vector<std::shared_ptr<Vessel<DIM> > > vessels = pVesselNetwork->GetVessels();
+    //for(unsigned idx=0; idx<vessels.size(); idx++)
+    //{
+    //    double x_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength)[0];
+    //    double y_loc_0 = vessels[idx]->GetStartNode()->rGetLocation().Convert(mReferenceLength)[1];
+    //    double x_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength)[0];
+    //    double y_loc_1 = vessels[idx]->GetEndNode()->rGetLocation().Convert(mReferenceLength)[1];
+    //    if(extended_in_x and x_loc_0>width/mReferenceLength and x_loc_1>width/mReferenceLength)
+    //    {
+     //       pVesselNetwork->RemoveVessel(vessels[idx], true);
+     //       pVesselNetwork->UpdateAll();
+     //   }
+     //   else if(extended_in_y and y_loc_0>height/mReferenceLength and y_loc_1>height/mReferenceLength)
+     //   {
+     //       pVesselNetwork->RemoveVessel(vessels[idx], true);
+     //       pVesselNetwork->UpdateAll();
+      //  }
+    //}
+
+//    pVesselNetwork->UpdateAll();
+
+    return pVesselNetwork;
+}
+
+
+
+template<unsigned DIM>
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateForkingNetworkNoCorners(unsigned order,
+                                                                                           QLength main_length,
+											   QLength input_radius,
+											   double twicelambda,
+                                                                                           bool fillDomain)
+{
+    // There will be no heterogeneity in radii between any two daughters
+    double alpha = 1.0;
+
+    double dimless_length = 1.0;
+
+    for(unsigned i_aux3=1; i_aux3<order+1; i_aux3++)
+    	{
+	dimless_length += pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i_aux3-1)/3.0)-pow(0.9,2)*pow(2.0, -2.0*double(i_aux3-1)));
+    	}
+    //dimensional horizontal length of the domain
+    QLength domain_length = dimless_length*2.0*twicelambda*input_radius;
+    
+    // Vessels are laid out on a regular grid in forking pattern
+    // There are extra two vessels - input and output 
+    // Create vessels by looping over the units, x direction is inside loop.
+
+    std::shared_ptr<VesselNetwork<DIM> > pVesselNetwork = VesselNetwork<DIM>::Create();
+    std::shared_ptr<Vessel<DIM> >   pAuxVessel;
+
+    for(unsigned i=0; i<order; i++)
+    {
+
+    double aux_dimless_length = 1.0;
+
+    for(unsigned i_aux2=0; i_aux2<i; i_aux2++)
+    	{
+	aux_dimless_length += pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i_aux2)/3.0)-pow(0.9,2.0)*pow(2.0, -2.0*double(i_aux2)));
+    	}
+    
+    // auxiliary variable calculating x-coordinates for nodes of vessels to be added
+    QLength aux_dimensional_length = aux_dimless_length*twicelambda*input_radius;
+
+	    // the following for loop calculates order of the vessels being added
+  	    // the order is stored in "count" variable after the for loop is finished, and will be used to assign vessel radii
+	    for(unsigned j=0; j<pow(2,i); j++)
+	    {
+	    unsigned aux = j;
+	    unsigned count=0;
+	    while(aux>0)
+	    {
+	    count+=aux%2;
+	    aux/=2;
+	    }
+	
+	    // add vessels to the first half of the domain
+		
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(aux_dimensional_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+  					     VesselNode<DIM>::Create((aux_dimless_length+pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i)/3.0)-pow(0.9,2.0)*pow(2.0, -2.0*double(i))))*twicelambda*input_radius,
+	                                                                     pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
+
+	    // OwnerRank here will serve to store information on vessel order
+	    pAuxVessel->SetOwnerRank(i+1);  
+	    // radii follow Murray's law
+            pAuxVessel->SetRadius(pow(alpha,double(count)+1.0)*input_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+	    // distance to previous bifurcation is hardcoded
+	    pAuxVessel->SetDistToPrevBif(twicelambda*pow(alpha,double(count))*input_radius/pow(1.0+alpha*alpha*alpha,double(i)/3.0));
+            // preference for haematocrit is hardcoded
+	    if(j % 2 == 0)
+	    {
+	    pAuxVessel->SetPreference(1);
+	    }
+	    else
+	    {
+	    pAuxVessel->SetPreference(0);
+	    }
+
+	    pVesselNetwork->AddVessel(pAuxVessel);
+   
+	  
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(aux_dimensional_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                             VesselNode<DIM>::Create((aux_dimless_length+pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i)/3.0)-pow(0.9,2)*pow(2.0, -2.0*double(i))))*twicelambda*input_radius,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))));
+
+            pAuxVessel->SetOwnerRank(i+1);  
+
+            pAuxVessel->SetRadius(pow(alpha,double(count))*input_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+
+	    pAuxVessel->SetDistToPrevBif(twicelambda*pow(alpha,double(count))*input_radius/pow(1.0+alpha*alpha*alpha,double(i)/3.0));
+
+	    if(j % 2 == 0)
+	    {
+	    pAuxVessel->SetPreference(0);
+	    }
+	    else
+	    {
+	    pAuxVessel->SetPreference(1);
+	    }
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+
+	    // add vessels to the second half of the domain
+
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length-aux_dimensional_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create(domain_length-(aux_dimless_length+pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i)/3.0)-pow(0.9,2)*pow(2.0, -2.0*double(i))))*twicelambda*input_radius,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
+
+	   
+            // radii and owner ranks ("orders") are assigned symmetrically to the first half
+            pAuxVessel->SetOwnerRank(i+1);  
+            pAuxVessel->SetRadius(pow(alpha,double(count)+1.0)*input_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+
+	    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length-aux_dimensional_length,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j))),
+                                                                           VesselNode<DIM>::Create(domain_length-(aux_dimless_length+pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i)/3.0)-pow(0.9,2)*pow(2.0, -2.0*double(i))))*twicelambda*input_radius,
+                                                                                  pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j))));
+
+            pAuxVessel->SetOwnerRank(i+1);  
+            pAuxVessel->SetRadius(pow(alpha,double(count))*input_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
+            pVesselNetwork->AddVessel(pAuxVessel);
+
+            }
+	   
+    }
+
+    // add input vessel
+ 
+    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(0.0*main_length,
+                                                                                  2.0*main_length),
+                                                                           VesselNode<DIM>::Create(twicelambda*input_radius,
+                                                                                  2.0*main_length));
+
+    pAuxVessel->SetOwnerRank(0);
+    pAuxVessel->SetRadius(input_radius);
+    pVesselNetwork->AddVessel(pAuxVessel);
+
+   // add output vessel
+
+    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length,
+                                                                                  2.0*main_length),
+                                                                           VesselNode<DIM>::Create(domain_length-twicelambda*input_radius,
+                                                                                  2.0*main_length));
+    pAuxVessel->SetOwnerRank(0);
+    pAuxVessel->SetRadius(input_radius);
+    pVesselNetwork->AddVessel(pAuxVessel);
+
+
+
+    pVesselNetwork->MergeCoincidentNodes();
+    pVesselNetwork->UpdateAll();
+
+    return pVesselNetwork;
+}
+
+
+
 //Explicit instantiation
 template class VesselNetworkGenerator<2> ;
 template class VesselNetworkGenerator<3> ;
