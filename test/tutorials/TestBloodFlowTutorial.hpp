@@ -108,6 +108,139 @@ public:
      * In the first test we will simulate blood flow in a simple bifurcating vessel network. Subsequent tests will add detail in the form of
      * more complex networks, structural adaptation and vessel regression.
      */
+
+
+    void TestEvenSimplerFlowProblem() throw (Exception)
+    {
+        /*
+         * We will work in microns
+         */
+        QLength reference_length(1.0 * unit::microns);
+        BaseUnits::Instance()->SetReferenceLengthScale(reference_length);
+        /*
+         * First make the network using a generator. Start with a simple unit.
+         */
+        QLength vessel_length(100.0*unit::microns);
+
+
+
+	std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0_m);
+        std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length);
+        std::shared_ptr<VesselNode<2> > p_node_3 = VesselNode<2>::Create(2.0*vessel_length, vessel_length);
+        std::shared_ptr<VesselNode<2> > p_node_4 = VesselNode<2>::Create(2.0*vessel_length, -vessel_length);
+        /*
+         * Next make vessel segments and vessels. Vessel segments are straight-line features which contain a `VesselNode` at each end. Vessels
+         * can be constructed from multiple vessel segments by adding them in order, but in this case each vessel just has a single segment.
+         */
+        std::shared_ptr<VesselSegment<2> > p_segment_1 = VesselSegment<2>::Create(p_node_1, p_node_2);
+        std::shared_ptr<Vessel<2> > p_vessel_1 = Vessel<2>::Create(p_segment_1);
+        std::shared_ptr<VesselSegment<2> > p_segment_2 = VesselSegment<2>::Create(p_node_2, p_node_3);
+        std::shared_ptr<Vessel<2> > p_vessel_2 = Vessel<2>::Create(p_segment_2);
+        std::shared_ptr<VesselSegment<2> > p_segment_3 = VesselSegment<2>::Create(p_node_2, p_node_4);
+        std::shared_ptr<Vessel<2> > p_vessel_3 = Vessel<2>::Create(p_segment_3);
+        /*
+         * Now add the vessels to a vessel network.
+         */
+        std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
+        p_network->AddVessel(p_vessel_1);
+        p_network->AddVessel(p_vessel_2);
+        p_network->AddVessel(p_vessel_3);
+        /*
+         * Use the test framework to make sure that the network has been created correctly by checking the number of vessels and nodes
+         */
+        TS_ASSERT_EQUALS(p_network->GetNumberOfNodes(), 4u);
+        TS_ASSERT_EQUALS(p_network->GetNumberOfVessels(), 3u);
+        /*
+         * Next write the network to file. Use the `OutputFileHandler` functionality to manage the output location
+         * and the pointer MACRO `MAKE_PTR_ARGS` to easily make a smart pointer. Networks are written using VTK's !PolyData format by default,
+         * which will have a .vtp extension.
+         */
+        //MAKE_PTR_ARGS(OutputFileHandler, p_handler, ("TestBuildVesselNetworkLiteratePaper"));
+        //VesselNetworkWriter<2> writer;
+        //writer.SetFileName(p_handler->GetOutputDirectoryFullPath() + "bifurcating_network.vtp");
+        //writer.SetVesselNetwork(p_network);
+       // writer.Write();
+
+
+
+
+
+
+
+        //Vertex<2> start_point(0.0_um, 0.0_um);
+        //VesselNetworkGenerator<2> network_generator;
+        //std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateBifurcationUnit(vessel_length, start_point);
+        /*
+         * Next, pattern it to make a larger network
+         */
+        //std::array<unsigned, 2> num_units_per_direction = {2, 0};
+        //network_generator.PatternUnitByTranslation(p_network, num_units_per_direction);
+        /*
+         * Specify which nodes will be the inlets and outlets of the network for the flow problem. This information, as well
+         * as all other info related to the flow problem, is contained in a `NodeFlowProperties` instance. Also, set the inlet and
+         * outlet pressures in Pa or mmHg. We can mix and match these thanks to the dimensional analysis functionality. Because
+         * the network is simple, we can figure out which node is which just from their index. For more complicated networks
+         * we need to use spatial locators and `NearestNode` type methods.
+         */
+        QPressure inlet_pressure(50.0 * unit::mmHg);
+        p_network->GetNode(0)->GetFlowProperties()->SetIsInputNode(true);
+        p_network->GetNode(0)->GetFlowProperties()->SetPressure(inlet_pressure);
+        /*
+         * It would be useful if we had a record of which parameter values we have used in the simulation and where they are sourced in the
+         * literature. Instead of manually entering parameter values like above we can use a `ParameterCollection` singleton which allows for
+         * some extra metadata storage. We will take some parameter values from a paper by Owen et al. (2011).
+         */
+        p_network->GetNode(p_network->GetNumberOfNodes()-1)->GetFlowProperties()->SetIsOutputNode(true);
+        p_network->GetNode(p_network->GetNumberOfNodes()-1)->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue());
+       p_network->GetNode(p_network->GetNumberOfNodes()-2)->GetFlowProperties()->SetIsOutputNode(true);
+        p_network->GetNode(p_network->GetNumberOfNodes()-2)->GetFlowProperties()->SetPressure(Owen11Parameters::mpOutletPressure->GetValue());
+        /*
+         * Now set the segment radii and viscosity values.
+         */
+        QLength vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
+        VesselNetworkPropertyManager<2>::SetSegmentRadii(p_network, vessel_radius);
+        QDynamicViscosity viscosity = Owen11Parameters::mpPlasmaViscosity->GetValue();
+        VesselNetworkPropertyManager<2>::SetSegmentViscosity(p_network, viscosity);
+        /*
+         * We use a calculator to work out the impedance of each vessel based on assumptions of Poiseuille flow and cylindrical vessels. This
+         * updates the value of the impedance in the vessel.
+         */
+        VesselImpedanceCalculator<2> impedance_calculator = VesselImpedanceCalculator<2>();
+        impedance_calculator.SetVesselNetwork(p_network);
+        impedance_calculator.Calculate();
+        /*
+         * Check that the impedance is as expected in one of the vessels
+         */
+        //QFlowImpedance expected_impedance = 8.0 * viscosity* vessel_length/(M_PI*Qpow4(vessel_radius));
+        //TS_ASSERT_DELTA(p_network->GetVessel(0)->GetSegment(0)->GetFlowProperties()->GetImpedance().GetValue(), expected_impedance.GetValue(), 1.e-6);
+        /*
+         * Now we can solve for the flow rates in each vessel based on the inlet and outlet pressures and impedances. The solver
+         * updates the value of pressures and flow rates in each vessel and node in the network.
+         */
+        FlowSolver<2> flow_solver = FlowSolver<2>();
+        flow_solver.SetVesselNetwork(p_network);
+        flow_solver.SetUp();
+        flow_solver.Solve();
+        /*
+         * Check the pressure, it is expected to drop linearly so should be the average of the input and output half way along the network.
+         */
+        //QPressure expected_pressure = (inlet_pressure + Owen11Parameters::mpOutletPressure->GetValue())/2.0;
+        //TS_ASSERT_DELTA(p_network->GetNode(7)->GetFlowProperties()->GetPressure()/1_Pa, expected_pressure/1_Pa, 1.e-6);
+        /*
+         * Next we write out the network, including updated flow data, to file.
+         */
+        auto p_handler =
+                std::make_shared<OutputFileHandler>("TestBloodFlowLiteratePaper/TestEvenSimplerFlowProblem");
+        p_network->Write(p_handler->GetOutputDirectoryFullPath() + "bifurcating_network_results.vtp");
+        /*
+         * Now we can visualize the results in Paraview. To view the network import the file
+         * `TestBloodFlowLiteratePaper\bifurcating_network.vtp` into Paraview. For a nicer rendering you can do `Filters->Alphabetical->Tube`.
+         * Finally, dump our parameter collection to an xml file and, importantly, clear it for the next test.
+         */
+        //ParameterCollection::Instance()->DumpToFile(p_handler->GetOutputDirectoryFullPath() + "parameter_collection.xml");
+        //ParameterCollection::Instance()->Destroy();
+       // BaseUnits::Instance()->Destroy();
+    }
     void TestSimpleFlowProblem() throw (Exception)
     {
         /*
