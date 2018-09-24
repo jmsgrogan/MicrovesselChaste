@@ -379,6 +379,8 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::Solve()
     }
     this->Update();
 
+    this->mpLinearSystem->SetPcType("lu");
+    this->mpLinearSystem->SetKspType("preonly");
     // Do the solve
     ReplicatableVector soln_repl(this->mpLinearSystem->Solve());
 
