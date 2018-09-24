@@ -33,7 +33,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
 
-#include "BetteridgeHaematocritSolver.hpp"
+#include "CFL_Ed_WithX0_ModifiedPriesHaematocritSolver.hpp"
 #include "LinearSystem.hpp"
 #include "VesselNode.hpp"
 #include "Vessel.hpp"
@@ -42,9 +42,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "RandomNumberGenerator.hpp"
 
 template<unsigned DIM>
-BetteridgeHaematocritSolver<DIM>::BetteridgeHaematocritSolver() : AbstractHaematocritSolver<DIM>(),
-    mTHR(2.5),
-    mAlpha(0.5),
+CFL_Ed_WithX0_ModifiedPriesHaematocritSolver<DIM>::CFL_Ed_WithX0_ModifiedPriesHaematocritSolver() : AbstractHaematocritSolver<DIM>(),
     mHaematocrit(0.45),
     mSolveHighConnectivityNetworks(false),
     mTurnOffFungModel(false),
@@ -55,61 +53,49 @@ BetteridgeHaematocritSolver<DIM>::BetteridgeHaematocritSolver() : AbstractHaemat
 }
 
 template<unsigned DIM>
-BetteridgeHaematocritSolver<DIM>::~BetteridgeHaematocritSolver()
+CFL_Ed_WithX0_ModifiedPriesHaematocritSolver<DIM>::~CFL_Ed_WithX0_ModifiedPriesHaematocritSolver()
 {
 
 }
 
 template <unsigned DIM>
-std::shared_ptr<BetteridgeHaematocritSolver<DIM> > BetteridgeHaematocritSolver<DIM>::Create()
+std::shared_ptr<CFL_Ed_WithX0_ModifiedPriesHaematocritSolver<DIM> > CFL_Ed_WithX0_ModifiedPriesHaematocritSolver<DIM>::Create()
 {
-    return std::make_shared<BetteridgeHaematocritSolver<DIM> >();
+    return std::make_shared<CFL_Ed_WithX0_ModifiedPriesHaematocritSolver<DIM> >();
 }
 
 template <unsigned DIM>
-void BetteridgeHaematocritSolver<DIM>::SetExceptionOnFailedConverge(bool setException)
+void CFL_Ed_WithX0_ModifiedPriesHaematocritSolver<DIM>::SetExceptionOnFailedConverge(bool setException)
 {
     mExceptionOnFailedConverge = setException;
 }
 
 template<unsigned DIM>
-void BetteridgeHaematocritSolver<DIM>::SetUseRandomSplittingModel(bool useRandomSplittingModel)
+void CFL_Ed_WithX0_ModifiedPriesHaematocritSolver<DIM>::SetUseRandomSplittingModel(bool useRandomSplittingModel)
 {
     mUseRandomSplitting = useRandomSplittingModel;
 }
 
 template<unsigned DIM>
-void BetteridgeHaematocritSolver<DIM>::SetTHR(QDimensionless THR)
-{
-    mTHR = THR;
-}
-
-template<unsigned DIM>
-void BetteridgeHaematocritSolver<DIM>::SetAlpha(QDimensionless Alpha)
-{
-    mAlpha = Alpha;
-}
-
-template<unsigned DIM>
-void BetteridgeHaematocritSolver<DIM>::SetUseHigherConnectivityBranches(bool useHighConnectivity)
+void CFL_Ed_WithX0_ModifiedPriesHaematocritSolver<DIM>::SetUseHigherConnectivityBranches(bool useHighConnectivity)
 {
     mSolveHighConnectivityNetworks = useHighConnectivity;
 }
 
 template<unsigned DIM>
-void BetteridgeHaematocritSolver<DIM>::SetTurnOffFungModel(bool turnOffFungModel)
+void CFL_Ed_WithX0_ModifiedPriesHaematocritSolver<DIM>::SetTurnOffFungModel(bool turnOffFungModel)
 {
     mTurnOffFungModel = turnOffFungModel;
 }
 
 template<unsigned DIM>
-void BetteridgeHaematocritSolver<DIM>::SetHaematocrit(QDimensionless haematocrit)
+void CFL_Ed_WithX0_ModifiedPriesHaematocritSolver<DIM>::SetHaematocrit(QDimensionless haematocrit)
 {
     mHaematocrit = haematocrit;
 }
 
 template<unsigned DIM>
-void BetteridgeHaematocritSolver<DIM>::Calculate()
+void CFL_Ed_WithX0_ModifiedPriesHaematocritSolver<DIM>::Calculate()
 {
     // Give the vessels unique Ids
     std::vector<std::shared_ptr<Vessel<DIM> > > vessels = this->mpNetwork->GetVessels();
@@ -280,30 +266,152 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
                         QFlowRate competitor0_flow_rate = competitor_vessels[0]->GetFlowProperties()->GetFlowRate();
                         QFlowRate parent0_flow_rate = parent_vessels[0]->GetFlowProperties()->GetFlowRate();
 
+			//QDimensionless flow_ratio_pc = Qabs(parent0_flow_rate)/Qabs(competitor0_flow_rate);
+                        //QDimensionless flow_ratio_mc = Qabs(flow_rate)/Qabs(competitor0_flow_rate);
+                        QDimensionless flow_ratio_pm = Qabs(parent0_flow_rate)/Qabs(flow_rate);
+
                         // There is a bifurcation, apply a haematocrit splitting rule
                         QLength my_radius = vessels[idx]->GetRadius();
                         QLength competitor_radius = competitor_vessels[0]->GetRadius();
-                        QVelocity my_velocity = Qabs(flow_rate)/(M_PI * my_radius * my_radius);
-                        QVelocity competitor_velocity = Qabs(competitor0_flow_rate)/(M_PI * competitor_radius * competitor_radius);
+                        QLength parent_radius = parent_vessels[0]->GetRadius();
+                       //QVelocity my_velocity = Qabs(flow_rate)/(M_PI * my_radius * my_radius);
+                       // QVelocity competitor_velocity = Qabs(competitor0_flow_rate)/(M_PI * competitor_radius * competitor_radius);
 
-                        QDimensionless alpha = 1.0 - parent_vessels[0]->GetFlowProperties()->GetHaematocrit();
-                        QDimensionless flow_ratio_pm = Qabs(parent0_flow_rate)/Qabs(flow_rate);
-                        QDimensionless flow_ratio_cm = Qabs(competitor0_flow_rate)/Qabs(flow_rate);
-                        double numer = flow_ratio_pm;
+        		double micron_my_radius = (my_radius/unit::metres)*1.e6;
+        		double micron_competitor_radius = (competitor_radius/unit::metres)*1.e6;
+        		double micron_parent_radius = (parent_radius/unit::metres)*1.e6;
 
-                        // Apply fungs rule to faster vessel
-                        if(my_velocity >= competitor_velocity)
-                        {
-                            QDimensionless term = alpha * (my_velocity/competitor_velocity-1.0);
-                            double denom = 1.0+flow_ratio_cm*(1.0/(1.0+term));
-                            linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -numer/denom);
-                        }
-                        else
-                        {
-                            QDimensionless term = alpha * (competitor_velocity/my_velocity-1.0);
-                            double denom = 1.0+flow_ratio_cm*(1.0+term);
-                            linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -numer/denom);
-                        }
+			QDimensionless diameter_ratio = micron_my_radius/micron_competitor_radius;
+
+			// new bits with CFL for inverted Pi only
+			/*
+						
+			double cfl_term = 1000.0;
+    			QLength dist_to_prev_bif = parent_vessels[0]->GetLength();
+			double micron_distTPB = (dist_to_prev_bif/unit::metres)*1.e6;
+
+			if(parent_vessels[0]->GetStartNode()->GetFlowProperties()->IsInputNode() or
+                        parent_vessels[0]->GetEndNode()->GetFlowProperties()->IsInputNode())
+			{
+			cfl_term = 0.0;
+			}
+			else if(vessels[idx]->GetEndNode()->rGetLocation()[1] > 0.00005)
+			{
+			cfl_term = 1.0/micron_distTPB;
+			}
+			else
+			{
+			cfl_term = -1.0/micron_distTPB;
+			}
+
+			std::cout << cfl_term << "\n";
+			std::cout << vessels[idx]->GetEndNode()->rGetLocation()[1] << "\n";			
+			*/			
+			//new bits with CFL for inverted Pi only end
+
+
+			// new bits with CFL for dichotomous network
+
+			double cfl_term = 1000.0;
+    			QLength dist_to_prev_bif = vessels[idx]->GetDistToPrevBif();;
+			double micron_distTPB = (dist_to_prev_bif/unit::metres)*1.e6;
+			double A_shift = 0.5;
+			double X0, X0_favor, X0_unfavor;
+			X0 = 0.964*(1-parent_vessels[0]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
+			X0_favor = X0*(1.0-exp(-micron_distTPB/(8*micron_parent_radius)));
+			X0_unfavor = X0*(1.0+exp(-micron_distTPB/(8*micron_parent_radius)));
+        		double B = 1.0 + 6.98*(1.0-parent_vessels[0]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
+
+                        QDimensionless modified_flow_ratio_mc;
+
+			if(parent_vessels[0]->GetStartNode()->GetFlowProperties()->IsInputNode() or
+                        parent_vessels[0]->GetEndNode()->GetFlowProperties()->IsInputNode())
+			{
+			cfl_term = 0.0;
+			}
+			else if(vessels[idx]->GetPreference() == 1)
+			{
+			cfl_term = A_shift*exp(-micron_distTPB/(8*micron_parent_radius));
+			}
+			else
+			{
+			cfl_term = -A_shift*exp(-micron_distTPB/(8*micron_parent_radius));
+			}
+
+			//std::cout << "The cfl_term is:" << cfl_term << "\n";
+
+			// new bits with CFL for dichotomous network end
+
+        		double A1 = -13.29*((1.0-parent_vessels[0]->GetFlowProperties()->GetHaematocrit())*(diameter_ratio*diameter_ratio-1.0))/(2.0*micron_parent_radius*(diameter_ratio*diameter_ratio+1.0))+cfl_term;
+                        //QDimensionless alpha = 1.0 - parent_vessels[0]->GetFlowProperties()->GetHaematocrit();
+                        
+			double term2 = exp(A1);
+			// Apply modified Pries rule to faster vessel
+
+
+
+			if(parent_vessels[0]->GetStartNode()->GetFlowProperties()->IsInputNode() or
+                        parent_vessels[0]->GetEndNode()->GetFlowProperties()->IsInputNode())
+			{
+				if(Qabs(flow_rate)/Qabs(parent0_flow_rate) < X0)
+				{
+				linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), 0.0);
+				}
+				else if(Qabs(competitor0_flow_rate)/Qabs(parent0_flow_rate) < X0)
+				{
+				linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -Qabs(parent0_flow_rate)/Qabs(flow_rate));
+				}
+				else
+				{	
+				modified_flow_ratio_mc = (Qabs(flow_rate)-X0*Qabs(parent0_flow_rate))/(Qabs(competitor0_flow_rate)-X0*Qabs(parent0_flow_rate));
+				double term1 = pow(modified_flow_ratio_mc,B);		
+				double numer = term2*term1*flow_ratio_pm;                
+                       	 	double denom = 1.0+term2*term1;
+				linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -numer/denom);
+				}
+			}
+			else if(vessels[idx]->GetPreference() == 1)
+			{
+				if(Qabs(flow_rate)/Qabs(parent0_flow_rate) < X0_favor)
+				{
+				linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), 0.0);
+				}
+				else if(Qabs(competitor0_flow_rate)/Qabs(parent0_flow_rate) < X0_unfavor)
+				{
+				linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -Qabs(parent0_flow_rate)/Qabs(flow_rate));
+				}
+				else
+				{
+				modified_flow_ratio_mc = (Qabs(flow_rate)-X0_favor*Qabs(parent0_flow_rate))/(Qabs(competitor0_flow_rate)-X0_unfavor*Qabs(parent0_flow_rate));
+				double term1 = pow(modified_flow_ratio_mc,B);		
+				double numer = term2*term1*flow_ratio_pm;                
+                        	double denom = 1.0+term2*term1;
+				linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -numer/denom);
+				}
+			}
+			else
+			{
+				if(Qabs(flow_rate)/Qabs(parent0_flow_rate) < X0_unfavor)
+				{
+				linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), 0.0);
+				}
+				else if(Qabs(competitor0_flow_rate)/Qabs(parent0_flow_rate) < X0_favor)
+				{
+				linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -Qabs(parent0_flow_rate)/Qabs(flow_rate));
+				}
+				else
+				{
+				modified_flow_ratio_mc = (Qabs(flow_rate)-X0_unfavor*Qabs(parent0_flow_rate))/(Qabs(competitor0_flow_rate)-X0_favor*Qabs(parent0_flow_rate));
+				double term1 = pow(modified_flow_ratio_mc,B);		
+				double numer = term2*term1*flow_ratio_pm;                
+                        	double denom = 1.0+term2*term1;
+				linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -numer/denom);
+				}
+			}
+
+
+                     
+                     
 
                         // Save the indices for later updating
                         std::vector<int> local_update_indics = std::vector<int>(3);
@@ -318,7 +426,7 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
     }
 
     // Set the parameters for iteration
-    double tolerance = 1e-3;
+    double tolerance = 1e-9;
     double max_iterations = 1000;
     double residual = DBL_MAX;
     int iterations = 0;
@@ -385,11 +493,162 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
                 }
                 else
                 {
+
+                        QFlowRate self_flow_rate = vessels[update_indices[idx][0]]->GetFlowProperties()->GetFlowRate();
+                        QFlowRate competitor0_flow_rate = vessels[update_indices[idx][2]]->GetFlowProperties()->GetFlowRate();
+                        QFlowRate parent0_flow_rate = vessels[update_indices[idx][1]]->GetFlowProperties()->GetFlowRate();
+
+			//QDimensionless flow_ratio_pc = Qabs(parent0_flow_rate)/Qabs(competitor0_flow_rate);
+                        //QDimensionless flow_ratio_mc = Qabs(self_flow_rate)/Qabs(competitor0_flow_rate);
+			QDimensionless flow_ratio_pm = Qabs(parent0_flow_rate)/Qabs(self_flow_rate);
+
+			QLength my_radius = vessels[update_indices[idx][0]]->GetRadius();
+                   	QLength competitor_radius = vessels[update_indices[idx][2]]->GetRadius();
+                        QLength parent_radius = vessels[update_indices[idx][1]]->GetRadius();
+			
+                
+
+        		double micron_my_radius = (my_radius/unit::metres)*1.e6;
+        		double micron_competitor_radius = (competitor_radius/unit::metres)*1.e6;
+        		double micron_parent_radius = (parent_radius/unit::metres)*1.e6;
+
+			QDimensionless diameter_ratio = micron_my_radius/micron_competitor_radius;
+
+
+
+
+			// new bits with CFL for inverted pi only
+			/*		
+			double cfl_term = 1000.0;
+    			QLength dist_to_prev_bif = vessels[update_indices[idx][1]]->GetLength();
+			double micron_distTPB = (dist_to_prev_bif/unit::metres)*1.e6;
+
+			if(vessels[update_indices[idx][1]]->GetStartNode()->GetFlowProperties()->IsInputNode() or
+                        vessels[update_indices[idx][1]]->GetEndNode()->GetFlowProperties()->IsInputNode())
+			{
+			cfl_term = 0.0;
+			}
+			else if(vessels[update_indices[idx][0]]->GetEndNode()->rGetLocation()[1] > 0.00005)
+			{
+			cfl_term = 1.0/micron_distTPB;
+			}
+			else
+			{
+			cfl_term = -1.0/micron_distTPB;
+			}
+
+			std::cout << cfl_term << "\n";
+			std::cout << vessels[update_indices[idx][0]]->GetEndNode()->rGetLocation()[1] << "\n";	
+			*/		
+			//new bits with inverted Pi end
+			// new bits with CFL for dichotomous network
+
+			double cfl_term = 1000.0;
+    			QLength dist_to_prev_bif = vessels[update_indices[idx][0]]->GetDistToPrevBif();;
+			double micron_distTPB = (dist_to_prev_bif/unit::metres)*1.e6;
+			double A_shift = 0.5;
+
+
+
+			double X0, X0_favor, X0_unfavor;
+			X0 = 0.964*(1-vessels[update_indices[idx][1]]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
+			X0_favor = X0*(1.0-exp(-micron_distTPB/(8*micron_parent_radius)));
+			X0_unfavor = X0*(1.0+exp(-micron_distTPB/(8*micron_parent_radius)));
+        		double B = 1.0 + 6.98*(1.0-vessels[update_indices[idx][1]]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
+
+                        QDimensionless modified_flow_ratio_mc;
+			if(vessels[update_indices[idx][1]]->GetStartNode()->GetFlowProperties()->IsInputNode() or
+                        vessels[update_indices[idx][1]]->GetEndNode()->GetFlowProperties()->IsInputNode())
+			{
+			cfl_term = 0.0;
+			}
+			else if(vessels[update_indices[idx][0]]->GetPreference() == 1)
+			{
+			cfl_term = A_shift*exp(-micron_distTPB/(8*micron_parent_radius));
+			}
+			else
+			{
+			cfl_term = -A_shift*exp(-micron_distTPB/(8*micron_parent_radius));
+			}
+
+			//std::cout << "The cfl_term is:" << cfl_term << "\n";
+
+			// new bits with CFL for dichotomous network end
+
+
+        		double A1 = -13.29*((1.0-vessels[update_indices[idx][1]]->GetFlowProperties()->GetHaematocrit())*(diameter_ratio*diameter_ratio-1.0))/(2.0*micron_parent_radius*(diameter_ratio*diameter_ratio+1.0))+cfl_term;
+                        //QDimensionless alpha = 1.0 - parent_vessels[0]->GetFlowProperties()->GetHaematocrit();
+                        
+			double term2 = exp(A1);
+
+			if(vessels[update_indices[idx][1]]->GetStartNode()->GetFlowProperties()->IsInputNode() or
+                        vessels[update_indices[idx][1]]->GetEndNode()->GetFlowProperties()->IsInputNode())
+			{
+				if(Qabs(self_flow_rate)/Qabs(parent0_flow_rate) < X0)
+				{
+				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), 0.0);
+				}
+				else if(Qabs(competitor0_flow_rate)/Qabs(parent0_flow_rate) < X0)
+				{
+				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -Qabs(parent0_flow_rate)/Qabs(self_flow_rate));
+				}
+				else
+				{	
+				modified_flow_ratio_mc = (Qabs(self_flow_rate)-X0*Qabs(parent0_flow_rate))/(Qabs(competitor0_flow_rate)-X0*Qabs(parent0_flow_rate));
+				double term1 = pow(modified_flow_ratio_mc,B);		
+				double numer = term2*term1*flow_ratio_pm;                
+                       	 	double denom = 1.0+term2*term1;
+				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -numer/denom);
+				}
+			}
+			else if(vessels[update_indices[idx][0]]->GetPreference() == 1)
+			{
+				if(Qabs(self_flow_rate)/Qabs(parent0_flow_rate) < X0_favor)
+				{
+				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), 0.0);
+				}
+				else if(Qabs(competitor0_flow_rate)/Qabs(parent0_flow_rate) < X0_unfavor)
+				{
+				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -Qabs(parent0_flow_rate)/Qabs(self_flow_rate));
+				}
+				else
+				{
+				modified_flow_ratio_mc = (Qabs(self_flow_rate)-X0_favor*Qabs(parent0_flow_rate))/(Qabs(competitor0_flow_rate)-X0_unfavor*Qabs(parent0_flow_rate));
+				double term1 = pow(modified_flow_ratio_mc,B);		
+				double numer = term2*term1*flow_ratio_pm;                
+                        	double denom = 1.0+term2*term1;
+				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -numer/denom);
+				}
+			}
+			else
+			{
+				if(Qabs(self_flow_rate)/Qabs(parent0_flow_rate) < X0_unfavor)
+				{
+				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), 0.0);
+				}
+				else if(Qabs(competitor0_flow_rate)/Qabs(parent0_flow_rate) < X0_favor)
+				{
+				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -Qabs(parent0_flow_rate)/Qabs(self_flow_rate));
+				}
+				else
+				{
+				modified_flow_ratio_mc = (Qabs(self_flow_rate)-X0_unfavor*Qabs(parent0_flow_rate))/(Qabs(competitor0_flow_rate)-X0_favor*Qabs(parent0_flow_rate));
+				double term1 = pow(modified_flow_ratio_mc,B);		
+				double numer = term2*term1*flow_ratio_pm;                
+                        	double denom = 1.0+term2*term1;
+				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -numer/denom);
+				}
+			}
+						
+			
+		
+		/*
                     QFlowRate self_flow_rate = vessels[update_indices[idx][0]]->GetFlowProperties()->GetFlowRate();
                     QFlowRate competitor0_flow_rate = vessels[update_indices[idx][2]]->GetFlowProperties()->GetFlowRate();
                     QFlowRate parent0_flow_rate = vessels[update_indices[idx][1]]->GetFlowProperties()->GetFlowRate();
 
-                    QLength my_radius = vessels[update_indices[idx][0]]->GetRadius();
+                    QLength my_radius = vessels[update_indic
+	es[idx][0]]->GetRadius();
                     QLength competitor_radius = vessels[update_indices[idx][2]]->GetRadius();
                     QVelocity my_velocity = Qabs(self_flow_rate)/(M_PI * my_radius * my_radius);
                     QVelocity competitor_velocity = Qabs(competitor0_flow_rate)/(M_PI * competitor_radius * competitor_radius);
@@ -399,7 +658,7 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
                     double flow_ratio_cm = Qabs(competitor0_flow_rate/self_flow_rate);
                     double numer = flow_ratio_pm;
 
-                    // Apply fungs rule to faster vessel
+                   
                     if(my_velocity >= competitor_velocity)
                     {
                         double term = alpha * (my_velocity/competitor_velocity-1.0);
@@ -412,6 +671,7 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
                         double denom = 1.0+flow_ratio_cm*(1.0+term);
                         linearSystem.SetMatrixElement(update_indices[idx][0], update_indices[idx][1], -numer/denom);
                     }
+		*/
                 }
             }
         }
@@ -458,5 +718,5 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
     }
 }
 // Explicit instantiation
-template class BetteridgeHaematocritSolver<2>;
-template class BetteridgeHaematocritSolver<3>;
+template class CFL_Ed_WithX0_ModifiedPriesHaematocritSolver<2>;
+template class CFL_Ed_WithX0_ModifiedPriesHaematocritSolver<3>;

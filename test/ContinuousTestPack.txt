@@ -61,6 +61,8 @@ simulation/flow/structural_adaptation/TestStructuralAdaptationSolver.hpp
 simulation/flow/haematocrit/TestAlarcon03HaematocritSolver.hpp
 simulation/flow/haematocrit/TestBetteridgeHaematocritSolver.hpp
 simulation/flow/haematocrit/TestLinnengarHaematocritSolver.hpp
+simulation/flow/haematocrit/TestLinnengarHaematocritSolverNew.hpp
+simulation/flow/haematocrit/TestNoCellsBetteridgeNontrivVis.hpp
 simulation/flow/haematocrit/TestWithOrWithoutMemory.hpp
 simulation/flow/calculators/TestVesselImpedanceCalculator.hpp
 simulation/flow/calculators/TestVesselNetworkCalculators.hpp

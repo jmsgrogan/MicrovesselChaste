@@ -33,7 +33,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
 
-#include "LinnengarHaematocritSolver.hpp"
+#include "YangHaematocritSolver.hpp"
 #include "LinearSystem.hpp"
 #include "VesselNode.hpp"
 #include "Vessel.hpp"
@@ -42,11 +42,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "RandomNumberGenerator.hpp"
 
 template<unsigned DIM>
-LinnengarHaematocritSolver<DIM>::LinnengarHaematocritSolver() : AbstractHaematocritSolver<DIM>(),
+YangHaematocritSolver<DIM>::YangHaematocritSolver() : AbstractHaematocritSolver<DIM>(),
     mTHR(2.5),
     mAlpha(0.5),
     mHaematocrit(0.45),
-    mLinnM(1.0),
+    mYangM0(10.0),
+    mYangk(4.0),
     mSolveHighConnectivityNetworks(false),
     mTurnOffFungModel(false),
     mUseRandomSplitting(false),
@@ -56,70 +57,76 @@ LinnengarHaematocritSolver<DIM>::LinnengarHaematocritSolver() : AbstractHaematoc
 }
 
 template<unsigned DIM>
-LinnengarHaematocritSolver<DIM>::~LinnengarHaematocritSolver()
+YangHaematocritSolver<DIM>::~YangHaematocritSolver()
 {
 
 }
 
 template <unsigned DIM>
-std::shared_ptr<LinnengarHaematocritSolver<DIM> > LinnengarHaematocritSolver<DIM>::Create()
+std::shared_ptr<YangHaematocritSolver<DIM> > YangHaematocritSolver<DIM>::Create()
 {
-    return std::make_shared<LinnengarHaematocritSolver<DIM> >();
+    return std::make_shared<YangHaematocritSolver<DIM> >();
 }
 
 template <unsigned DIM>
-void LinnengarHaematocritSolver<DIM>::SetExceptionOnFailedConverge(bool setException)
+void YangHaematocritSolver<DIM>::SetExceptionOnFailedConverge(bool setException)
 {
     mExceptionOnFailedConverge = setException;
 }
 
 template<unsigned DIM>
-void LinnengarHaematocritSolver<DIM>::SetUseRandomSplittingModel(bool useRandomSplittingModel)
+void YangHaematocritSolver<DIM>::SetUseRandomSplittingModel(bool useRandomSplittingModel)
 {
     mUseRandomSplitting = useRandomSplittingModel;
 }
 
 template<unsigned DIM>
-void LinnengarHaematocritSolver<DIM>::SetTHR(QDimensionless THR)
+void YangHaematocritSolver<DIM>::SetTHR(QDimensionless THR)
 {
     mTHR = THR;
 }
 
 template<unsigned DIM>
-void LinnengarHaematocritSolver<DIM>::SetAlpha(QDimensionless Alpha)
+void YangHaematocritSolver<DIM>::SetAlpha(QDimensionless Alpha)
 {
     mAlpha = Alpha;
 }
 
 template<unsigned DIM>
-void LinnengarHaematocritSolver<DIM>::SetUseHigherConnectivityBranches(bool useHighConnectivity)
+void YangHaematocritSolver<DIM>::SetUseHigherConnectivityBranches(bool useHighConnectivity)
 {
     mSolveHighConnectivityNetworks = useHighConnectivity;
 }
 
 template<unsigned DIM>
-void LinnengarHaematocritSolver<DIM>::SetTurnOffFungModel(bool turnOffFungModel)
+void YangHaematocritSolver<DIM>::SetTurnOffFungModel(bool turnOffFungModel)
 {
     mTurnOffFungModel = turnOffFungModel;
 }
 
 template<unsigned DIM>
-void LinnengarHaematocritSolver<DIM>::SetHaematocrit(QDimensionless haematocrit)
+void YangHaematocritSolver<DIM>::SetHaematocrit(QDimensionless haematocrit)
 {
     mHaematocrit = haematocrit;
 }
 
 template<unsigned DIM>
-void LinnengarHaematocritSolver<DIM>::SetLinnM(QDimensionless LinnM)
+void YangHaematocritSolver<DIM>::SetYangM0(QDimensionless YangM0)
 {
-    mLinnM = LinnM;
+    mYangM0 = YangM0;
 }
 
+template<unsigned DIM>
+void YangHaematocritSolver<DIM>::SetYangk(QDimensionless Yangk)
+{
+    mYangk = Yangk;
+}
 
 template<unsigned DIM>
-void LinnengarHaematocritSolver<DIM>::Calculate()
+void YangHaematocritSolver<DIM>::Calculate()
 {
     // Give the vessels unique Ids
+    double localM = 1.0;
     std::vector<std::shared_ptr<Vessel<DIM> > > vessels = this->mpNetwork->GetVessels();
     std::vector<double> random_assignment;
     if(mUseRandomSplitting)
@@ -287,9 +294,18 @@ std::cout << "Blaaaa";
                         QLength my_radius = vessels[idx]->GetRadius();
                         QLength competitor_radius = competitor_vessels[0]->GetRadius();                      
 
-                        // Apply Linninger's rule to faster vessel
-                        QDimensionless term =  pow(competitor_radius/my_radius,2.0/mLinnM);
-std::cout << -Qabs(parent0_flow_rate)/(Qabs(flow_rate)+Qabs(competitor0_flow_rate)*term) << "\n";
+                        // Apply Yang's rule using vessel with greater radius
+			if(my_radius >= competitor_radius)
+			{
+				localM = mYangM0*exp(-mYangk*flow_rate/parent0_flow_rate);	
+			}
+			else
+			{
+				localM = mYangM0*exp(-mYangk*competitor0_flow_rate/parent0_flow_rate);
+			}
+                        QDimensionless term =  pow(competitor_radius/my_radius,2.0/localM);
+std::cout << "The local M is:" << localM << "  and the local term is:" << term << "\n";
+//std::cout << -Qabs(parent0_flow_rate)/(Qabs(flow_rate)+Qabs(competitor0_flow_rate)*term) << "\n";
                         linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -Qabs(parent0_flow_rate)/(Qabs(flow_rate)+Qabs(competitor0_flow_rate)*term));
                         
              
@@ -317,5 +333,5 @@ PetscTools::Destroy(solution);
 
 }
 // Explicit instantiation
-template class LinnengarHaematocritSolver<2>;
-template class LinnengarHaematocritSolver<3>;
+template class YangHaematocritSolver<2>;
+template class YangHaematocritSolver<3>;

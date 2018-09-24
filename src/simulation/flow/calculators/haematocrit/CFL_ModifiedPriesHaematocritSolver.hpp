@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
 
-#ifndef _LinnengarHaematocritSolver_hpp
-#define _LinnengarHaematocritSolver_hpp
+#ifndef _CFL_ModifiedPriesHaematocritSolver_hpp
+#define _CFL_ModifiedPriesHaematocritSolver_hpp
 
 #include "SmartPointers.hpp"
 #include "AbstractHaematocritSolver.hpp"
@@ -42,30 +42,19 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /**
  * This solver calculates the distribution of haematocrit in branching vessel networks according to:
- * Linnengar et al. (2006), Networks and Heterogenous Media, 1(4), pp515-535.
+ * ModifiedPries model with CFL disruption effects hardcoded
  */
 template<unsigned DIM>
-class LinnengarHaematocritSolver : public AbstractHaematocritSolver<DIM>
+class CFL_ModifiedPriesHaematocritSolver : public AbstractHaematocritSolver<DIM>
 {
 
 private:
 
-    /**
-     * The threshold velocity ratio at which all haematocrit goes into the faster vessel
-     */
-    QDimensionless mTHR;
-
-    /**
-     * The partition coefficient for haematocrit
-     */
-    QDimensionless mAlpha;
 
     /**
      * The arterial haematocrit level
      */
     QDimensionless mHaematocrit;
-
-    QDimensionless mLinnM;
 
     /**
      * Attempt to solve networks with connectivity > 3. Not in original model.
@@ -93,18 +82,18 @@ public:
     /**
      * Constructor.
      */
-    LinnengarHaematocritSolver();
+    CFL_ModifiedPriesHaematocritSolver();
 
     /**
      *  destructor.
      */
-    ~LinnengarHaematocritSolver();
+    ~CFL_ModifiedPriesHaematocritSolver();
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to a new class instance
      */
-    static std::shared_ptr<LinnengarHaematocritSolver<DIM> > Create();
+    static std::shared_ptr<CFL_ModifiedPriesHaematocritSolver<DIM> > Create();
 
     /**
      *  Do the solve
@@ -113,28 +102,13 @@ public:
 
     void SetExceptionOnFailedConverge(bool setException);
 
-    /**
-     * Set the threshold velocity ratio
-     * @param thr the threshold velocity ratio
-     */
-    void SetTHR(QDimensionless thr);
-
-    /**
-     * Set the partition coefficient for haematocrit
-     * @param alpha the partition coefficient for haematocrit
-     */
-    void SetAlpha(QDimensionless alpha);
 
     /**
      * Set the artial haematocrit
      * @param haematocrit the arterial haematocrit
      */
     void SetHaematocrit(QDimensionless haematocrit);
-    /**
-     * Set M from Linninger's model
-     * @param LinnM Linninger's M
-     */
-    void SetLinnM(QDimensionless LinnM);
+
     /**
      * Attempt to use higher connectivity branches
      * @param useHighConnectivity use higher connectivity branches

@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
 
-#ifndef _LinnengarHaematocritSolver_hpp
-#define _LinnengarHaematocritSolver_hpp
+#ifndef _YangHaematocritSolver_hpp
+#define _YangHaematocritSolver_hpp
 
 #include "SmartPointers.hpp"
 #include "AbstractHaematocritSolver.hpp"
@@ -42,10 +42,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /**
  * This solver calculates the distribution of haematocrit in branching vessel networks according to:
- * Linnengar et al. (2006), Networks and Heterogenous Media, 1(4), pp515-535.
+ * Yang et al. (2017)
  */
 template<unsigned DIM>
-class LinnengarHaematocritSolver : public AbstractHaematocritSolver<DIM>
+class YangHaematocritSolver : public AbstractHaematocritSolver<DIM>
 {
 
 private:
@@ -65,8 +65,9 @@ private:
      */
     QDimensionless mHaematocrit;
 
-    QDimensionless mLinnM;
+    QDimensionless mYangM0;
 
+    QDimensionless mYangk;
     /**
      * Attempt to solve networks with connectivity > 3. Not in original model.
      * Haematocrit splits according to flow rate ratio only in higher connectivity cases.
@@ -93,18 +94,18 @@ public:
     /**
      * Constructor.
      */
-    LinnengarHaematocritSolver();
+    YangHaematocritSolver();
 
     /**
      *  destructor.
      */
-    ~LinnengarHaematocritSolver();
+    ~YangHaematocritSolver();
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to a new class instance
      */
-    static std::shared_ptr<LinnengarHaematocritSolver<DIM> > Create();
+    static std::shared_ptr<YangHaematocritSolver<DIM> > Create();
 
     /**
      *  Do the solve
@@ -131,10 +132,15 @@ public:
      */
     void SetHaematocrit(QDimensionless haematocrit);
     /**
-     * Set M from Linninger's model
-     * @param LinnM Linninger's M
+     * Set M0 from Yang's model
+     * @param YangM0 Yang's M0
      */
-    void SetLinnM(QDimensionless LinnM);
+    void SetYangM0(QDimensionless YangM0);
+     /**
+     * Set k from Yang's model
+     * @param Yangk Yang's k
+     */
+    void SetYangk(QDimensionless Yangk);
     /**
      * Attempt to use higher connectivity branches
      * @param useHighConnectivity use higher connectivity branches
