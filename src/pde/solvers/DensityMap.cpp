@@ -427,6 +427,12 @@ const std::vector<double>& DensityMap<DIM>::rGetPerfusedVesselSurfaceAreaDensity
         std::vector<std::vector<std::shared_ptr<VesselSegment<DIM> > > > segment_map = this->mpGridCalculator->rGetSegmentMap();
         QLength length_scale = this->mpGridCalculator->GetGrid()->GetReferenceLengthScale();
         std::vector<double> grid_volumes = this->mpGridCalculator->GetGrid()->rGetCellVolumes(true, true);
+    //for(unsigned idx=0;idx<grid_volumes.size();idx++)
+   // {
+
+//        std::cout << "These are the grid volumes:" << grid_volumes[idx];
+  //  }
+
         vtkSmartPointer<vtkUnstructuredGrid> p_sampling_grid;
 
         if(this->mpGridCalculator->HasStructuredGrid())

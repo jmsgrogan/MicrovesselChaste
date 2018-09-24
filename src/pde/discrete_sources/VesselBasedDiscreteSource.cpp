@@ -144,6 +144,8 @@ std::vector<QRate > VesselBasedDiscreteSource<DIM>::GetLinearInUValues()
     for(unsigned idx=0;idx<vessel_densities.size();idx++)
     {
         values[idx] = values[idx] - vessel_densities[idx]*mVesselPermeability * (1.0/reference_length);
+            //std::cout << "These are the values:" << values[idx];
+            //std::cout << "These are the vessel_densities:" << vessel_densities[idx];
     }
     return values;
 }

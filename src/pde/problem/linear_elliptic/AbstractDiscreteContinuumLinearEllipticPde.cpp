@@ -105,6 +105,12 @@ void AbstractDiscreteContinuumLinearEllipticPde<ELEMENT_DIM, SPACE_DIM>::UpdateD
             std::transform(mDiscreteConstantSourceStrengths.begin( ), mDiscreteConstantSourceStrengths.end( ),
                            result2.begin( ), mDiscreteConstantSourceStrengths.begin( ),std::plus<QConcentrationFlowRate >( ));
         }
+        //for(unsigned idx=0;idx<mDiscreteLinearSourceStrengths.size();idx++)
+        //{
+            //std::cout << "These are the Discrete Constant Source Strengths:" << mDiscreteLinearSourceStrengths[idx];
+
+        //}
+
     }
 }
 
