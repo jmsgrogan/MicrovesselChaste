@@ -170,7 +170,7 @@ class TestBetteridgeHaematocritSolver : public AbstractCellBasedTestSuite
 public:
 
 
-void TestInvertedPiBetteridgeHaematocrit() throw(Exception)
+void TestInvertedPiBetteridgeHaematocrit()
 { 
     
     PottsMeshGenerator<2> generator(200, 1, 200, 100, 1, 100); //**Changed**//
@@ -462,7 +462,7 @@ simulator.AddSimulationModifier(p_microvessel_modifier);
 
 
 
-void TestInvertedPiBetteridgeHaematocrit_polished() throw(Exception)
+void TestInvertedPiBetteridgeHaematocrit_polished()
 { 
     
     std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
@@ -660,7 +660,7 @@ simulator.AddSimulationModifier(p_microvessel_modifier);
 
 
 
-void TestInvertedPiBetteridgeHaematocrit_minimal() throw(Exception)
+void TestInvertedPiBetteridgeHaematocrit_minimal()
 { 
     
     std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
@@ -823,7 +823,7 @@ simulator.AddSimulationModifier(p_microvessel_modifier);
 }
 
 
-void TestInvertedPiBetteridgeHaematocrit_minimal_playing() throw(Exception)
+void TestInvertedPiBetteridgeHaematocrit_minimal_playing()
 { 
     
     std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
@@ -979,7 +979,7 @@ simulator.AddSimulationModifier(p_microvessel_modifier);
 
 
 
-void TestTwoVesselNetwork() throw(Exception)
+void TestTwoVesselNetwork()
 {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
@@ -1011,7 +1011,7 @@ void TestTwoVesselNetwork() throw(Exception)
     p_network->Write(output_filename);
 }
 
-void TestBifurcationInflowNetwork() throw(Exception)
+void TestBifurcationInflowNetwork()
 {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um,80.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(0.0_um,-80.0_um);
@@ -1050,7 +1050,7 @@ void TestBifurcationInflowNetwork() throw(Exception)
     p_network->Write(output_filename);
 }
 
-void TestTwoInTwoOutNetwork() throw(Exception)
+void TestTwoInTwoOutNetwork()
 {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(100.0_um);
@@ -1096,7 +1096,7 @@ void TestTwoInTwoOutNetwork() throw(Exception)
     p_network->Write(output_filename);
 }
 
-void TestBifurcationOutflowNetwork() throw(Exception)
+void TestBifurcationOutflowNetwork()
 {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80.0_um);
@@ -1134,7 +1134,7 @@ void TestBifurcationOutflowNetwork() throw(Exception)
     p_network->Write(output_filename);
 }
 
-void TestBifurcationOutflowNetworkBiasedFlow() throw(Exception)
+void TestBifurcationOutflowNetworkBiasedFlow()
 {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um,0.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(113.0_um,0.0_um);
@@ -1186,7 +1186,7 @@ void TestBifurcationOutflowNetworkBiasedFlow() throw(Exception)
 
 
 
-void TestInvPiFlow() throw(Exception)
+void TestInvPiFlow()
 {
 
 
@@ -1283,7 +1283,7 @@ void TestInvPiFlow() throw(Exception)
 
 
 
-void TestHexagonalNetworkBetteridgeHaematocrit() throw(Exception)
+void TestHexagonalNetworkBetteridgeHaematocrit()
 {
     // Specify the network dimensions
     QLength vessel_length = 80.0 * 1_um;
@@ -1389,7 +1389,7 @@ void TestHexagonalNetworkBetteridgeHaematocrit() throw(Exception)
 }
 
 
-void TestHexagonalNetworkBetteridgeHaematocrit_better() throw(Exception)
+void TestHexagonalNetworkBetteridgeHaematocrit_better()
 {
 
 
@@ -1577,7 +1577,7 @@ void TestHexagonalNetworkBetteridgeHaematocrit_better() throw(Exception)
 
 
 
-void TestInvertedPiBetteridgeHaematocrit_FlowOnly() throw(Exception)
+void TestInvertedPiBetteridgeHaematocrit_FlowOnly()
 {
     //create nodes
     QLength vessel_length = 50.0 * 1_um;
@@ -1643,7 +1643,7 @@ void TestInvertedPiBetteridgeHaematocrit_FlowOnly() throw(Exception)
 
 
 
-void TestInvertedPiBetteridgeHaematocrit_ChangingParameters() throw(Exception)
+void TestInvertedPiBetteridgeHaematocrit_ChangingParameters()
 {
 
 
@@ -1867,7 +1867,7 @@ void TestInvertedPiBetteridgeHaematocrit_ChangingParameters() throw(Exception)
 }
 
 
-void TestInvertedPiBetteridgeHaematocrit_FlowBC() throw(Exception)
+void TestInvertedPiBetteridgeHaematocrit_FlowBC()
 {
 
 

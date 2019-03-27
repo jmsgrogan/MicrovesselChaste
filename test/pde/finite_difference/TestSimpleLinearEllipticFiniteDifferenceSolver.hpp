@@ -59,7 +59,7 @@ class TestSimpleLinearEllipticFiniteDifferenceSolver : public CxxTest::TestSuite
 
 public:
 
-    void TestRectangleDomain() throw(Exception)
+    void TestRectangleDomain()
     {
         // Set up the grid
         BaseUnits::Instance()->SetReferenceLengthScale(1.0*unit::metres);
@@ -124,7 +124,7 @@ public:
         }
     }
 
-    void TestCuboidalDomain() throw(Exception)
+    void TestCuboidalDomain()
     {
         // Set up the grid
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
@@ -185,7 +185,7 @@ public:
         }
     }
 
-    void TestWithVesselBoundaryConditions() throw(Exception)
+    void TestWithVesselBoundaryConditions()
     {
         // Set up the vessel network
         QLength vessel_length = 100.0 * 1_um;

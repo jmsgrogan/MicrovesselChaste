@@ -71,6 +71,17 @@ class TestLinnengarHaematocritSolver : public CxxTest::TestSuite
 
 public:
 
+<<<<<<< HEAD
+=======
+void xTestCoupledOxygenSolveFailing()
+{
+    // Specify the domain
+    QLength vessel_length = 80_um;
+    QLength domain_side_length = 2000_um;
+    QLength vessel_radius = 10_um;
+    QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
+    auto p_file_handler = std::make_shared<OutputFileHandler>("TestLinnengarHaematocritSolverFailing", true);
+>>>>>>> 0397281... Keep g++-7.3 compiler happy by removing non C++11 standard exception (Merge from master)
 
   void TestDivergingBifurcationLinnengarHaematocrit() throw(Exception)
     {

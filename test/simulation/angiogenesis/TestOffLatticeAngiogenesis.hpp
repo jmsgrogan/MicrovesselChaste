@@ -57,7 +57,7 @@ class TestOffLatticeAngiogenesisSolver : public CxxTest::TestSuite
 
 public:
 
-    void Test2dPlane() throw(Exception)
+    void Test2dPlane()
     {
         CornealMicropocketSimulation<2> simulation;
         simulation.SetDomainType(DomainType::PLANAR_2D);
@@ -73,7 +73,7 @@ public:
         simulation.Run();
     }
 
-    void Test2dCircle() throw(Exception)
+    void Test2dCircle()
     {
         CornealMicropocketSimulation<2> simulation;
         simulation.SetDomainType(DomainType::CIRCLE_2D);
@@ -90,7 +90,7 @@ public:
         simulation.Run();
     }
 
-    void Test3dPlane() throw(Exception)
+    void Test3dPlane()
     {
         CornealMicropocketSimulation<3> simulation;
         simulation.SetDomainType(DomainType::PLANAR_3D);
@@ -107,7 +107,7 @@ public:
         simulation.Run();
     }
 
-    void Test3dCircle() throw(Exception)
+    void Test3dCircle()
     {
         CornealMicropocketSimulation<3> simulation;
         simulation.SetDomainType(DomainType::CIRCLE_3D);
@@ -123,7 +123,7 @@ public:
         simulation.Run();
     }
 
-    void TestHemisphere() throw(Exception)
+    void TestHemisphere()
     {
         CornealMicropocketSimulation<3> simulation;
         simulation.SetDomainType(DomainType::HEMISPHERE);

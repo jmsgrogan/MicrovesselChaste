@@ -65,7 +65,7 @@ class TestDiscreteSource : public CxxTest::TestSuite
 
 public:
 
-    void TestGridFunction() throw(Exception)
+    void TestGridFunction()
     {
         QLength length(100.0_um);
 
@@ -122,7 +122,7 @@ public:
         solver.Write();
     }
 
-    void TestMeshFunction() throw(Exception)
+    void TestMeshFunction()
     {
         QLength length(100.0*unit::microns);
 
@@ -176,7 +176,7 @@ public:
         solver.Write();
     }
 
-    void TestLinearGridPde() throw(Exception)
+    void TestLinearGridPde()
     {
         BaseUnits::Instance()->SetReferenceLengthScale(1.0*unit::metres);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed);
@@ -230,7 +230,7 @@ public:
         solver.Solve();
     }
 
-    void TestNonLinearGridPde() throw(Exception)
+    void TestNonLinearGridPde()
     {
         QLength length(100.0*unit::microns);
 

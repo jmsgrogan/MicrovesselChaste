@@ -62,7 +62,7 @@ class TestOffLatticeMigrationRules : public AbstractCellBasedTestSuite
 
 public:
 
-    void Test2dMigration() throw(Exception)
+    void Test2dMigration()
     {
         BaseUnits::Instance()->SetReferenceLengthScale(1_um);
         BaseUnits::Instance()->SetReferenceTimeScale(3600.0_s);
@@ -127,7 +127,7 @@ public:
         angiogenesis_solver.Run(true);
     }
 
-    void Test3dMigration() throw(Exception)
+    void Test3dMigration()
     {
         auto p_handler =
                 std::make_shared<OutputFileHandler>("TestOffLatticeMigrationRules/3d");

@@ -57,7 +57,7 @@ class TestStructuralAdaptationSolver : public CxxTest::TestSuite
 
 public:
 
-    void TestMultiVesselNetwork() throw(Exception)
+    void TestMultiVesselNetwork()
     {
         std::vector<std::shared_ptr<VesselNode<2> > > nodes;
         for(unsigned idx=0; idx<8; idx++)
@@ -119,7 +119,7 @@ public:
         SimulationTime::Destroy();
     }
 
-    void TestOneVesselNetwork() throw(Exception)
+    void TestOneVesselNetwork()
     {
         std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um, 0.0_um);
         std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80.0_um, 0.0_um);
@@ -167,7 +167,7 @@ public:
         SimulationTime::Destroy();
     }
 
-    void TestHexagonalNetwork() throw(Exception)
+    void TestHexagonalNetwork()
 	{
         // Specify the network dimensions
         QLength vessel_length = 83.0 * 1_um;

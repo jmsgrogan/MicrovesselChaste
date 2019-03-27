@@ -197,7 +197,7 @@ class TestMicrovesselSimulationModifier : public AbstractCellBasedTestSuite
 
 public:
 
-    void TestCaBasedSpheroid() throw (Exception)
+    void TestCaBasedSpheroid()
     {
         // Create the simulation domain
         std::shared_ptr<Part<3> > p_domain = GetSimulationDomain();
@@ -257,7 +257,7 @@ public:
         simulator.Solve();
     }
 
-    void TestNodeBasedSpheroid() throw (Exception)
+    void TestNodeBasedSpheroid()
     {
         // Create the domain
         std::shared_ptr<Part<3> > p_domain = GetSimulationDomain();

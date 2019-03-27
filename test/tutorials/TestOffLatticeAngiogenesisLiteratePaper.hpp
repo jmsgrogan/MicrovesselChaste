@@ -116,7 +116,7 @@ class TestOffLatticeAngiogenesisLiteratePaper : public AbstractCellBasedWithTimi
 {
 public:
 
-    void Test3dLatticeFree() throw(Exception)
+    void Test3dLatticeFree()
     {
         /*
          * Set up output file management.

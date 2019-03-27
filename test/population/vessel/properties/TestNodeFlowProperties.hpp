@@ -52,7 +52,7 @@ class TestNodeFlowProperties : public CxxTest::TestSuite
 {
 public:
 
-    void TestSetAndGet() throw (Exception)
+    void TestSetAndGet()
     {
         NodeFlowProperties<3> properties = NodeFlowProperties<3>();
         properties.SetIsInputNode(true);
@@ -67,7 +67,7 @@ public:
         TS_ASSERT_DELTA(properties.GetOutputData()["Node Pressure Pa"], 20.0, 1.e-6);
     }
 
-    void TestArchiving() throw (Exception)
+    void TestArchiving()
     {
 #if BOOST_VERSION >= 105600
         // Test Archiving

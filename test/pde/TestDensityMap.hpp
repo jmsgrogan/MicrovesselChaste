@@ -57,7 +57,7 @@ class TestDensityMap : public CxxTest::TestSuite
 
 public:
 
-    void TestAllInsideBoxAndAllOutsideBox2d() throw(Exception)
+    void TestAllInsideBoxAndAllOutsideBox2d()
     {
         EXIT_IF_PARALLEL;
 
@@ -86,7 +86,7 @@ public:
         BaseUnits::Instance()->Destroy();
     }
 
-    void TestCrossingBoxes2d() throw(Exception)
+    void TestCrossingBoxes2d()
     {
         EXIT_IF_PARALLEL;
 
@@ -115,7 +115,7 @@ public:
         BaseUnits::Instance()->Destroy();
     }
 
-    void TestAllInsideBoxAndAllOutsideBox3d() throw(Exception)
+    void TestAllInsideBoxAndAllOutsideBox3d()
     {
         EXIT_IF_PARALLEL;
 
@@ -148,7 +148,7 @@ public:
         BaseUnits::Instance()->Destroy();
     }
 
-    void TestCrossingBoxes3d() throw(Exception)
+    void TestCrossingBoxes3d()
     {
         EXIT_IF_PARALLEL;
 
@@ -178,7 +178,7 @@ public:
         BaseUnits::Instance()->Destroy();
     }
 
-    void TestBifurcationNetwork() throw(Exception)
+    void TestBifurcationNetwork()
     {
         std::string output_path = "TestDensityMap/Bifurcation";
         if(PetscTools::IsParallel())
@@ -210,7 +210,7 @@ public:
         p_grid->Write(p_output_file_handler);
     }
 
-    void TestBifurcationNetwork2d() throw(Exception)
+    void TestBifurcationNetwork2d()
     {
         BaseUnits::Instance()->SetReferenceLengthScale(1_um);
         std::string output_path = "TestDensityMap/Bifurcation2d";
@@ -243,7 +243,7 @@ public:
         p_grid->Write(p_output_file_handler);
     }
 
-    void TestConservationOverBoxSize() throw(Exception)
+    void TestConservationOverBoxSize()
     {
         EXIT_IF_PARALLEL;
         BaseUnits::Instance()->SetReferenceLengthScale(1_um);

@@ -138,7 +138,7 @@ public:
         }
     }
 
-    void Test3dKroghCylinderNetworkSurface() throw(Exception)
+    void Test3dKroghCylinderNetworkSurface()
     {
         // Set up the vessel network
         QLength micron_length_scale = 1_um;

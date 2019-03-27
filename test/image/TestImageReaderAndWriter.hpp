@@ -49,7 +49,7 @@ class TestImageReaderAndWriter : public CxxTest::TestSuite
 {
 public:
 
-    void TestImageIO() throw(Exception)
+    void TestImageIO()
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestImageReaderAndWriter/");
@@ -71,7 +71,7 @@ public:
         image_writer.Write();
     }
 
-    void TestReadPng() throw(Exception)
+    void TestReadPng()
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestImageReaderAndWriter/");

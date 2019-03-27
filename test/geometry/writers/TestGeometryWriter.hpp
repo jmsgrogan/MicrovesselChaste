@@ -51,7 +51,7 @@ class TestGeometryWriter : public CxxTest::TestSuite
 
 public:
 
-    void TestWriteCuboid() throw(Exception)
+    void TestWriteCuboid()
     {
         Part<3> part;
         part.AddCuboid(1_um, 1_um, 1_um);
@@ -86,7 +86,7 @@ public:
         part.Write(output_file_handler.GetOutputDirectoryFullPath() + "cube_alone.vtp", GeometryFormat::VTP, false);
     }
 
-    void TestWriteTwoParts() throw(Exception)
+    void TestWriteTwoParts()
     {
         Part<3> part1;
         part1.AddCuboid(1_um, 1_um, 1_um);

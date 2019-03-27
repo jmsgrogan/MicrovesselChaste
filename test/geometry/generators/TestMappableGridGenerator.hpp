@@ -58,7 +58,7 @@ class TestMappableGridGenerator : public CxxTest::TestSuite
 
 public:
 
-    void TestMakePlane() throw(Exception)
+    void TestMakePlane()
     {
         std::string output_directory = "TestMappableGridGenerator";
         if(PetscTools::IsParallel())
@@ -90,7 +90,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestMakeCylinder() throw(Exception)
+    void TestMakeCylinder()
     {
         std::string output_directory = "TestMappableGridGenerator";
         if(PetscTools::IsParallel())
@@ -133,7 +133,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestMakeCylinderShell() throw(Exception)
+    void TestMakeCylinderShell()
     {
         std::string output_directory = "TestMappableGridGenerator";
         if(PetscTools::IsParallel())
@@ -151,7 +151,7 @@ public:
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath()+"cylinder_shell.vtp");
     }
 
-    void TestMakeHemisphere() throw(Exception)
+    void TestMakeHemisphere()
     {
         std::string output_directory = "TestMappableGridGenerator";
         if(PetscTools::IsParallel())
@@ -192,7 +192,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestMakeHemisphereShell() throw(Exception)
+    void TestMakeHemisphereShell()
     {
         std::string output_directory = "TestMappableGridGenerator";
         if(PetscTools::IsParallel())
@@ -210,7 +210,7 @@ public:
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath()+"hemisphere_shell.vtp");
     }
 
-    void TestArchiving() throw (Exception)
+    void TestArchiving()
     {
         #if BOOST_VERSION >= 105600
         // Test Archiving

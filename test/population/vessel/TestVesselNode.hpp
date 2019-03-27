@@ -57,7 +57,7 @@ class TestVesselNode : public AbstractCellBasedTestSuite
 
 public:
 
-    void TestConstructorAndLocationMethods() throw (Exception)
+    void TestConstructorAndLocationMethods()
     {
         // Set up some points and locations
         ChastePoint<3> point1(1.0, 2.0, 3.0);
@@ -78,7 +78,7 @@ public:
         TS_ASSERT_DELTA(p_node_1->rGetLocation().Convert(1_um)[2], 4.0, 1.e-6);
     }
 
-    void TestSimpleGetAndSetMethods() throw (Exception)
+    void TestSimpleGetAndSetMethods()
     {
         // Make a node
         std::shared_ptr<VesselNode<3> > p_node = VesselNode<3>::Create(0_m);
@@ -102,7 +102,7 @@ public:
         p_node->SetFlowProperties(node_flow_properties);
     }
 
-    void TestDistanceAndConincidentMethods() throw (Exception)
+    void TestDistanceAndConincidentMethods()
     {
         // Set up some points nodes
         auto p_node_1 = VesselNode<3>::Create(1.0_um, 2.0_um, 3.0_um);
@@ -122,7 +122,7 @@ public:
         TS_ASSERT_DELTA(p_node_1->GetDistance(p_node_3->rGetLocation())/1_um, std::sqrt(27.0), 1.e-6);
     }
 
-    void TestAddingAndRemovingVesselSegments() throw (Exception)
+    void TestAddingAndRemovingVesselSegments()
     {
         // Make some nodes
         auto p_node_1 = VesselNode<2>::Create(0_um);
@@ -153,7 +153,7 @@ public:
         TS_ASSERT_THROWS_THIS(p_segment2->ReplaceNode(0, p_node_1), "This segment is already attached to this node.");
     }
 
-    void TestArchiving() throw (Exception)
+    void TestArchiving()
     {
 #if BOOST_VERSION >= 105600
         // Test Archiving

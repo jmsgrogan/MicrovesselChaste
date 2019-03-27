@@ -55,7 +55,7 @@ class TestVesselNetworkGeometryCalculator : public CxxTest::TestSuite
 {
 public:
 
-    void TestSimpleNetwork() throw(Exception)
+    void TestSimpleNetwork()
     {
         // Make some nodes
         std::vector<std::shared_ptr<VesselNode<3> > > nodes;

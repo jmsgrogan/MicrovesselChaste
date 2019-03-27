@@ -53,7 +53,7 @@ class TestRegularGrid : public AbstractCellBasedWithTimingsTestSuite
 
 public:
 
-    void TestIndexing() throw(Exception)
+    void TestIndexing()
     {
         // Set up a 2d grid
         std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
