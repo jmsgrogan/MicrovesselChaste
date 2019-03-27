@@ -65,7 +65,7 @@ class TestVesselBasedDiscreteSource : public CxxTest::TestSuite
 
 public:
 
-    void TestGridFunction() throw(Exception)
+    void TestGridFunction()
     {
         auto p_output_file_handler =
                 std::make_shared<OutputFileHandler>("TestVesselBasedDiscreteSource/TestGridFunction");
@@ -121,7 +121,7 @@ public:
         p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"network.vtp");
     }
 
-    void TestMeshFunction() throw(Exception)
+    void TestMeshFunction()
     {
         auto p_output_file_handler =
                 std::make_shared<OutputFileHandler>("TestVesselBasedDiscreteSource/TestMeshFunction");
@@ -178,7 +178,7 @@ public:
         p_network->Write(p_output_file_handler->GetOutputDirectoryFullPath()+"network.vtp");
     }
 
-    void TestSimpleLinearEllipticFiniteDifferenceSolver() throw(Exception)
+    void TestSimpleLinearEllipticFiniteDifferenceSolver()
     {
         auto p_output_file_handler =
                 std::make_shared<OutputFileHandler>("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteDifferenceSolver");
@@ -228,7 +228,7 @@ public:
         solver.Solve();
     }
 
-    void TestSimpleLinearEllipticFiniteElementSolver() throw(Exception)
+    void TestSimpleLinearEllipticFiniteElementSolver()
     {
         auto p_output_file_handler =
                 std::make_shared<OutputFileHandler>("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteElementSolver");

@@ -49,7 +49,7 @@ class TestVesselNetworkWriter : public CxxTest::TestSuite
 {
 public:
 
-    void TestWriteNetworkToFile() throw(Exception)
+    void TestWriteNetworkToFile()
     {
         // Locate the input file
         FileFinder fileFinder("projects/MicrovesselChaste/test/data/tapmeier_network.vtp", RelativeTo::ChasteSourceRoot);

@@ -65,7 +65,7 @@ class TestLatticeBasedMigrationRules : public AbstractCellBasedWithTimingsTestSu
 
 public:
 
-    void TestSingleVessel() throw(Exception)
+    void TestSingleVessel()
     {
         // Set the grid to move on
         auto p_grid = RegularGrid<2>::Create();
@@ -116,7 +116,7 @@ public:
         TS_ASSERT(not_moved<100)
     }
 
-    void TestOwen2011SingleVessel() throw(Exception)
+    void TestOwen2011SingleVessel()
     {
         // Set the grid to move on
         auto p_grid = RegularGrid<2>::Create();
@@ -189,7 +189,7 @@ public:
         TS_ASSERT(num_right<100)
     }
 
-    void TestSproutingAndMigrationWithFlow() throw(Exception)
+    void TestSproutingAndMigrationWithFlow()
     {
         // Make a network
 

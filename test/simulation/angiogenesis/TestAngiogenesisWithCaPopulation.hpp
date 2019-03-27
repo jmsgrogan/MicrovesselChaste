@@ -71,7 +71,7 @@ class TestAngiogenesisWithCaPopulation : public AbstractCellBasedWithTimingsTest
 
 public:
 
-    void TestGrowSingleVessel() throw (Exception)
+    void TestGrowSingleVessel()
     {
         std::string output_directory = "TestAngiogenesisWithCaPopulation";
         auto p_file_handler =

@@ -62,7 +62,7 @@ class TestVesselNetwork : public CxxTest::TestSuite
 {
 public:
 
-    void TestAddingVessels() throw(Exception)
+    void TestAddingVessels()
     {
         // Make some nodes
         std::vector<VesselNodePtr<3> > nodes;
@@ -86,7 +86,7 @@ public:
         TS_ASSERT_EQUALS(vessel_network.GetNodes().size(), 4u);
     }
 
-    void TestSettingNetworkData() throw(Exception)
+    void TestSettingNetworkData()
     {
         // Make some nodes
         std::vector<VesselNodePtr<3> > nodes;
@@ -109,7 +109,7 @@ public:
         VesselNetworkPropertyManager<3>::SetSegmentRadii(p_vessel_network, 12.0e-6 * unit::metres);
     }
 
-    void TestCopyingAndMovingNetwork() throw(Exception)
+    void TestCopyingAndMovingNetwork()
     {
         // Make some nodes
         std::vector<VesselNodePtr<3> > nodes;
@@ -153,7 +153,7 @@ public:
         TS_ASSERT_DELTA(vessel_network.GetVessels()[3]->GetSegments()[0]->GetNode(1)->rGetLocation().Convert(reference_length)[2], 3.0, 1.e-6);
     }
 
-    void TestRemoveVessel() throw(Exception)
+    void TestRemoveVessel()
     {
         // Make some nodes
         std::vector<VesselNodePtr<3> > nodes;
@@ -176,7 +176,7 @@ public:
         TS_ASSERT_EQUALS(vessel_network.GetNumberOfVessels(), 2u);
     }
 
-    void TestDivideVessel() throw(Exception)
+    void TestDivideVessel()
     {
          // Make some nodes
          std::vector<VesselNodePtr<3> > nodes;
@@ -204,7 +204,7 @@ public:
          TS_ASSERT_DELTA(vessel_network.GetVessel(1)->GetSegment(0)->GetNode(1)->rGetLocation().Convert(reference_length)[0], 2.0, 1.e-6);
     }
 
-    void TestDivideMultiSegmentVessel() throw(Exception)
+    void TestDivideMultiSegmentVessel()
     {
         // Make some nodes
         std::vector<VesselNodePtr<3> > nodes;
@@ -279,7 +279,7 @@ public:
         TS_ASSERT_EQUALS(p_vessel_network->GetNumberOfVessels(),3u);
     }
 
-    void TestRemoveAndDeleteVessel() throw(Exception)
+    void TestRemoveAndDeleteVessel()
     {
         // Make some nodes
         std::vector<VesselNodePtr<3> > nodes;
@@ -305,7 +305,7 @@ public:
         TS_ASSERT_EQUALS(vessel_network.GetNumberOfNodes(), 3u);
     }
 
-    void TestMergeVessel() throw(Exception)
+    void TestMergeVessel()
     {
         // Make some nodes
         std::vector<VesselNodePtr<3> > nodes;
@@ -330,7 +330,7 @@ public:
         TS_ASSERT_DELTA(vessels[2]->GetStartNode()->rGetLocation().Convert(1e-6 * unit::metres)[0], 20.0, 1.e-6);
     }
 
-    void TestMultipleSprouts() throw(Exception)
+    void TestMultipleSprouts()
     {
         // Make a network
         std::vector<VesselNodePtr<3> > bottom_nodes;

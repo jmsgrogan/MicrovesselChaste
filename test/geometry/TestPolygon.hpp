@@ -78,7 +78,7 @@ class TestPolygon : public CxxTest::TestSuite
 {
 public:
 
-    void TestConstructor() throw(Exception)
+    void TestConstructor()
     {
         std::vector<VertexPtr<3> > vertices = SetUpTriangle();
         Polygon<3> polygon1(vertices);
@@ -87,7 +87,7 @@ public:
         TS_ASSERT_EQUALS(polygon2.rGetVertices().size(), 1u);
     }
 
-    void TestFactoryConstructor() throw(Exception)
+    void TestFactoryConstructor()
     {
         std::vector<VertexPtr<3> > vertices = SetUpTriangle();
         auto p_polygon1 = Polygon<3>::Create(vertices);
@@ -96,7 +96,7 @@ public:
         TS_ASSERT_EQUALS(p_polygon2->rGetVertices().size(), 1u);
     }
 
-    void TestAddingVertices() throw(Exception)
+    void TestAddingVertices()
     {
         std::vector<VertexPtr<3> > vertices = SetUpTriangle();
 
@@ -116,7 +116,7 @@ public:
         TS_ASSERT_THROWS_THIS(p_polygon2->ReplaceVertex(100, vertices[0]), "Requested vertex index out of range");
     }
 
-    void TestVtkMethods() throw(Exception)
+    void TestVtkMethods()
     {
         std::vector<VertexPtr<3> > vertices = SetUpSquare<3>();
         auto p_polygon = Polygon<3>::Create(vertices);
@@ -149,7 +149,7 @@ public:
         std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > vertex_pair = p_polygon->GetVtkVertices();
     }
 
-    void TestVtkMethods2d() throw(Exception)
+    void TestVtkMethods2d()
     {
         std::vector<VertexPtr<2> > vertices = SetUpSquare<2>();
 
@@ -170,7 +170,7 @@ public:
         std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkIdTypeArray> > vertex_pair = p_polygon->GetVtkVertices();
     }
 
-    void TestTransforms() throw(Exception)
+    void TestTransforms()
     {
         std::vector<VertexPtr<3> > vertices = SetUpSquare<3>();
         auto p_polygon = Polygon<3>::Create(vertices);
@@ -186,7 +186,7 @@ public:
         TS_ASSERT_DELTA(p_polygon->rGetVertices()[1]->Convert(1_um)[1], 3.0, 1.e-6);
     }
 
-    void TestGeometryOperations() throw(Exception)
+    void TestGeometryOperations()
     {
         std::vector<VertexPtr<3> > vertices = SetUpSquare<3>();
         auto p_polygon = Polygon<3>::Create(vertices);
@@ -207,7 +207,7 @@ public:
         TS_ASSERT_DELTA(p_polygon->GetDistanceToEdges(Vertex<3>(1.5_um, 0.5_um, 0.0_um))/1_um, 0.5, 1.e-6);
     }
 
-    void TestLabelling() throw(Exception)
+    void TestLabelling()
     {
         std::vector<VertexPtr<3> > vertices = SetUpSquare<3>();
         auto p_polygon = Polygon<3>::Create(vertices);
@@ -224,7 +224,7 @@ public:
         p_polygon->AddAttribute(poly_label, 2.0);
     }
 
-    void TestArchiving() throw (Exception)
+    void TestArchiving()
     {
 #if BOOST_VERSION >= 105600
         // Test Archiving

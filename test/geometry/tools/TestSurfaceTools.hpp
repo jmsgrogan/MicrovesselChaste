@@ -54,7 +54,7 @@ class TestSurfaceTools : public CxxTest::TestSuite
 {
 public:
 
-    void TestExtractBoundaryWithRemove() throw(Exception)
+    void TestExtractBoundaryWithRemove()
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestSurfaceTools/");
@@ -86,7 +86,7 @@ public:
         p_writer->Write();
     }
 
-    void TestExtractBoundary() throw(Exception)
+    void TestExtractBoundary()
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestSurfaceTools/");

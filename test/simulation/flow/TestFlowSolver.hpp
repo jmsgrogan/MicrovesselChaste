@@ -62,7 +62,7 @@ class TestFlowSolver : public CxxTest::TestSuite
 
 public:
 
-    void TestFlowThroughSingleSegment() throw (Exception)
+    void TestFlowThroughSingleSegment()
     {
         // Make some nodes
         std::shared_ptr<VesselNode<3> > pn1 = VesselNode<3>::Create(0_um);
@@ -100,7 +100,7 @@ public:
         TS_ASSERT_THROWS_THIS(solver.Update(), "Impedance should be a positive number.");
     }
 
-    void TestFlowThroughSingleSegmentVelocityBc() throw (Exception)
+    void TestFlowThroughSingleSegmentVelocityBc()
     {
         std::shared_ptr<VesselNode<3> > pn1 = VesselNode<3>::Create(0_um);
         std::shared_ptr<VesselNode<3> > pn2 = VesselNode<3>::Create(5_um);
@@ -133,7 +133,7 @@ public:
         TS_ASSERT_DELTA(p_vessel->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1.e-9, 1e-6);
     }
 
-    void TestFlowThroughBifurcationVelocityBc() throw (Exception)
+    void TestFlowThroughBifurcationVelocityBc()
     {
         std::shared_ptr<VesselNode<3> > pn1 = VesselNode<3>::Create(0_um, 0_um);
         std::shared_ptr<VesselNode<3> > pn2 = VesselNode<3>::Create(5_um, 0_um);
@@ -177,7 +177,7 @@ public:
         TS_ASSERT_DELTA(p_vessel3->GetEndNode()->GetFlowProperties()->GetPressure()/unit::pascals, 0.0, 1e-6);
     }
 
-    void TestFlowThroughSingleVesselWithMultipleSegments() throw (Exception)
+    void TestFlowThroughSingleVesselWithMultipleSegments()
     {
         // Make some nodes
         std::vector<NodePtr3> nodes;
@@ -235,7 +235,7 @@ public:
 
     }
 
-    void TestFlowThroughMultipleVessels() throw (Exception)
+    void TestFlowThroughMultipleVessels()
     {
         // Make some nodes
         std::vector<NodePtr3> nodes;
@@ -276,7 +276,7 @@ public:
 
     }
 
-    void TestFlowThroughBifurcation() throw (Exception)
+    void TestFlowThroughBifurcation()
     {
 
         EXIT_IF_PARALLEL;    // Need a larger network to run in parallel
@@ -356,7 +356,7 @@ public:
 
     }
 
-    void TestFlowThroughBifurcationHavingSwappedNodeLabels() throw (Exception)
+    void TestFlowThroughBifurcationHavingSwappedNodeLabels()
     {
         EXIT_IF_PARALLEL;    // Need a larger network to run in parallel
 
@@ -428,7 +428,7 @@ public:
 
     }
 
-    void TestFlowThroughHexagonalNetwork() throw (Exception)
+    void TestFlowThroughHexagonalNetwork()
     {
         // Specify the network dimensions
         QLength vessel_length = 80.0*1_um;
@@ -501,7 +501,7 @@ public:
     }
 
     // Slow, move to long running test pack
-    void DontTestFlowThroughRetinalNetwork() throw (Exception)
+    void DontTestFlowThroughRetinalNetwork()
     {
         // Specify the network dimensions
         FileFinder fileFinder("projects/Microvessel/test/data/retinal.vtp", RelativeTo::ChasteSourceRoot);
@@ -545,7 +545,7 @@ public:
         p_network->Write(output_filename);
     }
 
-    void TestLoop() throw(Exception)
+    void TestLoop()
     {
         EXIT_IF_PARALLEL;    // Need a larger network to run in parallel
 
@@ -604,7 +604,7 @@ public:
         p_network->Write(output_filename);
     }
 
-    void TestSproutingWithFlow() throw(Exception)
+    void TestSproutingWithFlow()
     {
         EXIT_IF_PARALLEL;    // Need a larger network to run in parallel
 

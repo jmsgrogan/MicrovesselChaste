@@ -69,7 +69,7 @@ class TestVesselNetworkCellPopulationInteractor : public AbstractCellBasedWithTi
 
 public:
 
-    void TestSetUpLatticeBasedVessel() throw (Exception)
+    void TestSetUpLatticeBasedVessel()
     {
         // Create the mesh
         PottsMeshGenerator<3> generator(20, 0, 0, 20, 0, 0, 21, 0, 0);

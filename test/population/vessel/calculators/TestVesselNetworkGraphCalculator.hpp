@@ -53,7 +53,7 @@ class TestVesselNetworkGraphCalculator : public CxxTest::TestSuite
 {
 public:
 
-    void TestConnnectedMethods() throw(Exception)
+    void TestConnnectedMethods()
     {
         // Make some nodes
         std::vector<std::shared_ptr<VesselNode<3> > > nodes;

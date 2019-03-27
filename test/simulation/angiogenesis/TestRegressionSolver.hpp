@@ -60,7 +60,7 @@ class TestRegressionSolver : public AbstractCellBasedWithTimingsTestSuite
 
 public:
 
-    void TestSingleVesselRegression() throw(Exception)
+    void TestSingleVesselRegression()
     {
         // Make a vessel
         std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
@@ -92,7 +92,7 @@ public:
         TS_ASSERT_EQUALS(p_network->GetNumberOfVessels(), 0u);
     }
 
-    void TestMultiVesselRegression() throw(Exception)
+    void TestMultiVesselRegression()
     {
         // Set up a hexagonal vessel network
         // Specify the network dimensions

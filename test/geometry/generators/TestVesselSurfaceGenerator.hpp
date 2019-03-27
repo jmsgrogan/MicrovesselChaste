@@ -57,7 +57,7 @@ class TestGenerateVtkVesselSurface : public CxxTest::TestSuite
 {
 public:
 
-    void TestSingleSegmentVessel() throw(Exception)
+    void TestSingleSegmentVessel()
     {
         QLength vessel_length = 100_um;
         VesselNetworkGenerator<3> generator;
@@ -77,7 +77,7 @@ public:
         writer.Write();
     }
 
-    void TestMultiSegmentVessel() throw(Exception)
+    void TestMultiSegmentVessel()
     {
         QLength vessel_length = 100_um;
         auto p_node1 = VesselNode<3> ::Create(0.0_m);
@@ -109,7 +109,7 @@ public:
         writer.Write();
     }
 
-    void TestSinusoidVessel() throw(Exception)
+    void TestSinusoidVessel()
     {
         QLength vessel_length = 400_um;
         unsigned num_segments= 10;
@@ -143,7 +143,7 @@ public:
         writer.Write();
     }
 
-    void TestMultiVessel() throw(Exception)
+    void TestMultiVessel()
     {
         QLength vessel_length = 100.0;
         std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3> ::Create(-vessel_length);
@@ -195,7 +195,7 @@ public:
         writer.Write();
     }
 
-    void Test2dFails() throw(Exception)
+    void Test2dFails()
     {
         QLength vessel_length = 100_um;
         VesselNetworkGenerator<2> generator;

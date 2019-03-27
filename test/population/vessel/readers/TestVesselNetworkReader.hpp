@@ -48,7 +48,7 @@ class TestVesselNetworkReader : public CxxTest::TestSuite
 {
 public:
 
-    void TestReadNetworkFromFile() throw(Exception)
+    void TestReadNetworkFromFile()
     {
         // Locate the input file
         FileFinder fileFinder("projects/MicrovesselChaste/test/data/tapmeier_network.vtp", RelativeTo::ChasteSourceRoot);
@@ -67,7 +67,7 @@ public:
         p_network->Write(output_filename);
     }
 
-    void TestReadBioNetworkFromFile() throw(Exception)
+    void TestReadBioNetworkFromFile()
     {
         // Locate the input file
         FileFinder fileFinder("projects/MicrovesselChaste/test/data/retinal.vtp", RelativeTo::ChasteSourceRoot);

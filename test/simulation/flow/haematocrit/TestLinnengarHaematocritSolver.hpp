@@ -71,7 +71,7 @@ class TestLinnengarHaematocritSolver : public CxxTest::TestSuite
 public:
 
 
-void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
+void TestHexagonalNetworkLinnengarHaematocrit()
 {
     // Iterate over vessel lengths
     std::vector<double> lengths;

@@ -123,7 +123,7 @@ class TestLatticeBasedAngiogenesisLiteratePaper : public AbstractCellBasedWithTi
 
 public:
 
-    void Test3dLatticeBased() throw (Exception)
+    void Test3dLatticeBased()
     {
         /*
          * Set up output file management and seed the random number generator.
