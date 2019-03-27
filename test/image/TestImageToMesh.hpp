@@ -56,7 +56,7 @@ class TestImageToMesh : public CxxTest::TestSuite
 {
 public:
 
-    void Test2dMesh() throw(Exception)
+    void Test2dMesh()
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestImageToMesh/", false);
@@ -86,7 +86,7 @@ public:
         mesh_writer.WriteFilesUsingMesh(*(p_image_mesher->GetMesh()));
     }
 
-    void Test2dMeshWithDomain() throw(Exception)
+    void Test2dMeshWithDomain()
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestImageToMesh/", false);

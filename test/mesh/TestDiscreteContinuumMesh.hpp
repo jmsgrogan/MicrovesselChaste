@@ -100,7 +100,7 @@ private:
 
 public:
 
-    void xTestMeshCircleInCirle() throw(Exception)
+    void xTestMeshCircleInCirle()
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/Circle");
         std::shared_ptr<Part<2> > p_part = Part<2>::Create();
@@ -132,7 +132,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestMeshCylinder() throw(Exception)
+    void xTestMeshCylinder()
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/Cylinder");
 
@@ -159,7 +159,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestMeshCylinderWithVesselSurface() throw(Exception)
+    void xTestMeshCylinderWithVesselSurface()
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CylinderWithVesselSurface");
 
@@ -186,7 +186,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestMeshCylinderWithVesselSurfaceNoHole() throw(Exception)
+    void xTestMeshCylinderWithVesselSurfaceNoHole()
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CylinderWithVesselSurfaceNoHole");
 
@@ -213,7 +213,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestMeshCubeWithVesselSurface() throw(Exception)
+    void xTestMeshCubeWithVesselSurface()
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CubeWithVesselSurface");
 
@@ -241,7 +241,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestMeshCubeWithVesselSurfaceInternal() throw(Exception)
+    void xTestMeshCubeWithVesselSurfaceInternal()
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/CubeWithVesselSurface", false);
 
@@ -269,7 +269,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestParrallelVesselSurfaceCube() throw(Exception)
+    void xTestParrallelVesselSurfaceCube()
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/ParrallelVesselSurface");
 
@@ -295,7 +295,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestPatchOnFace() throw(Exception)
+    void xTestPatchOnFace()
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/PatchOnFace");
 
@@ -351,7 +351,7 @@ public:
         mesh_writer.Write();
     }
 
-    void xTestPartInPart() throw(Exception)
+    void xTestPartInPart()
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/Hemisphere");
 
@@ -408,7 +408,7 @@ public:
         mesh_writer.Write();
     }
 
-    void TestDistanceMap3D() throw(Exception)
+    void TestDistanceMap3D()
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/DistanceMap3D");
 
@@ -478,7 +478,7 @@ public:
         p_polydata_writer->Write();
     }
 
-    void xTestDistanceMap2D() throw(Exception)
+    void xTestDistanceMap2D()
     {
         OutputFileHandler file_handler("TestDiscreteContinuumMesh/DistanceMap2D");
         std::shared_ptr<Part<2> > p_part = Part<2>::Create();

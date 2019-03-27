@@ -81,7 +81,7 @@ class TestPart : public CxxTest::TestSuite
 
 public:
 
-    void TestAddRectangle() throw(Exception)
+    void TestAddRectangle()
     {
         std::string output_directory = "TestPart";
         if(PetscTools::IsParallel())
@@ -108,7 +108,7 @@ public:
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Rectangle.vtp"));
     }
 
-    void TestAddCuboid() throw(Exception)
+    void TestAddCuboid()
     {
         std::string output_directory = "TestPart";
         if(PetscTools::IsParallel())
@@ -122,7 +122,7 @@ public:
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Cuboid.vtp"));
     }
 
-    void TestAddCylinder() throw(Exception)
+    void TestAddCylinder()
     {
         std::string output_directory = "TestPart";
         if(PetscTools::IsParallel())
@@ -136,7 +136,7 @@ public:
         part.Write(output_file_handler.GetOutputDirectoryFullPath().append("Cylinder.vtp"));
     }
 
-    void TestComposite2DPart() throw(Exception)
+    void TestComposite2DPart()
     {
         std::string output_directory = "TestPart";
         if(PetscTools::IsParallel())
@@ -164,7 +164,7 @@ public:
         p_part->Write(output_file_handler.GetOutputDirectoryFullPath().append("Composite2DPart.vtp"));
     }
 
-    void TestExtrudePart() throw(Exception)
+    void TestExtrudePart()
     {
         std::string output_directory = "TestPart";
         if(PetscTools::IsParallel())
@@ -183,7 +183,7 @@ public:
         TS_ASSERT_THROWS_THIS(p_part2->Extrude(p_circle2, 1_um), "Only parts in 3D space can be extruded.");
     }
 
-    void TestAddParrallelVesselsLines2d() throw(Exception)
+    void TestAddParrallelVesselsLines2d()
     {
         std::string output_directory = "TestPart";
         if(PetscTools::IsParallel())
@@ -202,7 +202,7 @@ public:
         TS_ASSERT_EQUALS(segment_indices.size(), 4u);
     }
 
-    void TestAddParrallelVesselLines3d() throw(Exception)
+    void TestAddParrallelVesselLines3d()
     {
         std::string output_directory = "TestPart";
         if(PetscTools::IsParallel())
@@ -218,7 +218,7 @@ public:
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselLines3d.vtp"));
     }
 
-    void TestAddParrallelVesselsSurfaces2d() throw(Exception)
+    void TestAddParrallelVesselsSurfaces2d()
     {
         std::string output_directory = "TestPart";
         if(PetscTools::IsParallel())
@@ -233,7 +233,7 @@ public:
         TS_ASSERT_THROWS_THIS(p_domain->AddVesselNetwork(p_network, true), "The surface generator currently only works in 3D");
     }
 
-    void TestAddParrallelVesselSurface3d() throw(Exception)
+    void TestAddParrallelVesselSurface3d()
     {
         std::string output_directory = "TestPart";
         if(PetscTools::IsParallel())
@@ -249,7 +249,7 @@ public:
         p_domain->Write(output_file_handler.GetOutputDirectoryFullPath().append("ParrallelVesselSurface3d.vtp"));
     }
 
-    void TestAddVesselsSurface3dCylinder() throw(Exception)
+    void TestAddVesselsSurface3dCylinder()
     {
         std::string output_directory = "TestPart";
         if(PetscTools::IsParallel())
@@ -277,7 +277,7 @@ public:
         part2.Write(output_file_handler.GetOutputDirectoryFullPath().append("Vessels3dCylinderSurfaceFill.vtp"));
     }
 
-    void TestBooleanWithNetwork() throw(Exception)
+    void TestBooleanWithNetwork()
     {
         auto p_network = GetVesselNetwork<2>();
         auto p_domain = Part<2>::Create();
@@ -286,7 +286,7 @@ public:
         TS_ASSERT_EQUALS(p_network->GetNumberOfVessels(), 1u);
     }
 
-    void TestContainingGridIndices() throw(Exception)
+    void TestContainingGridIndices()
     {
         Part<3> part;
         part.AddCuboid(10_um, 10_um, 10_um, Vertex<3>(0.5_um, 0.5_um, 0.5_um));
@@ -295,13 +295,13 @@ public:
         TS_ASSERT_EQUALS(containing_indices.size(), 10u*10u*10u);
     }
 
-    void TestGetSegmentIndices() throw(Exception)
+    void TestGetSegmentIndices()
     {
         Part<3> part;
         part.AddCuboid(10_um, 10_um, 10_um);
     }
 
-    void TestPointInPart() throw(Exception)
+    void TestPointInPart()
     {
         Part<3> part;
         part.AddCuboid(10_um, 10_um, 10_um);
@@ -317,7 +317,7 @@ public:
         TS_ASSERT(part2.IsPointInPart(p_probes)[0]);
     }
 
-    void TestTranslate() throw(Exception)
+    void TestTranslate()
     {
         Part<3> part;
         part.AddCuboid(10_um, 10_um, 10_um);
@@ -327,7 +327,7 @@ public:
         TS_ASSERT_DELTA(part.GetPolygons()[0]->rGetVertices()[0]->Convert(1_um)[0], 10.0, 1.e-6);
     }
 
-    void TestLabelling() throw (Exception)
+    void TestLabelling()
     {
         std::string output_directory = "TestPart";
         if(PetscTools::IsParallel())
@@ -404,7 +404,7 @@ public:
         hemisphere->Write(output_file_handler.GetOutputDirectoryFullPath() + "hemisphere.vtp", GeometryFormat::VTP, true);
     }
 
-    void TestArchiving() throw (Exception)
+    void TestArchiving()
     {
 #if BOOST_VERSION >= 105600
         std::string output_directory = "TestPart";
@@ -446,7 +446,7 @@ public:
 #endif
     }
 
-    void TestSendAndReceive() throw (Exception)
+    void TestSendAndReceive()
     {
 #if BOOST_VERSION >= 105600
         EXIT_IF_SEQUENTIAL;

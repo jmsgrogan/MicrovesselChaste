@@ -50,7 +50,7 @@ class TestVesselNetworkGenerator : public CxxTest::TestSuite
 
 public:
 
-    void TestGenerateAndWriteMonolithicHexagonalNetwork() throw (Exception)
+    void TestGenerateAndWriteMonolithicHexagonalNetwork()
     {
         // Generate the network
         VesselNetworkGenerator<2> network_generator;
@@ -66,7 +66,7 @@ public:
         p_network->Write(output_file_handler.GetOutputDirectoryFullPath().append("network.vtp"));
     }
 
-    void TestGenerateAndWriteHexagonalNetwork() throw (Exception)
+    void TestGenerateAndWriteHexagonalNetwork()
     {
         // Specify the network dimensions
         QLength vessel_length = 5_um;
@@ -84,7 +84,7 @@ public:
         p_network->Write(output_file_handler.GetOutputDirectoryFullPath().append("HexagonalVesselNetwork.vtp"));
     }
 
-    void TestGenerate3dHexagonalNetwork() throw (Exception)
+    void TestGenerate3dHexagonalNetwork()
     {
         // Specify the network dimensions
         QLength vessel_length = 40_um;
@@ -102,7 +102,7 @@ public:
         p_network->Write(output_file_handler.GetOutputDirectoryFullPath().append("HexagonalVesselNetwork3d.vtp"));
     }
 
-    void TestParallelNetworks() throw (Exception)
+    void TestParallelNetworks()
     {
         auto p_part = Part<3>::Create();
         p_part->AddCuboid(1_mm, 1_mm, 50_um, Vertex<3>(0.0, 0.0, 0.0));

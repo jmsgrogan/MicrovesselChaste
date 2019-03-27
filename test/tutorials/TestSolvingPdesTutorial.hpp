@@ -99,7 +99,7 @@ public:
      * In the first example we will solve a steady-state linear reaction diffusion
      * PDE with finite differences.
      */
-    void TestLinearReactionDiffusionPdeWithFiniteDifferences() throw(Exception)
+    void TestLinearReactionDiffusionPdeWithFiniteDifferences()
     {
         auto p_handler =
                 std::make_shared<OutputFileHandler>("TestSolvingPdesLiteratePaper/TestLinearReactionDiffusionPdeWithFiniteDifferences");

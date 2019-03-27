@@ -71,7 +71,7 @@ class TestLinnengarHaematocritSolver : public CxxTest::TestSuite
 
 public:
 
-void xTestCoupledOxygenSolveFailing() throw(Exception)
+void xTestCoupledOxygenSolveFailing()
 {
     // Specify the domain
     QLength vessel_length = 80_um;

@@ -52,7 +52,7 @@ class TestImageToSurface : public CxxTest::TestSuite
 {
 public:
 
-    void TestDefaultExtraction() throw(Exception)
+    void TestDefaultExtraction()
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestImageToSurface/");
@@ -111,7 +111,7 @@ public:
         p_writer->Write();
     }
 
-    void TestRemoveDisconnected() throw(Exception)
+    void TestRemoveDisconnected()
     {
         // Read the image from file
         OutputFileHandler file_handler1 = OutputFileHandler("TestImageToSurface/RemDisconnected/");

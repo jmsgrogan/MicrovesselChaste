@@ -57,7 +57,7 @@ class TestVesselImpedanceCalculator : public CxxTest::TestSuite
 
 public:
 
-    void TestFlowThroughSingleSegment() throw (Exception)
+    void TestFlowThroughSingleSegment()
     {
 
         // Make some nodes

@@ -76,7 +76,7 @@ class TestCoupledLumpedSystemFiniteDifferenceSolver : public AbstractCellBasedWi
     }
 public:
 
-    void TestPlaneSlowRelease() throw(Exception)
+    void TestPlaneSlowRelease()
     {
         BaseUnits::Instance()->SetReferenceLengthScale(1.0*unit::metres);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed);
@@ -145,7 +145,7 @@ public:
         }
     }
 
-    void TestPlane() throw(Exception)
+    void TestPlane()
     {
         BaseUnits::Instance()->SetReferenceLengthScale(1_um);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.e-9*unit::mole_per_metre_cubed);

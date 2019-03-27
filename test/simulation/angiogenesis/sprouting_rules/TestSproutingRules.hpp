@@ -53,7 +53,7 @@ class TestSproutingRules : public AbstractCellBasedWithTimingsTestSuite
 
 public:
 
-    void TestLatticeBasedSproutingRuleSimpleNetwork() throw(Exception)
+    void TestLatticeBasedSproutingRuleSimpleNetwork()
     {
         // Set up the grid
         auto p_grid = RegularGrid<3>::Create();
@@ -102,7 +102,7 @@ public:
         }
     }
 
-    void TestOwen2011SproutingRuleSimpleNetwork() throw(Exception)
+    void TestOwen2011SproutingRuleSimpleNetwork()
     {
         // Set up the grid
         auto p_grid = RegularGrid<2>::Create();

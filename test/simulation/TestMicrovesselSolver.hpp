@@ -61,7 +61,7 @@ class TestMicrovesselSolver : public AbstractCellBasedWithTimingsTestSuite
 
 public:
 
-    void TestSingleVesselGrowth() throw(Exception)
+    void TestSingleVesselGrowth()
     {
         // Make a network
         std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0, 0.0, 0.0);

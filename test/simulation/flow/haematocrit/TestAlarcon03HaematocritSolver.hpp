@@ -57,7 +57,7 @@ class TestAlarconHaematocritSolver : public CxxTest::TestSuite
 
 public:
 
-    void TestTwoVesselNetwork() throw(Exception)
+    void TestTwoVesselNetwork()
     {
         auto p_node1 = VesselNode<2>::Create(0.0_um);
         auto p_node2 = VesselNode<2>::Create(80_um);
@@ -84,7 +84,7 @@ public:
         TS_ASSERT_DELTA(p_vessel2->GetFlowProperties()->GetHaematocrit(),0.45, 1e-6);
     }
 
-    void TestBifurcationInflowNetwork() throw(Exception)
+    void TestBifurcationInflowNetwork()
     {
         auto p_node1 = VesselNode<2>::Create(0.0_um);
         auto p_node2 = VesselNode<2>::Create(80_um);
@@ -114,7 +114,7 @@ public:
         TS_ASSERT_DELTA(p_vessel3->GetFlowProperties()->GetHaematocrit(), 0.9, 1e-6);
     }
 
-    void TestBifurcationOutflowNetwork() throw(Exception)
+    void TestBifurcationOutflowNetwork()
     {
         auto p_node1 = VesselNode<2>::Create(0.0_um);
         auto p_node2 = VesselNode<2>::Create(80_um);
@@ -147,7 +147,7 @@ public:
         TS_ASSERT_DELTA(p_vessel3->GetFlowProperties()->GetHaematocrit(),0.45, 1e-6);
     }
 
-    void TestBifurcationOutflowNetworkBiasedFlow() throw(Exception)
+    void TestBifurcationOutflowNetworkBiasedFlow()
     {
         auto p_node1 = VesselNode<2>::Create(0.0_um);
         auto p_node2 = VesselNode<2>::Create(80_um);
@@ -180,7 +180,7 @@ public:
         TS_ASSERT_DELTA(p_vessel3->GetFlowProperties()->GetHaematocrit(), 0.45, 1e-6);
     }
 
-    void TestHexagonalNetwork() throw(Exception)
+    void TestHexagonalNetwork()
     {
         // Specify the network dimensions
         QLength vessel_length = 80.0_um;

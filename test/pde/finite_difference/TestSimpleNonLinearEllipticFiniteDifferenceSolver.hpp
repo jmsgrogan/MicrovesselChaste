@@ -90,7 +90,7 @@ private:
 
 public:
 
-    void TestRectangleDomain() throw(Exception)
+    void TestRectangleDomain()
     {
         // Set up the grid
         BaseUnits::Instance()->SetReferenceLengthScale(1.0*unit::metres);
@@ -158,7 +158,7 @@ public:
         }
     }
 
-    void TestBox() throw(Exception)
+    void TestBox()
     {
         // Set up the mesh
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();
