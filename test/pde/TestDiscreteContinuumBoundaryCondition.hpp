@@ -60,7 +60,7 @@ class TestDiscreteContinuumBoundaryCondition : public CxxTest::TestSuite
 
 public:
 
-    void TestSimpleLinearEllipticFiniteDifferenceSolver() throw(Exception)
+    void TestSimpleLinearEllipticFiniteDifferenceSolver()
     {
         // Set up the vessel network
         QLength vessel_length(100.0*unit::microns);
@@ -110,7 +110,7 @@ public:
         solver.Solve();
     }
 
-    void TestSimpleLinearEllipticFiniteElementSolver() throw(Exception)
+    void TestSimpleLinearEllipticFiniteElementSolver()
     {
         // Set up the vessel network
         QLength vessel_length(100.0*unit::microns);

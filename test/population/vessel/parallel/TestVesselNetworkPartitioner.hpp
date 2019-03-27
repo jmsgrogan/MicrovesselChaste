@@ -55,7 +55,7 @@ class TestVesselNetworkPartitioner : public CxxTest::TestSuite
 {
 public:
 
-    void TestSingleVessel() throw (Exception)
+    void TestSingleVessel()
     {
         std::string output_directory = "TestVesselNetworkPartitioner";
         if(PetscTools::IsParallel())
@@ -82,7 +82,7 @@ public:
                 boost::lexical_cast<std::string>(rank)+".vtp", false);
     }
 
-    void TestHexagonalNetwork() throw (Exception)
+    void TestHexagonalNetwork()
     {
         std::string output_directory = "TestVesselNetworkPartitioner";
         if(PetscTools::IsParallel())
@@ -103,7 +103,7 @@ public:
                 boost::lexical_cast<std::string>(rank)+".vtp", false);
     }
 
-    void TestParallelFlowProblem() throw (Exception)
+    void TestParallelFlowProblem()
     {
         std::string output_directory = "TestVesselNetworkPartitioner/Flow";
         if(PetscTools::IsParallel())

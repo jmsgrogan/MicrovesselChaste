@@ -57,7 +57,7 @@ class TestBetteridgeHaematocritSolver : public CxxTest::TestSuite
 
 public:
 
-void TestTwoVesselNetwork() throw(Exception)
+void TestTwoVesselNetwork()
 {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
@@ -84,7 +84,7 @@ void TestTwoVesselNetwork() throw(Exception)
     TS_ASSERT_DELTA(p_vessel2->GetSegments()[0]->GetFlowProperties()->GetHaematocrit(), 0.45/2.0, 1e-6);
 }
 
-void TestBifurcationInflowNetwork() throw(Exception)
+void TestBifurcationInflowNetwork()
 {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
@@ -114,7 +114,7 @@ void TestBifurcationInflowNetwork() throw(Exception)
     TS_ASSERT_DELTA(p_vessel3->GetSegments()[0]->GetFlowProperties()->GetHaematocrit(),5.0*0.45, 1e-6);
 }
 
-void TestTwoInTwoOutNetwork() throw(Exception)
+void TestTwoInTwoOutNetwork()
 {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(100.0_um);
@@ -155,7 +155,7 @@ void TestTwoInTwoOutNetwork() throw(Exception)
     TS_ASSERT_DELTA(double(p_vessel4->GetSegments()[0]->GetFlowProperties()->GetHaematocrit()),0.45, 1e-6);
 }
 
-void TestBifurcationOutflowNetwork() throw(Exception)
+void TestBifurcationOutflowNetwork()
 {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80.0_um);
@@ -188,7 +188,7 @@ void TestBifurcationOutflowNetwork() throw(Exception)
     TS_ASSERT_DELTA(p_vessel3->GetSegments()[0]->GetFlowProperties()->GetHaematocrit(),0.45, 1e-6);
 }
 
-void TestBifurcationOutflowNetworkBiasedFlow() throw(Exception)
+void TestBifurcationOutflowNetworkBiasedFlow()
 {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80.0_um);
@@ -232,7 +232,7 @@ void TestBifurcationOutflowNetworkBiasedFlow() throw(Exception)
     TS_ASSERT_DELTA(double(p_vessel3->GetSegments()[0]->GetFlowProperties()->GetHaematocrit()),parent_haematocrit, 1e-6);
 }
 
-void TestHexagonalNetworkBetteridgeHaematocrit() throw(Exception)
+void TestHexagonalNetworkBetteridgeHaematocrit()
 {
     // Specify the network dimensions
     QLength vessel_length = 80.0 * 1_um;

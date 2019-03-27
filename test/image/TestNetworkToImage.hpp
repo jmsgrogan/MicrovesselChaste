@@ -55,7 +55,7 @@ class TestNetworkToImage : public CxxTest::TestSuite
 {
 public:
 
-    void TestSingleVessel()  throw(Exception)
+    void TestSingleVessel()
     {
         std::string output_path = "TestNetworkToImage";
         if(PetscTools::IsParallel())
@@ -96,7 +96,7 @@ public:
         writer.Write();
     }
 
-    void TestBifurcationVessel() throw(Exception)
+    void TestBifurcationVessel()
     {
         // Set up the network
         QLength length = 100_um;

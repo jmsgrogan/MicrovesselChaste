@@ -65,7 +65,7 @@ class TestFunctionMap : public CxxTest::TestSuite
 
 public:
 
-    void TestGridFunction() throw(Exception)
+    void TestGridFunction()
     {
         BaseUnits::Instance()->SetReferenceLengthScale(1_um);
         QLength length(100.0*unit::microns);
@@ -98,7 +98,7 @@ public:
         solver.Write();
     }
 
-    void TestMeshFunction() throw(Exception)
+    void TestMeshFunction()
     {
         BaseUnits::Instance()->SetReferenceLengthScale(1_um);
         QLength length(100.0*unit::microns);

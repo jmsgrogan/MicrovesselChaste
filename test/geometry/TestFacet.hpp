@@ -87,7 +87,7 @@ class TestFacet : public CxxTest::TestSuite
 
 public:
 
-    void TestConstructor() throw (Exception)
+    void TestConstructor()
     {
         std::vector<PolygonPtr<3> > polygons = SetUpPolygons();
         Facet<3> facet1(polygons);
@@ -96,7 +96,7 @@ public:
         TS_ASSERT_EQUALS(facet2.GetPolygons().size(), 1u);
     }
 
-    void TestFactoryConstructor() throw (Exception)
+    void TestFactoryConstructor()
     {
         std::vector<PolygonPtr<3> > polygons = SetUpPolygons();
         auto p_facet1 = Facet<3>::Create(polygons);
@@ -105,7 +105,7 @@ public:
         TS_ASSERT_EQUALS(p_facet2->GetPolygons().size(), 1u);
     }
 
-    void TestAddingPolygons() throw (Exception)
+    void TestAddingPolygons()
     {
         std::vector<PolygonPtr<3> > polygons = SetUpPolygons();
         PolygonPtr<3> p_polygon = SetUpTriangle();
@@ -117,7 +117,7 @@ public:
         TS_ASSERT_EQUALS(p_facet2->GetPolygons().size(), 2u);
     }
 
-    void TestVtkMethods() throw (Exception)
+    void TestVtkMethods()
     {
         PolygonPtr<3> p_polygon = SetUpSquare<3>();
         auto p_facet = Facet<3>::Create(p_polygon);
@@ -138,7 +138,7 @@ public:
         TS_ASSERT_DELTA(std::abs(normal[2]), 1.0, 1.e-6);
     }
 
-    void TestVtkMethods2d() throw (Exception)
+    void TestVtkMethods2d()
     {
         PolygonPtr<2> p_polygon = SetUpSquare<2>();
         auto p_facet = Facet<2>::Create(p_polygon);
@@ -155,7 +155,7 @@ public:
         TS_ASSERT_DELTA(normal[1], 0.0, 1.e-6);
     }
 
-    void TestTransforms() throw (Exception)
+    void TestTransforms()
     {
         PolygonPtr<3> p_polygon = SetUpSquare<3>();
         auto p_facet = Facet<3>::Create(p_polygon);
@@ -173,7 +173,7 @@ public:
         p_facet->RotateAboutAxis(rotation_axis, -M_PI/2.0);
     }
 
-    void TestGeometryAndLabelMethods() throw (Exception)
+    void TestGeometryAndLabelMethods()
     {
         std::vector<VertexPtr<3> > vertices;
         vertices.push_back(Vertex<3>::Create(-0.5_um, 0.0_um));
@@ -197,7 +197,7 @@ public:
         TS_ASSERT_DELTA(abs(p_facet->GetPlane()->GetNormal()[2]), 1.0, 1.e-6);
     }
 
-    void Test2DMethods() throw (Exception)
+    void Test2DMethods()
     {
         std::vector<std::shared_ptr<Vertex<2> > > vertices;
         vertices.push_back(Vertex<2>::Create(-0.5_um, 0.0_um));
@@ -216,7 +216,7 @@ public:
         TS_ASSERT_DELTA(double(p_facet->GetDistance(Vertex<2>(1.5_um, 0.5_um, 0.0_um))/1_um), 0.0, 1.e-6);
     }
 
-    void TestArchiving() throw (Exception)
+    void TestArchiving()
     {
 #if BOOST_VERSION >= 105600
         // Test Archiving

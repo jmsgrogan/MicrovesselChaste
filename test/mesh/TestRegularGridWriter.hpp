@@ -54,7 +54,7 @@ class TestRegularGridWriter : public AbstractCellBasedWithTimingsTestSuite
 
 public:
 
-    void TestWriteSimpleGrid() throw(Exception)
+    void TestWriteSimpleGrid()
     {
         OutputFileHandler output_file_handler("TestRegularGridWriter", false);
         std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("SimpleGrid.vti");

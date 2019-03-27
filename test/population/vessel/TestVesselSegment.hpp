@@ -51,7 +51,7 @@ class TestVesselSegment : public CxxTest::TestSuite
 {
 public:
 
-    void TestConstructor() throw (Exception)
+    void TestConstructor()
     {
         // Make some nodes
         std::vector<std::shared_ptr<VesselNode<2> > > nodes;
@@ -86,7 +86,7 @@ public:
                               "A node index other than 0 or 1 has been requested for a Vessel Segment.");
     }
 
-    void TestSimpleGetAndSetMethods() throw (Exception)
+    void TestSimpleGetAndSetMethods()
     {
         std::shared_ptr<VesselSegment<3> > pSegment = VesselSegment<3>::Create(VesselNode<3>::Create(0.0_um),
                                                                                       VesselNode<3>::Create(1.0_um));
@@ -104,7 +104,7 @@ public:
         TS_ASSERT_DELTA(pSegment->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 15.0, 1.e-6);
     }
 
-    void TestGeometricFeatures() throw (Exception)
+    void TestGeometricFeatures()
     {
         //Check the returned length
         std::vector<std::shared_ptr<VesselNode<2> > > nodes;
@@ -129,7 +129,7 @@ public:
         TS_ASSERT_DELTA(p_segment1->GetUnitTangent()[1], 1.0 / std::sqrt(2.0), 1.E-6);
     }
 
-    void TestAddingAndRemovingVessels() throw (Exception)
+    void TestAddingAndRemovingVessels()
     {
         // Make some nodes
         std::vector<std::shared_ptr<VesselNode<2> > > nodes;
@@ -160,7 +160,7 @@ public:
                               "A vessel has been requested but this segment doesn't have one.");
     }
 
-    void TestRemoveMethod() throw (Exception)
+    void TestRemoveMethod()
     {
         // Make a segment
         std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0_um);

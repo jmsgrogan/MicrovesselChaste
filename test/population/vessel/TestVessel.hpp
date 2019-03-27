@@ -49,7 +49,7 @@ class TestVessel : public CxxTest::TestSuite
 {
 public:
 
-    void TestConstructor() throw (Exception)
+    void TestConstructor()
     {
         std::vector<std::shared_ptr<VesselNode<2> > > nodes;
         for (unsigned idx = 0; idx < 6; idx++)
@@ -101,7 +101,7 @@ public:
         TS_ASSERT_DELTA(pVessel1->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 15.0, 1.e-6);
     }
 
-    void TestAddingAndRemovingSegments() throw (Exception)
+    void TestAddingAndRemovingSegments()
     {
         // Make some nodes
         std::vector<std::shared_ptr<VesselNode<2> > > nodes;
@@ -151,7 +151,7 @@ public:
                               "Input vessel segments are not attached in the correct order.");
     }
 
-    void TestRemoveMethod() throw (Exception)
+    void TestRemoveMethod()
     {
         // Make a segment
         std::shared_ptr<VesselNode<3> > p_node1 = VesselNode<3>::Create(0.0);
