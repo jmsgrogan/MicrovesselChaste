@@ -1,12 +1,12 @@
 # Copyright (c) 2005-2017, University of Oxford.
 # All rights reserved.
-# 
+#
 # University of Oxford means the Chancellor, Masters and Scholars of the
 # University of Oxford, having an administrative office at Wellington
 # Square, Oxford OX1 2JD, UK.
-# 
+#
 # This file is part of Chaste.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
 #  * Redistributions of source code must retain the above copyright notice,
@@ -17,7 +17,7 @@
 #  * Neither the name of the University of Oxford nor the names of its
 #    contributors may be used to endorse or promote products derived from this
 #    software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,7 +28,7 @@
 # HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-# 
+#
 add_compile_options(-Wno-unused-local-typedefs)
 # Build the Python bindings
 add_definitions(-DCHASTE_MicrovesselChaste_PYTHON)
@@ -41,13 +41,13 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
 include_directories(${Chaste_INCLUDE_DIRS} ${Chaste_THIRD_PARTY_INCLUDE_DIRS})
 
-# Any non-wrapper code (code in the src folder) in this project needs to be put in its own shared library. 
+# Any non-wrapper code (code in the src folder) in this project needs to be put in its own shared library.
 if(APPLE)
     set(PROJECT_MicrovesselChaste_LIB ${CMAKE_CURRENT_BINARY_DIR}/libchaste_project_MicrovesselChaste.dylib)
 elseif(WIN32)
-    set(PROJECT_MicrovesselChaste_LIB ${CMAKE_CURRENT_BINARY_DIR}/libchaste_project_MicrovesselChaste.dll)  
+    set(PROJECT_MicrovesselChaste_LIB ${CMAKE_CURRENT_BINARY_DIR}/libchaste_project_MicrovesselChaste.dll)
 else()
-    set(PROJECT_MicrovesselChaste_LIB ${CMAKE_CURRENT_BINARY_DIR}/libchaste_project_MicrovesselChaste.so)  
+    set(PROJECT_MicrovesselChaste_LIB ${CMAKE_CURRENT_BINARY_DIR}/libchaste_project_MicrovesselChaste.so)
 endif()
 
 # These packages are needed for binding generation
@@ -70,7 +70,7 @@ set(PYBIND11_PYTHON_VERSION 2.7)
 set(PYBIND11_CPP_STANDARD -std=c++11)
 include_directories(${PYTHON_INCLUDE_DIRS})
 
-######### Build the Python modules ###################### 
+######### Build the Python modules ######################
 set (MicrovesselChaste_AUTO_MODULES "")
 set (MicrovesselChaste_PYTHON_MODULES "")
 set (MicrovesselChaste_PYTHON_MODULE_LOCATIONS "")
@@ -130,9 +130,9 @@ math(EXPR len2 "${len1} - 1")
 foreach(val RANGE ${len2})
     list(GET MicrovesselChaste_PYTHON_MODULES ${val} python_module)
     list(GET MicrovesselChaste_PYTHON_MODULE_LOCATIONS ${val} python_module_location)
-    
+
     file(GLOB MODULE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/dynamic/wrappers/${python_module}/*.cpp)
-    
+
     # each module is in the 'dynamic' directory. The library name must be the same as that defined in the cpp file. It is customary
     # to start the name with an underscore. The usual 'lib' prefix is disabled.
     add_library(_chaste_project_MicrovesselChaste_${python_module} SHARED ${MODULE_SOURCES})
@@ -141,7 +141,7 @@ foreach(val RANGE ${len2})
     target_compile_features(_chaste_project_MicrovesselChaste_${python_module} PRIVATE cxx_range_for)
 
     # order is important, boost python and python come first
-    target_link_libraries(_chaste_project_MicrovesselChaste_${python_module} pybind11::module ${PYTHON_LIBRARIES} ${Chaste_THIRD_PARTY_LIBRARIES} ${Chaste_LIBRARIES} ${PROJECT_MicrovesselChaste_LIB})
+    target_link_libraries(_chaste_project_MicrovesselChaste_${python_module} find_package(pybind11) ${PYTHON_LIBRARIES} ${Chaste_THIRD_PARTY_LIBRARIES} ${Chaste_LIBRARIES} ${PROJECT_MicrovesselChaste_LIB})
     add_dependencies(_chaste_project_MicrovesselChaste_${python_module} chaste_project_MicrovesselChaste)
 endforeach()
 #

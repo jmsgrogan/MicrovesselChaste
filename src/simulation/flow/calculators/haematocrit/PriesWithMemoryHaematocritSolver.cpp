@@ -271,7 +271,7 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
                         QLength my_radius = vessels[idx]->GetRadius();
                         QLength competitor_radius = competitor_vessels[0]->GetRadius();
                         QLength parent_radius = parent_vessels[0]->GetRadius();
-                    
+
         		double micron_my_radius = (my_radius/unit::metres)*1.e6;
         		double micron_competitor_radius = (competitor_radius/unit::metres)*1.e6;
         		double micron_parent_radius = (parent_radius/unit::metres)*1.e6;
@@ -312,7 +312,7 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
 
 
         		double A = -13.29*((1.0-parent_vessels[0]->GetFlowProperties()->GetHaematocrit())*(diameter_ratio*diameter_ratio-1.0))/(2.0*micron_parent_radius*(diameter_ratio*diameter_ratio+1.0))+cfl_term;
-                        
+
 			double term2 = exp(A);
 			// Apply extended Pries rule
 
@@ -328,10 +328,10 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
 				linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -Qabs(parent0_flow_rate)/Qabs(flow_rate));
 				}
 				else
-				{	
+				{
 				modified_flow_ratio_mc = (Qabs(flow_rate)-X0*Qabs(parent0_flow_rate))/(Qabs(competitor0_flow_rate)-X0*Qabs(parent0_flow_rate));
-				double term1 = pow(modified_flow_ratio_mc,B);		
-				double numer = term2*term1*flow_ratio_pm;                
+				double term1 = pow(modified_flow_ratio_mc,B);
+				double numer = term2*term1*flow_ratio_pm;
                        	 	double denom = 1.0+term2*term1;
 				linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -numer/denom);
 				}
@@ -349,8 +349,8 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
 				else
 				{
 				modified_flow_ratio_mc = (Qabs(flow_rate)-X0_favor*Qabs(parent0_flow_rate))/(Qabs(competitor0_flow_rate)-X0_unfavor*Qabs(parent0_flow_rate));
-				double term1 = pow(modified_flow_ratio_mc,B);		
-				double numer = term2*term1*flow_ratio_pm;                
+				double term1 = pow(modified_flow_ratio_mc,B);
+				double numer = term2*term1*flow_ratio_pm;
                         	double denom = 1.0+term2*term1;
 				linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -numer/denom);
 				}
@@ -368,15 +368,15 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
 				else
 				{
 				modified_flow_ratio_mc = (Qabs(flow_rate)-X0_unfavor*Qabs(parent0_flow_rate))/(Qabs(competitor0_flow_rate)-X0_favor*Qabs(parent0_flow_rate));
-				double term1 = pow(modified_flow_ratio_mc,B);		
-				double numer = term2*term1*flow_ratio_pm;                
+				double term1 = pow(modified_flow_ratio_mc,B);
+				double numer = term2*term1*flow_ratio_pm;
                         	double denom = 1.0+term2*term1;
 				linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -numer/denom);
 				}
 			}
 
 
-                     
+
                         // new bits with memory effects for dichotomous networks end here
 
                         // Save the indices for later updating
@@ -416,7 +416,7 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
                          {
                              if(update_indices[idx][local_update_index]<0)
                              {
-                                 if(random_assignment[update_indices[idx][abs(local_update_index)]]>my_value)
+                                 if(random_assignment[update_indices[idx][(local_update_index > 0) ? local_update_index: -local_update_index]]>my_value)
                                  {
                                      my_value_highest = false;
                                  }
@@ -468,8 +468,8 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
 			QLength my_radius = vessels[update_indices[idx][0]]->GetRadius();
                    	QLength competitor_radius = vessels[update_indices[idx][2]]->GetRadius();
                         QLength parent_radius = vessels[update_indices[idx][1]]->GetRadius();
-			
-                
+
+
 
         		double micron_my_radius = (my_radius/unit::metres)*1.e6;
         		double micron_competitor_radius = (competitor_radius/unit::metres)*1.e6;
@@ -520,10 +520,10 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
 				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -Qabs(parent0_flow_rate)/Qabs(self_flow_rate));
 				}
 				else
-				{	
+				{
 				modified_flow_ratio_mc = (Qabs(self_flow_rate)-X0*Qabs(parent0_flow_rate))/(Qabs(competitor0_flow_rate)-X0*Qabs(parent0_flow_rate));
-				double term1 = pow(modified_flow_ratio_mc,B);		
-				double numer = term2*term1*flow_ratio_pm;                
+				double term1 = pow(modified_flow_ratio_mc,B);
+				double numer = term2*term1*flow_ratio_pm;
                        	 	double denom = 1.0+term2*term1;
 				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -numer/denom);
 				}
@@ -541,8 +541,8 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
 				else
 				{
 				modified_flow_ratio_mc = (Qabs(self_flow_rate)-X0_favor*Qabs(parent0_flow_rate))/(Qabs(competitor0_flow_rate)-X0_unfavor*Qabs(parent0_flow_rate));
-				double term1 = pow(modified_flow_ratio_mc,B);		
-				double numer = term2*term1*flow_ratio_pm;                
+				double term1 = pow(modified_flow_ratio_mc,B);
+				double numer = term2*term1*flow_ratio_pm;
                         	double denom = 1.0+term2*term1;
 				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -numer/denom);
 				}
@@ -560,13 +560,13 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
 				else
 				{
 				modified_flow_ratio_mc = (Qabs(self_flow_rate)-X0_unfavor*Qabs(parent0_flow_rate))/(Qabs(competitor0_flow_rate)-X0_favor*Qabs(parent0_flow_rate));
-				double term1 = pow(modified_flow_ratio_mc,B);		
-				double numer = term2*term1*flow_ratio_pm;                
+				double term1 = pow(modified_flow_ratio_mc,B);
+				double numer = term2*term1*flow_ratio_pm;
                         	double denom = 1.0+term2*term1;
 				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -numer/denom);
 				}
 			}
-						
+
                 }
             }
         }

@@ -283,7 +283,7 @@ void ModifiedPriesHaematocritSolver<DIM>::Calculate()
 			QDimensionless diameter_ratio = micron_my_radius/micron_competitor_radius;
 
 			// new bits with CFL
-			/*			
+			/*
 			double cfl_term = 1000.0;
     			QLength dist_to_prev_bif = parent_vessels[0]->GetLength();
 			double micron_distTPB = (dist_to_prev_bif/unit::metres)*1.e6;
@@ -303,22 +303,22 @@ void ModifiedPriesHaematocritSolver<DIM>::Calculate()
 			}
 
 			std::cout << cfl_term << "\n";
-			*/			
+			*/
 			//new bits end
 
         		double A1 = -13.29*((1.0-parent_vessels[0]->GetFlowProperties()->GetHaematocrit())*(diameter_ratio*diameter_ratio-1.0))/(2.0*micron_parent_radius*(diameter_ratio*diameter_ratio+1.0));
         		double A2 = 6.98*(1.0-parent_vessels[0]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
                         //QDimensionless alpha = 1.0 - parent_vessels[0]->GetFlowProperties()->GetHaematocrit();
-                        
+
 			double term1 = pow(flow_ratio_mc,A2);
 			double term2 = exp(A1);
-						
-			double numer = term2*term1*flow_ratio_pc;                
+
+			double numer = term2*term1*flow_ratio_pc;
                         double denom = 1.0+term2*term1*flow_ratio_mc;
 			// Apply modified Pries rule to faster vessel
                         linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -numer/denom);
-                     
-                     
+
+
 
                         // Save the indices for later updating
                         std::vector<int> local_update_indics = std::vector<int>(3);
@@ -357,7 +357,7 @@ void ModifiedPriesHaematocritSolver<DIM>::Calculate()
                          {
                              if(update_indices[idx][local_update_index]<0)
                              {
-                                 if(random_assignment[update_indices[idx][abs(local_update_index)]]>my_value)
+                                 if(random_assignment[update_indices[idx][(local_update_index > 0) ? local_update_index: -local_update_index]]>my_value)
                                  {
                                      my_value_highest = false;
                                  }
@@ -411,8 +411,8 @@ void ModifiedPriesHaematocritSolver<DIM>::Calculate()
 			QLength my_radius = vessels[update_indices[idx][0]]->GetRadius();
                    	QLength competitor_radius = vessels[update_indices[idx][2]]->GetRadius();
                         QLength parent_radius = vessels[update_indices[idx][1]]->GetRadius();
-			
-                
+
+
 
         		double micron_my_radius = (my_radius/unit::metres)*1.e6;
         		double micron_competitor_radius = (competitor_radius/unit::metres)*1.e6;
@@ -423,15 +423,15 @@ void ModifiedPriesHaematocritSolver<DIM>::Calculate()
         		double A1 = -13.29*((1.0-vessels[update_indices[idx][1]]->GetFlowProperties()->GetHaematocrit())*(diameter_ratio*diameter_ratio-1.0))/(2.0*micron_parent_radius*(diameter_ratio*diameter_ratio+1.0));
         		double A2 = 6.98*(1.0-vessels[update_indices[idx][1]]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
                         //QDimensionless alpha = 1.0 - parent_vessels[0]->GetFlowProperties()->GetHaematocrit();
-                        
+
 			double term1 = pow(flow_ratio_mc,A2);
 			double term2 = exp(A1);
-						
-			double numer = term2*term1*flow_ratio_pc;                
+
+			double numer = term2*term1*flow_ratio_pc;
                         double denom = 1.0+term2*term1*flow_ratio_mc;
 			// Apply modified Pries rule to faster vessel
                         linearSystem.SetMatrixElement(update_indices[idx][0], update_indices[idx][1], -numer/denom);
-		
+
 		/*
                     QFlowRate self_flow_rate = vessels[update_indices[idx][0]]->GetFlowProperties()->GetFlowRate();
                     QFlowRate competitor0_flow_rate = vessels[update_indices[idx][2]]->GetFlowProperties()->GetFlowRate();
@@ -447,7 +447,7 @@ void ModifiedPriesHaematocritSolver<DIM>::Calculate()
                     double flow_ratio_cm = Qabs(competitor0_flow_rate/self_flow_rate);
                     double numer = flow_ratio_pm;
 
-                   
+
                     if(my_velocity >= competitor_velocity)
                     {
                         double term = alpha * (my_velocity/competitor_velocity-1.0);
