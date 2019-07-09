@@ -74,13 +74,13 @@ class TestNoCellsBetteridgeNontrivVis : public CxxTest::TestSuite
 
 public:
 
-void xTestNoCellsNontriv() throw(Exception)
+void xTestNoCellsNontriv()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
     QLength domain_side_length = 1280_um;
     //QLength vessel_radius = 10_um;
-QLength vessel_radius = 5_um;     
+QLength vessel_radius = 5_um;
 QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     auto p_file_handler = std::make_shared<OutputFileHandler>("TestNoCellsNontrivLinn", true);
 
@@ -237,7 +237,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
 
-void xTestNoCellsNontrivEquilateralBett() throw(Exception)
+void xTestNoCellsNontrivEquilateralBett()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -245,7 +245,7 @@ void xTestNoCellsNontrivEquilateralBett() throw(Exception)
     QLength domain_side_length_y = sqrt(2.0)*units_in_y*vessel_length;
     QLength domain_side_length_x = (2+sqrt(2.0))*units_in_y*vessel_length;
     //QLength vessel_radius = 10_um;
-QLength vessel_radius = 20_um;     
+QLength vessel_radius = 20_um;
 QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     auto p_file_handler = std::make_shared<OutputFileHandler>("TestNoCellsNontrivHexagonalEquilateralBett", true);
 
@@ -399,7 +399,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     SimulationTime::Instance()->Destroy();
 }
 
-void xTestNoCellsNontrivEquilateralModPries() throw(Exception)
+void xTestNoCellsNontrivEquilateralModPries()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -407,7 +407,7 @@ void xTestNoCellsNontrivEquilateralModPries() throw(Exception)
     QLength domain_side_length_y = sqrt(2.0)*units_in_y*vessel_length;
     QLength domain_side_length_x = (2+sqrt(2.0))*units_in_y*vessel_length;
     //QLength vessel_radius = 10_um;
-QLength vessel_radius = 20_um;     
+QLength vessel_radius = 20_um;
 QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     auto p_file_handler = std::make_shared<OutputFileHandler>("TestNoCellsNontrivHexagonalEquilateralModPries", true);
 
@@ -564,7 +564,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
 
-void xTestNoCellsNontrivEquilateralConst() throw(Exception)
+void xTestNoCellsNontrivEquilateralConst()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -572,7 +572,7 @@ void xTestNoCellsNontrivEquilateralConst() throw(Exception)
     QLength domain_side_length_y = sqrt(2.0)*units_in_y*vessel_length;
     QLength domain_side_length_x = (2+sqrt(2.0))*units_in_y*vessel_length;
     //QLength vessel_radius = 10_um;
-QLength vessel_radius = 20_um;     
+QLength vessel_radius = 20_um;
 QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     auto p_file_handler = std::make_shared<OutputFileHandler>("TestNoCellsNontrivHexagonalEquilateralConst", true);
 
@@ -726,7 +726,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     SimulationTime::Instance()->Destroy();
 }
 
-void xTestNoCellsNontrivVaryingRadii() throw(Exception)
+void xTestNoCellsNontrivVaryingRadii()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -734,7 +734,7 @@ void xTestNoCellsNontrivVaryingRadii() throw(Exception)
     QLength domain_side_length_y = sqrt(2.0)*units_in_y*vessel_length;
     QLength domain_side_length_x = (2+sqrt(2.0))*units_in_y*vessel_length;
     QLength max_radius = 40_um;
-//QLength vessel_radius = 5_um;     
+//QLength vessel_radius = 5_um;
 QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     auto p_file_handler = std::make_shared<OutputFileHandler>("TestNoCellsNontrivBettVaryingRadii", true);
 
@@ -890,7 +890,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
 
-void xTestNoCellsDichotomous() throw(Exception)
+void xTestNoCellsDichotomous()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -899,7 +899,7 @@ void xTestNoCellsDichotomous() throw(Exception)
     unsigned order=7;
     QLength domain_side_length_x = (double(order)+1.0)*2.0*vessel_length;
     QLength max_radius = 40_um;
-//QLength vessel_radius = 5_um;     
+//QLength vessel_radius = 5_um;
 QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     auto p_file_handler = std::make_shared<OutputFileHandler>("TestNoCellsNontrivBettDichotomous", true);
 
@@ -1053,7 +1053,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 }
 
 
-void xTestNoCellsDichotomousUneven() throw(Exception)
+void xTestNoCellsDichotomousUneven()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -1062,7 +1062,7 @@ void xTestNoCellsDichotomousUneven() throw(Exception)
     unsigned order=4;
     QLength domain_side_length_x = (double(order)+1.0)*2.0*vessel_length;
     QLength max_radius = 40_um;
-//QLength vessel_radius = 5_um;     
+//QLength vessel_radius = 5_um;
 QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     auto p_file_handler = std::make_shared<OutputFileHandler>("TestNoCellsNontrivDichotomousUnevenConst", true);
 
@@ -1218,7 +1218,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 }
 
 
-void xTestNoCellsDichotomousUnevenModPries() throw(Exception)
+void xTestNoCellsDichotomousUnevenModPries()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -1227,7 +1227,7 @@ void xTestNoCellsDichotomousUnevenModPries() throw(Exception)
     unsigned order=4;
     QLength domain_side_length_x = (double(order)+1.0)*2.0*vessel_length;
     QLength max_radius = 40_um;
-//QLength vessel_radius = 5_um;     
+//QLength vessel_radius = 5_um;
 QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     auto p_file_handler = std::make_shared<OutputFileHandler>("TestNoCellsNontrivDichotomousUnevenModPries", true);
 
@@ -1383,7 +1383,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 }
 
 
-void xTestNoCellsDichotomousUnevenModPriesNoCorners() throw(Exception)
+void xTestNoCellsDichotomousUnevenModPriesNoCorners()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -1392,7 +1392,7 @@ void xTestNoCellsDichotomousUnevenModPriesNoCorners() throw(Exception)
     unsigned order=4;
     QLength domain_side_length_x = (double(order)+1.0)*2.0*vessel_length;
     QLength max_radius = 40_um;
-//QLength vessel_radius = 5_um;     
+//QLength vessel_radius = 5_um;
 QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     auto p_file_handler = std::make_shared<OutputFileHandler>("TestNoCellsNontrivDichotomousUnevenNoCornersYangHigherAlpha", true);
 
@@ -1550,7 +1550,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
 
-void xTestNoCellsDichotomousUnevenModPriesNoCornersVaryDistance() throw(Exception)
+void xTestNoCellsDichotomousUnevenModPriesNoCornersVaryDistance()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -1560,7 +1560,7 @@ void xTestNoCellsDichotomousUnevenModPriesNoCornersVaryDistance() throw(Exceptio
     double theta = 0.6;
     QLength domain_side_length_x = (1.0-pow(theta,double(order)+1.0))/(1.0-theta)*2.0*vessel_length;
     QLength max_radius = 40_um;
-//QLength vessel_radius = 5_um;     
+//QLength vessel_radius = 5_um;
 QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     auto p_file_handler = std::make_shared<OutputFileHandler>("TestDichotomousVaryDistanceEdinburgh_Asymmetry_WithX0_extremes_taken_care", true);
 
@@ -1718,7 +1718,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
 
-void xTestNoCellsDichotomousWithCFL_LengthsFollowRadii() throw(Exception)
+void xTestNoCellsDichotomousWithCFL_LengthsFollowRadii()
 {
     unsigned order=5;
     double theta = 1.0;
@@ -1730,7 +1730,7 @@ void xTestNoCellsDichotomousWithCFL_LengthsFollowRadii() throw(Exception)
 	dimless_length += sqrt(pow(2.0,-2.0*double(i_aux)/3.0)-pow(2.0, -2.0*double(i_aux)));
     	}
     QLength max_radius = 50_um;
-//QLength vessel_radius = 5_um;     
+//QLength vessel_radius = 5_um;
 QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
@@ -1742,7 +1742,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     // Generate the network
 
     VesselNetworkGenerator<2> network_generator;
-   
+
    double lambda;
 
    for (unsigned k_aux=0; k_aux<5; k_aux++)
@@ -1911,7 +1911,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
 
-void TestNoCellsDichotomousWithCFL_LengthsFollowRadii() throw(Exception)
+void TestNoCellsDichotomousWithCFL_LengthsFollowRadii()
 {
     unsigned order=7;
     double theta = 1.0;
@@ -1923,7 +1923,7 @@ void TestNoCellsDichotomousWithCFL_LengthsFollowRadii() throw(Exception)
 	dimless_length += pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i_aux-1)/3.0)-pow(0.9,2)*pow(2.0, -2.0*double(i_aux-1)));
     	}
     QLength max_radius = 50_um;
-//QLength vessel_radius = 5_um;     
+//QLength vessel_radius = 5_um;
 QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
@@ -1935,7 +1935,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     // Generate the network
 
     VesselNetworkGenerator<2> network_generator;
-   
+
    double lambda;
 
    for (unsigned k_aux=1; k_aux<2; k_aux++)
@@ -2105,13 +2105,13 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
 
-void xTestNoCellsNontrivInvertedPiLinn() throw(Exception)
+void xTestNoCellsNontrivInvertedPiLinn()
 {
 
  // Set up the vessel network
     QLength vessel_length(50.0_um);
     QLength reference_length(1.0_um);
-        
+
     std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0*vessel_length, 30.0 * 1_um);
     std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length, 30.0 * 1_um);
     std::shared_ptr<VesselNode<2> > p_node_3 = VesselNode<2>::Create(3.0*vessel_length, 30.0 * 1_um);
@@ -2139,7 +2139,7 @@ void xTestNoCellsNontrivInvertedPiLinn() throw(Exception)
          */
 
 
-   
+
     std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
     p_network->AddVessel(p_vessel_1);
     p_network->AddVessel(p_vessel_2);
@@ -2162,7 +2162,7 @@ std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
         {
             if((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
             {
-                
+
                     if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] <  10.0)
                     {
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
@@ -2182,13 +2182,13 @@ std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
 
              if((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
 	     {
-                
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  10.0)                    
+
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  10.0)
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);
                     }
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] >   10.0 && (*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  60.0 )                    
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] >   10.0 && (*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  60.0 )
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
@@ -2198,9 +2198,9 @@ std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
 		  	(*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
 		    }
-              
+
             }
-            
+
 
 	}
 
@@ -2222,7 +2222,7 @@ p_vessel_1->SetRadius(2.e-5*unit::metres);
     p_vessel_5->SetRadius(1.2e-5*unit::metres);
 
 
-    
+
 std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
 p_domain->AddRectangle(4.0*vessel_length, 2.0*vessel_length);
 
@@ -2364,13 +2364,13 @@ p_grid->GenerateFromPart(p_domain, spacing);
 }
 
 
-void xTestNoCellsNontrivInvertedPiYang() throw(Exception)
+void xTestNoCellsNontrivInvertedPiYang()
 {
 
  // Set up the vessel network
     QLength vessel_length(50.0_um);
     QLength reference_length(1.0_um);
-        
+
     std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0*vessel_length, 30.0 * 1_um);
     std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length, 30.0 * 1_um);
     std::shared_ptr<VesselNode<2> > p_node_3 = VesselNode<2>::Create(3.0*vessel_length, 30.0 * 1_um);
@@ -2398,7 +2398,7 @@ void xTestNoCellsNontrivInvertedPiYang() throw(Exception)
          */
 
 
-   
+
     std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
     p_network->AddVessel(p_vessel_1);
     p_network->AddVessel(p_vessel_2);
@@ -2421,7 +2421,7 @@ std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
         {
             if((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
             {
-                
+
                     if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] <  10.0)
                     {
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
@@ -2441,13 +2441,13 @@ std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
 
              if((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
 	     {
-                
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  10.0)                    
+
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  10.0)
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);
                     }
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] >   10.0 && (*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  60.0 )                    
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] >   10.0 && (*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  60.0 )
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
@@ -2457,9 +2457,9 @@ std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
 		  	(*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
 		    }
-              
+
             }
-            
+
 
 	}
 
@@ -2481,7 +2481,7 @@ p_vessel_1->SetRadius(2.e-5*unit::metres);
     p_vessel_5->SetRadius(1.2e-5*unit::metres);
 
 
-    
+
 std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
 p_domain->AddRectangle(4.0*vessel_length, 2.0*vessel_length);
 
@@ -2623,13 +2623,13 @@ p_grid->GenerateFromPart(p_domain, spacing);
 
 
 
-void xTestNoCellsNontrivInvertedPiModPries() throw(Exception)
+void xTestNoCellsNontrivInvertedPiModPries()
 {
 
  // Set up the vessel network
     QLength vessel_length(50.0_um);
     QLength reference_length(1.0_um);
-        
+
     std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0*vessel_length, 30.0 * 1_um);
     std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length, 30.0 * 1_um);
     std::shared_ptr<VesselNode<2> > p_node_3 = VesselNode<2>::Create(2.0*vessel_length, 30.0 * 1_um);
@@ -2659,7 +2659,7 @@ void xTestNoCellsNontrivInvertedPiModPries() throw(Exception)
          */
 
 
-   
+
     std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
     p_network->AddVessel(p_vessel_1);
     p_network->AddVessel(p_vessel_2);
@@ -2682,7 +2682,7 @@ std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
         {
             if((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
             {
-                
+
                     if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] <  10.0)
                     {
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
@@ -2702,13 +2702,13 @@ std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
 
              if((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
 	     {
-                
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  10.0)                    
+
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  10.0)
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);
                     }
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] >   10.0 && (*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  60.0 )                    
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] >   10.0 && (*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  60.0 )
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
@@ -2718,9 +2718,9 @@ std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
 		  	(*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
 		    }
-              
+
             }
-            
+
 
 	}
 
@@ -2735,13 +2735,13 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     p_segment->GetFlowProperties()->SetHaematocrit(initial_haematocrit);
     p_segment->GetFlowProperties()->SetViscosity(viscosity);
     VesselNetworkPropertyManager<2>::SetSegmentProperties(p_network, p_segment);
-    
+
     p_vessel_1->SetRadius(2.e-5*unit::metres);
     p_vessel_2->SetRadius(1.5e-5*unit::metres);
     p_vessel_3->SetRadius(7.e-6*unit::metres);
     p_vessel_4->SetRadius(1.e-5*unit::metres);
     p_vessel_5->SetRadius(1.2e-5*unit::metres);
-    
+
 /*
     p_vessel_1->SetRadius(1.e-5*unit::metres);
     p_vessel_2->SetRadius(1.e-5*unit::metres);
@@ -2749,7 +2749,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     p_vessel_4->SetRadius(1.e-5*unit::metres);
     p_vessel_5->SetRadius(1.e-5*unit::metres);
 */
-    
+
 std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
 p_domain->AddRectangle(4.0*vessel_length, 2.0*vessel_length);
 
@@ -2890,13 +2890,13 @@ p_grid->GenerateFromPart(p_domain, spacing);
 }
 
 
-void xTestNoCellsNontrivInvertedPiModPriesImposedFluxes_CFL() throw(Exception)
+void xTestNoCellsNontrivInvertedPiModPriesImposedFluxes_CFL()
 {
 
  // Set up the vessel network
     QLength vessel_length(50.0_um);
     QLength reference_length(1.0_um);
-        
+
     std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0*vessel_length, 30.0 * 1_um);
     std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length, 30.0 * 1_um);
     std::shared_ptr<VesselNode<2> > p_node_3 = VesselNode<2>::Create(3.0*vessel_length, 30.0 * 1_um);
@@ -2931,7 +2931,7 @@ void xTestNoCellsNontrivInvertedPiModPriesImposedFluxes_CFL() throw(Exception)
     p_vessel_3->SetRadius(1.e-5*unit::metres);
     p_vessel_4->SetRadius(1.e-5*unit::metres);
     p_vessel_5->SetRadius(1.e-5*unit::metres);
-   
+
     std::shared_ptr<VesselNetwork<2> > p_network = VesselNetwork<2>::Create();
     p_network->AddVessel(p_vessel_1);
     p_network->AddVessel(p_vessel_2);
@@ -2959,7 +2959,7 @@ void xTestNoCellsNontrivInvertedPiModPriesImposedFluxes_CFL() throw(Exception)
     p_segment->GetFlowProperties()->SetHaematocrit(initial_haematocrit);
     //p_segment->GetFlowProperties()->SetViscosity(viscosity);
     VesselNetworkPropertyManager<2>::SetSegmentProperties(p_network, p_segment);
-    
+
 
     p_vessel_1->GetSegments()[0]->GetFlowProperties()->SetFlowRate(4.0 * unit::metre_cubed_per_second);
     p_vessel_2->GetSegments()[0]->GetFlowProperties()->SetFlowRate(2.0 * unit::metre_cubed_per_second);
@@ -2967,7 +2967,7 @@ void xTestNoCellsNontrivInvertedPiModPriesImposedFluxes_CFL() throw(Exception)
     p_vessel_4->GetSegments()[0]->GetFlowProperties()->SetFlowRate(2.0 * unit::metre_cubed_per_second);
     p_vessel_5->GetSegments()[0]->GetFlowProperties()->SetFlowRate(1.0 * unit::metre_cubed_per_second);
 
-    
+
 /*
     p_vessel_1->SetRadius(1.e-5*unit::metres);
     p_vessel_2->SetRadius(1.e-5*unit::metres);
@@ -2975,7 +2975,7 @@ void xTestNoCellsNontrivInvertedPiModPriesImposedFluxes_CFL() throw(Exception)
     p_vessel_4->SetRadius(1.e-5*unit::metres);
     p_vessel_5->SetRadius(1.e-5*unit::metres);
 */
-    
+
 std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
 p_domain->AddRectangle(4.0*vessel_length, 2.0*vessel_length);
 
@@ -3119,6 +3119,3 @@ p_grid->GenerateFromPart(p_domain, spacing);
 };
 
 #endif // TESTNOCELLSBETTERIDGENONTRIVVIS_HPP
-
-
-

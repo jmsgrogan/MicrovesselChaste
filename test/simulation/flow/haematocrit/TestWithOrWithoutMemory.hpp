@@ -67,7 +67,7 @@ class TestWithOrWithourMemory : public CxxTest::TestSuite
 public:
 
 
-void TestNoCellsDichotomousWithOrWithoutMemoryEffects() throw(Exception)
+void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
 {
     // order of the dichotomous network
     unsigned order=5;
@@ -88,7 +88,7 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects() throw(Exception)
     // Generate the network
 
     VesselNetworkGenerator<2> network_generator;
-   
+
    double lambda;
    double twicelambda;
 
@@ -262,6 +262,3 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects() throw(Exception)
 };
 
 #endif // TESTWITHORWITHOUTMEMORY_HPP
-
-
-

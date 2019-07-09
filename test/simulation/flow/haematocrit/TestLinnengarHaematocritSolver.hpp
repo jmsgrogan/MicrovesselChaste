@@ -72,7 +72,7 @@ class TestLinnengarHaematocritSolver : public CxxTest::TestSuite
 public:
 
 
-  void TestDivergingBifurcationLinnengarHaematocrit() throw(Exception)
+  void TestDivergingBifurcationLinnengarHaematocrit()
     {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um,0.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(113.0_um,0.0_um);
@@ -118,14 +118,14 @@ p_vessel2->SetRadius(5.e-6*unit::metres);
 }
 
 
-void TestInvertedPiLinnengarHaematocrit() throw(Exception)
-{ 
-    
-    
+void TestInvertedPiLinnengarHaematocrit()
+{
+
+
     QLength vessel_length = 50.0 * 1_um;
 
 
-    
+
 
     std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0*vessel_length, 30.0 * 1_um);
     std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length, 30.0 * 1_um);
@@ -149,13 +149,13 @@ void TestInvertedPiLinnengarHaematocrit() throw(Exception)
     std::shared_ptr<Vessel<2> > p_vessel_4 = Vessel<2>::Create(p_segment_4);
     std::shared_ptr<VesselSegment<2> > p_segment_5 = VesselSegment<2>::Create(p_node_3, p_node_6);
     std::shared_ptr<Vessel<2> > p_vessel_5 = Vessel<2>::Create(p_segment_5);
-      
+
     p_vessel_1->GetSegments()[0]->GetFlowProperties()->SetFlowRate(6.0 * unit::metre_cubed_per_second);
     p_vessel_2->GetSegments()[0]->GetFlowProperties()->SetFlowRate(4.0 * unit::metre_cubed_per_second);
     p_vessel_3->GetSegments()[0]->GetFlowProperties()->SetFlowRate(3.0 * unit::metre_cubed_per_second);
     p_vessel_4->GetSegments()[0]->GetFlowProperties()->SetFlowRate(2.0 * unit::metre_cubed_per_second);
     p_vessel_5->GetSegments()[0]->GetFlowProperties()->SetFlowRate(1.0 * unit::metre_cubed_per_second);
- 
+
     p_vessel_4->SetRadius(2.e-5*unit::metres);
          /*
          * Now add the vessels to a vessel network.
@@ -178,13 +178,13 @@ void TestInvertedPiLinnengarHaematocrit() throw(Exception)
     OutputFileHandler output_file_handler("TestLinningerHaematocritSolver_InvPi", false);
 
     std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("InvPi_Hemo.vtp");
-    vascular_network->Write(output_filename);	
+    vascular_network->Write(output_filename);
 
 }
 
 
 
-void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
+void TestHexagonalNetworkLinnengarHaematocrit()
 {
     // Iterate over vessel lengths
     std::vector<double> lengths;
@@ -326,7 +326,7 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
 }
 
 
-void TestHexagonalNetworkYangHaematocrit() throw(Exception)
+void TestHexagonalNetworkYangHaematocrit()
 {
     // Iterate over vessel lengths
     std::vector<double> lengths;
@@ -471,7 +471,7 @@ void TestHexagonalNetworkYangHaematocrit() throw(Exception)
 
 }
 
-void TestHexagonalNetworkYangHaematocrit_better() throw(Exception)
+void TestHexagonalNetworkYangHaematocrit_better()
 {
 
 
@@ -534,7 +534,7 @@ void TestHexagonalNetworkYangHaematocrit_better() throw(Exception)
                 if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[1] <  y_min + vessel_length)
                 {
                     //if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] >  x_middle)
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  x_min + vessel_length)                    
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  x_min + vessel_length)
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);
@@ -617,13 +617,13 @@ void TestHexagonalNetworkYangHaematocrit_better() throw(Exception)
     auto p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
     p_oxygen_solver->SetPde(p_oxygen_pde);
     p_oxygen_solver->SetLabel("oxygen");
-    p_oxygen_solver->SetGrid(p_grid); 
+    p_oxygen_solver->SetGrid(p_grid);
     p_oxygen_solver->SetVesselNetwork(vascular_network);
     bool write=true;
     p_oxygen_solver->SetWriteSolution(write);
-    
+
     //std::string output_filename3 = output_file_handler.GetOutputDirectoryFullPath().append("HexOxygen.vtp");
-    //const std::string& rDirectory = 
+    //const std::string& rDirectory =
     const std::string& rDirectory = "TestYangHaematocritSolver_oxygen";
     std::shared_ptr<OutputFileHandler> pOutputFileHandler(new OutputFileHandler(rDirectory));
     //*pOutputFileHandler = rDirectory;
@@ -652,7 +652,7 @@ void TestHexagonalNetworkYangHaematocrit_better() throw(Exception)
          * Dump the parameters to file for inspection.
          */
     //ParameterCollection::Instance()->DumpToFile(p_handler->GetOutputDirectoryFullPath()+"parameter_collection.xml");
-    
+
 
 }
 

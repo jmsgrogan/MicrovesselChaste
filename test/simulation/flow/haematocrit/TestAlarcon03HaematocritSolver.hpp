@@ -56,7 +56,7 @@ class TestAlarconHaematocritSolver : public CxxTest::TestSuite
 
 public:
 
-    void TestTwoVesselNetwork() throw(Exception)
+    void TestTwoVesselNetwork()
     {
         std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
         std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
@@ -83,7 +83,7 @@ public:
         TS_ASSERT_DELTA(p_vessel2->GetFlowProperties()->GetHaematocrit(),0.45, 1e-6);
     }
 
-    void TestBifurcationInflowNetwork() throw(Exception)
+    void TestBifurcationInflowNetwork()
     {
         std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
         std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
@@ -113,7 +113,7 @@ public:
         TS_ASSERT_DELTA(p_vessel3->GetFlowProperties()->GetHaematocrit(), 0.9, 1e-6);
     }
 
-    void TestBifurcationOutflowNetwork() throw(Exception)
+    void TestBifurcationOutflowNetwork()
     {
         std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
         std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
@@ -146,7 +146,7 @@ public:
         TS_ASSERT_DELTA(p_vessel3->GetFlowProperties()->GetHaematocrit(),0.45, 1e-6);
     }
 
-    void TestBifurcationOutflowNetworkBiasedFlow() throw(Exception)
+    void TestBifurcationOutflowNetworkBiasedFlow()
     {
         std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
         std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
@@ -179,7 +179,7 @@ public:
         TS_ASSERT_DELTA(p_vessel3->GetFlowProperties()->GetHaematocrit(),0.45, 1e-6);
     }
 
-    void TestHexagonalNetwork() throw(Exception)
+    void TestHexagonalNetwork()
     {
         // Specify the network dimensions
         QLength vessel_length = 80.0 * 1_um;
@@ -192,7 +192,7 @@ public:
         //std::shared_ptr<VesselNetwork<2> > vascular_network = vascular_network_generator.GenerateHexagonalNetwork(990.0* 1_um,
         //                                                                                                                1200.0* 1_um,
         //                                                                                                               vessel_length);
-        
+
 	std::vector<std::shared_ptr<VesselNode<2> > > nodes;
         nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(0.0_um)));
         nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(5.0_um)));
@@ -231,7 +231,7 @@ public:
                 if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[1] >  y_middle)
                 {
                     //if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] >  x_middle)
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] >  x_middle)                    
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] >  x_middle)
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);
@@ -290,7 +290,7 @@ public:
     }
 
 
-    void TestHexagonalNetwork_better() throw(Exception)
+    void TestHexagonalNetwork_better()
     {
         // Specify the network dimensions
         QLength vessel_length = 80.0 * 1_um;
@@ -303,7 +303,7 @@ public:
         //std::shared_ptr<VesselNetwork<2> > vascular_network = vascular_network_generator.GenerateHexagonalNetwork(990.0* 1_um,
         //                                                                                                                1200.0* 1_um,
         //                                                                                                               vessel_length);
-        
+
 	std::vector<std::shared_ptr<VesselNode<2> > > nodes;
         nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(0.0_um)));
         nodes.push_back(std::shared_ptr<VesselNode<2> > (VesselNode<2>::Create(5.0_um)));
@@ -344,7 +344,7 @@ public:
                 if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[1] <  y_min + vessel_length)
                 {
                     //if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] >  x_middle)
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  x_min + vessel_length)                    
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  x_min + vessel_length)
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);

@@ -170,28 +170,28 @@ class TestBetteridgeHaematocritSolver : public AbstractCellBasedTestSuite
 public:
 
 
-void TestInvertedPiBetteridgeHaematocrit() throw(Exception)
-{ 
-    
+void TestInvertedPiBetteridgeHaematocrit()
+{
+
     PottsMeshGenerator<2> generator(200, 1, 200, 100, 1, 100); //**Changed**//
     PottsMesh<2>* p_mesh = generator.GetMesh(); //**Changed**//
     std::vector<CellPtr> cells;
-       
+
     //MAKE_PTR(TransitCellProliferativeType, p_transit_type);
 
     CellsGenerator<UniformG1GenerationalCellCycleModel, 2> cells_generator;
 
     cells_generator.GenerateBasicRandom(cells, p_mesh->GetNumElements());//, p_transit_type);     //Here it fails
     PottsBasedCellPopulation<2> cell_population(*p_mesh, cells);//**Changed**//
-    //cell_population.SetTemperature(1.0); 
+    //cell_population.SetTemperature(1.0);
 
-    
+
      //  MAKE_PTR(SurfaceAreaConstraintPottsUpdateRule<2>, p_surface_area_update_rule); //**Changed**//
       // simulator.AddUpdateRule(p_surface_area_update_rule); //**Changed**//
        //MAKE_PTR(AdhesionPottsUpdateRule<2>, p_adhesion_update_rule); //**Changed**//
        //simulator.AddUpdateRule(p_adhesion_update_rule); //**Changed**//
 
-   
+
        //MAKE_PTR_ARGS(RandomCellKiller<2>, p_cell_killer, (&cell_population, 0.01));
        //simulator.AddCellKiller(p_cell_killer);
 
@@ -216,7 +216,7 @@ void TestInvertedPiBetteridgeHaematocrit() throw(Exception)
     QLength vessel_length = 50.0 * 1_um;
 
 
-    
+
 
     std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0*vessel_length, 35.0 * 1_um);
     std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length, 35.0 * 1_um);
@@ -254,14 +254,14 @@ void TestInvertedPiBetteridgeHaematocrit() throw(Exception)
 
     // Generate the network
 
-  
+
     //double radius = 20.0;
     //p_segment_2->SetRadius(radius*1.e-6*unit::metres);
     //double haematocrit = 0.50;
     //p_segment_2->GetFlowProperties()->SetHaematocrit(haematocrit);
     //VesselNetworkPropertyManager<2>::SetSegmentProperties(vascular_network, p_segment_2);
 
-    
+
 
     std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
 
@@ -271,7 +271,7 @@ void TestInvertedPiBetteridgeHaematocrit() throw(Exception)
         {
             if((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
             {
-                
+
                     if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] <  10.0)
                     {
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
@@ -291,13 +291,13 @@ void TestInvertedPiBetteridgeHaematocrit() throw(Exception)
 
              if((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
 	     {
-                
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  10.0)                    
+
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  10.0)
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);
                     }
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] >   10.0 && (*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  60.0 )                    
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] >   10.0 && (*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  60.0 )
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
@@ -307,7 +307,7 @@ void TestInvertedPiBetteridgeHaematocrit() throw(Exception)
 		  	(*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
 		    }
-              
+
             }
             /*if((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 3)
             {
@@ -317,10 +317,10 @@ void TestInvertedPiBetteridgeHaematocrit() throw(Exception)
             {
 	  	                        (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2500.0*unit::pascals);
 	    }*/
-        
+
 
 	}
- 
+
 
 
     //std::vector<std::shared_ptr<VesselSegment<2> > > segments = vascular_network->GetVesselSegments();
@@ -372,7 +372,7 @@ void TestInvertedPiBetteridgeHaematocrit() throw(Exception)
     p_vessel_oxygen_source->SetReferenceHaematocrit(Owen11Parameters::mpInflowHaematocrit->GetValue("User"));
     p_oxygen_pde->AddDiscreteSource(p_vessel_oxygen_source);
 
-    
+
 
    //QConcentration other_concentration = 1000000.0 * unit::mole_per_metre_cubed;
 
@@ -386,8 +386,8 @@ void TestInvertedPiBetteridgeHaematocrit() throw(Exception)
     std::shared_ptr<CaBasedCellPopulation<2> > p_cell_population = p_cell_population_genenerator->Update();
     //pGridCalc->SetCellPopulation(*p_cell_population,reference_length,other_concentration);
     auto p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
-    //p_oxygen_solver->SetCellPopulation(*p_cell_population,reference_length,other_concentration); 
-    
+    //p_oxygen_solver->SetCellPopulation(*p_cell_population,reference_length,other_concentration);
+
     auto p_cell_oxygen_sink = CellBasedDiscreteSource<2>::Create();
     p_cell_oxygen_sink->SetLinearInUConsumptionRatePerCell(100.0*Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
     p_oxygen_pde->AddDiscreteSource(p_cell_oxygen_sink);
@@ -420,7 +420,7 @@ void TestInvertedPiBetteridgeHaematocrit() throw(Exception)
     boost::shared_ptr<MicrovesselSimulationModifier<2> > p_microvessel_modifier =
                 boost::shared_ptr<MicrovesselSimulationModifier<2> >(new MicrovesselSimulationModifier<2> ());
     p_microvessel_modifier->SetMicrovesselSolver(p_microvessel_solver);
-    
+
 OnLatticeSimulation<2> simulator(*p_cell_population);//**Changed**//
 simulator.AddSimulationModifier(p_microvessel_modifier);
         //simulator.SetSamplingTimestepMultiple(5);
@@ -445,15 +445,15 @@ simulator.AddSimulationModifier(p_microvessel_modifier);
 
  p_oxygen_solver->Solve(); //now the problem must be here
 
-      //  std::cout << "Hello4\n";  
-   
+      //  std::cout << "Hello4\n";
+
 
     //p_oxygen_solver->Write(output_filename3);
         /*
          * Dump the parameters to file for inspection.
          */
     //ParameterCollection::Instance()->DumpToFile(p_handler->GetOutputDirectoryFullPath()+"parameter_collection.xml");
-    
+
 
 }
 
@@ -462,9 +462,9 @@ simulator.AddSimulationModifier(p_microvessel_modifier);
 
 
 
-void TestInvertedPiBetteridgeHaematocrit_polished() throw(Exception)
-{ 
-    
+void TestInvertedPiBetteridgeHaematocrit_polished()
+{
+
     std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
 
     QLength grid_spacing = 10.0 * 1_um;
@@ -483,7 +483,7 @@ void TestInvertedPiBetteridgeHaematocrit_polished() throw(Exception)
     QLength vessel_length = 50.0 * 1_um;
 
 
-    
+
 
     std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0*vessel_length, 35.0 * 1_um);
     std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length, 35.0 * 1_um);
@@ -523,7 +523,7 @@ void TestInvertedPiBetteridgeHaematocrit_polished() throw(Exception)
         {
             if((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
             {
-                
+
                     if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] <  10.0)
                     {
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
@@ -543,13 +543,13 @@ void TestInvertedPiBetteridgeHaematocrit_polished() throw(Exception)
 
              if((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
 	     {
-                
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  10.0)                    
+
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  10.0)
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);
                     }
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] >   10.0 && (*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  60.0 )                    
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] >   10.0 && (*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  60.0 )
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
@@ -559,12 +559,12 @@ void TestInvertedPiBetteridgeHaematocrit_polished() throw(Exception)
 		  	(*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
 		    }
-              
+
             }
-            
+
 
 	}
- 
+
 
 
     QLength vessel_radius(GenericParameters::mpCapillaryRadius->GetValue());
@@ -591,7 +591,7 @@ std::string output_filename3a = output_file_handler.GetOutputDirectoryFullPath()
 
     auto p_oxygen_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
     p_oxygen_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpOxygenDiffusivity->GetValue("User"));
-    
+
     auto p_vessel_oxygen_source = VesselBasedDiscreteSource<2>::Create();
     //QSolubility oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
     //          GenericParameters::mpGasConcentrationAtStp->GetValue("User");
@@ -613,10 +613,10 @@ std::string output_filename3a = output_file_handler.GetOutputDirectoryFullPath()
 
 
     std::shared_ptr<CaBasedCellPopulation<2> > p_cell_population = p_cell_population_genenerator->Update();
-   
+
     auto p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
- 
-    
+
+
     auto p_cell_oxygen_sink = CellBasedDiscreteSource<2>::Create();
     p_cell_oxygen_sink->SetLinearInUConsumptionRatePerCell(Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
     p_oxygen_pde->AddDiscreteSource(p_cell_oxygen_sink);
@@ -625,7 +625,7 @@ std::string output_filename3a = output_file_handler.GetOutputDirectoryFullPath()
         * Set up a finite difference solver and pass it the pde and grid.
         */
 
-      
+
     p_oxygen_solver->SetPde(p_oxygen_pde);
     p_oxygen_solver->SetLabel("oxygen");
     p_oxygen_solver->SetGrid(p_grid);
@@ -635,11 +635,11 @@ std::string output_filename3a = output_file_handler.GetOutputDirectoryFullPath()
     p_microvessel_solver->SetVesselNetwork(vascular_network);
     p_microvessel_solver->SetOutputFrequency(1);
     p_microvessel_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
-    
+
     boost::shared_ptr<MicrovesselSimulationModifier<2> > p_microvessel_modifier =
                 boost::shared_ptr<MicrovesselSimulationModifier<2> >(new MicrovesselSimulationModifier<2> ());
     p_microvessel_modifier->SetMicrovesselSolver(p_microvessel_solver);
-    
+
 OnLatticeSimulation<2> simulator(*p_cell_population);//**Changed**//
 simulator.AddSimulationModifier(p_microvessel_modifier);
         //simulator.SetSamplingTimestepMultiple(5);
@@ -651,7 +651,7 @@ simulator.AddSimulationModifier(p_microvessel_modifier);
        simulator.Solve();
 
 
-     
+
 
            std::string output_filename3b = output_file_handler.GetOutputDirectoryFullPath().append("InvPiHemo3b.vtp");
      vascular_network->Write(output_filename3b);
@@ -660,9 +660,9 @@ simulator.AddSimulationModifier(p_microvessel_modifier);
 
 
 
-void TestInvertedPiBetteridgeHaematocrit_minimal() throw(Exception)
-{ 
-    
+void TestInvertedPiBetteridgeHaematocrit_minimal()
+{
+
     std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
 
     QLength grid_spacing = 10.0*1_um;
@@ -684,7 +684,7 @@ void TestInvertedPiBetteridgeHaematocrit_minimal() throw(Exception)
     QLength vessel_length = 50.0 * 1_um;
 
 
-    
+
 
     std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0*vessel_length, 30.0 * 1_um);
     std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length, 30.0 * 1_um);
@@ -708,14 +708,14 @@ void TestInvertedPiBetteridgeHaematocrit_minimal() throw(Exception)
     std::shared_ptr<Vessel<2> > p_vessel_4 = Vessel<2>::Create(p_segment_4);
     std::shared_ptr<VesselSegment<2> > p_segment_5 = VesselSegment<2>::Create(p_node_3, p_node_6);
     std::shared_ptr<Vessel<2> > p_vessel_5 = Vessel<2>::Create(p_segment_5);
-      
+
     p_vessel_1->GetSegments()[0]->GetFlowProperties()->SetFlowRate(6.0 * unit::metre_cubed_per_second);
     p_vessel_2->GetSegments()[0]->GetFlowProperties()->SetFlowRate(3.0 * unit::metre_cubed_per_second);
     p_vessel_3->GetSegments()[0]->GetFlowProperties()->SetFlowRate(2.0 * unit::metre_cubed_per_second);
     p_vessel_4->GetSegments()[0]->GetFlowProperties()->SetFlowRate(3.0 * unit::metre_cubed_per_second);
     p_vessel_5->GetSegments()[0]->GetFlowProperties()->SetFlowRate(1.0 * unit::metre_cubed_per_second);
- 
- 
+
+
          /*
          * Now add the vessels to a vessel network.
          */
@@ -742,7 +742,7 @@ std::string output_filename3a = output_file_handler.GetOutputDirectoryFullPath()
 
     auto p_oxygen_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
     p_oxygen_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpOxygenDiffusivity->GetValue("User"));
-    
+
     auto p_vessel_oxygen_source = VesselBasedDiscreteSource<2>::Create();
     //QSolubility oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
     //          GenericParameters::mpGasConcentrationAtStp->GetValue("User");
@@ -776,10 +776,10 @@ c_vector<unsigned, 3> dimensions_2;
 
 
     std::shared_ptr<CaBasedCellPopulation<2> > p_cell_population = p_cell_population_genenerator->Update();
-   
+
     auto p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
- 
-    
+
+
     auto p_cell_oxygen_sink = CellBasedDiscreteSource<2>::Create();
     p_cell_oxygen_sink->SetLinearInUConsumptionRatePerCell(1.0*Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
     p_oxygen_pde->AddDiscreteSource(p_cell_oxygen_sink);
@@ -788,7 +788,7 @@ c_vector<unsigned, 3> dimensions_2;
         * Set up a finite difference solver and pass it the pde and grid.
         */
 
-      
+
     p_oxygen_solver->SetPde(p_oxygen_pde);
     p_oxygen_solver->SetLabel("oxygen");
     p_oxygen_solver->SetGrid(p_grid);
@@ -823,9 +823,9 @@ simulator.AddSimulationModifier(p_microvessel_modifier);
 }
 
 
-void TestInvertedPiBetteridgeHaematocrit_minimal_playing() throw(Exception)
-{ 
-    
+void TestInvertedPiBetteridgeHaematocrit_minimal_playing()
+{
+
     std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
 
     QLength grid_spacing =10.0* 1_um;
@@ -844,7 +844,7 @@ void TestInvertedPiBetteridgeHaematocrit_minimal_playing() throw(Exception)
     QLength vessel_length = 50.0 * 1_um;
 
 
-    
+
 
     std::shared_ptr<VesselNode<2> > p_node_1 = VesselNode<2>::Create(0.0*vessel_length, 65.0 * 1_um);
     std::shared_ptr<VesselNode<2> > p_node_2 = VesselNode<2>::Create(vessel_length, 65.0 * 1_um);
@@ -868,14 +868,14 @@ void TestInvertedPiBetteridgeHaematocrit_minimal_playing() throw(Exception)
     std::shared_ptr<Vessel<2> > p_vessel_4 = Vessel<2>::Create(p_segment_4);
     std::shared_ptr<VesselSegment<2> > p_segment_5 = VesselSegment<2>::Create(p_node_3, p_node_6);
     std::shared_ptr<Vessel<2> > p_vessel_5 = Vessel<2>::Create(p_segment_5);
-      
+
     p_vessel_1->GetSegments()[0]->GetFlowProperties()->SetFlowRate(4.0 * unit::metre_cubed_per_second);
     p_vessel_2->GetSegments()[0]->GetFlowProperties()->SetFlowRate(2.0 * unit::metre_cubed_per_second);
     p_vessel_3->GetSegments()[0]->GetFlowProperties()->SetFlowRate(1.0 * unit::metre_cubed_per_second);
     p_vessel_4->GetSegments()[0]->GetFlowProperties()->SetFlowRate(2.0 * unit::metre_cubed_per_second);
     p_vessel_5->GetSegments()[0]->GetFlowProperties()->SetFlowRate(1.0 * unit::metre_cubed_per_second);
- 
- 
+
+
          /*
          * Now add the vessels to a vessel network.
          */
@@ -886,7 +886,7 @@ void TestInvertedPiBetteridgeHaematocrit_minimal_playing() throw(Exception)
     vascular_network->AddVessel(p_vessel_4);
     vascular_network->AddVessel(p_vessel_5);
 
-    
+
 
     OutputFileHandler output_file_handler("Playing_Minimal_TestBetteridgeHaematocritSolver_InvPi", false);
 
@@ -899,7 +899,7 @@ std::string output_filename3a = output_file_handler.GetOutputDirectoryFullPath()
 
     auto p_oxygen_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
     p_oxygen_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpOxygenDiffusivity->GetValue("User"));
-    
+
     auto p_vessel_oxygen_source = VesselBasedDiscreteSource<2>::Create();
     //QSolubility oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
     //          GenericParameters::mpGasConcentrationAtStp->GetValue("User");
@@ -931,10 +931,10 @@ c_vector<unsigned, 3> dimensions_2;
 
 
     std::shared_ptr<CaBasedCellPopulation<2> > p_cell_population = p_cell_population_genenerator->Update();
-   
+
     auto p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
- 
-    
+
+
     auto p_cell_oxygen_sink = CellBasedDiscreteSource<2>::Create();
     p_cell_oxygen_sink->SetLinearInUConsumptionRatePerCell(Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
     p_oxygen_pde->AddDiscreteSource(p_cell_oxygen_sink);
@@ -943,7 +943,7 @@ c_vector<unsigned, 3> dimensions_2;
         * Set up a finite difference solver and pass it the pde and grid.
         */
 
-      
+
     p_oxygen_solver->SetPde(p_oxygen_pde);
     p_oxygen_solver->SetLabel("oxygen");
     p_oxygen_solver->SetGrid(p_grid);
@@ -953,11 +953,11 @@ c_vector<unsigned, 3> dimensions_2;
     p_microvessel_solver->SetVesselNetwork(vascular_network);
     p_microvessel_solver->SetOutputFrequency(1);
     p_microvessel_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
-    
+
     boost::shared_ptr<MicrovesselSimulationModifier<2> > p_microvessel_modifier =
                 boost::shared_ptr<MicrovesselSimulationModifier<2> >(new MicrovesselSimulationModifier<2> ());
     p_microvessel_modifier->SetMicrovesselSolver(p_microvessel_solver);
-    
+
 OnLatticeSimulation<2> simulator(*p_cell_population);//**Changed**//
 simulator.AddSimulationModifier(p_microvessel_modifier);
         //simulator.SetSamplingTimestepMultiple(5);
@@ -969,7 +969,7 @@ simulator.AddSimulationModifier(p_microvessel_modifier);
        simulator.Solve();
 
 
-     
+
 
            //std::string output_filename3b = output_file_handler.GetOutputDirectoryFullPath().append("InvPiHemo3b.vtp");
      //vascular_network->Write(output_filename3b);
@@ -979,7 +979,7 @@ simulator.AddSimulationModifier(p_microvessel_modifier);
 
 
 
-void TestTwoVesselNetwork() throw(Exception)
+void TestTwoVesselNetwork()
 {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80_um);
@@ -1011,7 +1011,7 @@ void TestTwoVesselNetwork() throw(Exception)
     p_network->Write(output_filename);
 }
 
-void TestBifurcationInflowNetwork() throw(Exception)
+void TestBifurcationInflowNetwork()
 {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um,80.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(0.0_um,-80.0_um);
@@ -1050,7 +1050,7 @@ void TestBifurcationInflowNetwork() throw(Exception)
     p_network->Write(output_filename);
 }
 
-void TestTwoInTwoOutNetwork() throw(Exception)
+void TestTwoInTwoOutNetwork()
 {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(100.0_um);
@@ -1096,7 +1096,7 @@ void TestTwoInTwoOutNetwork() throw(Exception)
     p_network->Write(output_filename);
 }
 
-void TestBifurcationOutflowNetwork() throw(Exception)
+void TestBifurcationOutflowNetwork()
 {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(80.0_um);
@@ -1127,14 +1127,14 @@ void TestBifurcationOutflowNetwork() throw(Exception)
     TS_ASSERT_DELTA(p_vessel1->GetSegments()[0]->GetFlowProperties()->GetHaematocrit(),0.45/2.0, 1e-6);
     TS_ASSERT_DELTA(p_vessel2->GetSegments()[0]->GetFlowProperties()->GetHaematocrit(),0.45/2.0, 1e-6);
     TS_ASSERT_DELTA(p_vessel3->GetSegments()[0]->GetFlowProperties()->GetHaematocrit(),0.45, 1e-6);
-    
+
     OutputFileHandler output_file_handler("TestBetteridgeHaematocritSolver_BifurcOutflow", false);
 
     std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("BifurcOutflow_Hemo.vtp");
     p_network->Write(output_filename);
 }
 
-void TestBifurcationOutflowNetworkBiasedFlow() throw(Exception)
+void TestBifurcationOutflowNetworkBiasedFlow()
 {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um,0.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(113.0_um,0.0_um);
@@ -1186,7 +1186,7 @@ void TestBifurcationOutflowNetworkBiasedFlow() throw(Exception)
 
 
 
-void TestInvPiFlow() throw(Exception)
+void TestInvPiFlow()
 {
 
 
@@ -1202,7 +1202,7 @@ void TestInvPiFlow() throw(Exception)
     std::shared_ptr<VesselNode<2> > p_node_6 = VesselNode<2>::Create(3.0*vessel_length, 85.0 * 1_um);
     //set input/output nodes and corresponding pressures
     p_node_1->GetFlowProperties()->SetIsInputNode(true);
-   
+
     /*
      * Next make vessel segments and vessels. Vessel segments are straight-line features which contain a `VesselNode` at each end. Vessels
      * can be constructed from multiple vessel segments by adding them in order, but in this case each vessel just has a single segment.
@@ -1283,7 +1283,7 @@ void TestInvPiFlow() throw(Exception)
 
 
 
-void TestHexagonalNetworkBetteridgeHaematocrit() throw(Exception)
+void TestHexagonalNetworkBetteridgeHaematocrit()
 {
     // Specify the network dimensions
     QLength vessel_length = 80.0 * 1_um;
@@ -1389,7 +1389,7 @@ void TestHexagonalNetworkBetteridgeHaematocrit() throw(Exception)
 }
 
 
-void TestHexagonalNetworkBetteridgeHaematocrit_better() throw(Exception)
+void TestHexagonalNetworkBetteridgeHaematocrit_better()
 {
 
 
@@ -1452,7 +1452,7 @@ void TestHexagonalNetworkBetteridgeHaematocrit_better() throw(Exception)
                 if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[1] <  y_min + vessel_length)
                 {
                     //if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] >  x_middle)
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  x_min + vessel_length)                    
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  x_min + vessel_length)
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);
@@ -1535,13 +1535,13 @@ void TestHexagonalNetworkBetteridgeHaematocrit_better() throw(Exception)
     auto p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
     p_oxygen_solver->SetPde(p_oxygen_pde);
     p_oxygen_solver->SetLabel("oxygen");
-    p_oxygen_solver->SetGrid(p_grid); 
+    p_oxygen_solver->SetGrid(p_grid);
     p_oxygen_solver->SetVesselNetwork(vascular_network);
     bool write=true;
     p_oxygen_solver->SetWriteSolution(write);
-    
+
     //std::string output_filename3 = output_file_handler.GetOutputDirectoryFullPath().append("HexOxygen.vtp");
-    //const std::string& rDirectory = 
+    //const std::string& rDirectory =
     const std::string& rDirectory = "TestBetteridgeHaematocritSolver_oxygen";
     std::shared_ptr<OutputFileHandler> pOutputFileHandler(new OutputFileHandler(rDirectory));
     //*pOutputFileHandler = rDirectory;
@@ -1570,14 +1570,14 @@ void TestHexagonalNetworkBetteridgeHaematocrit_better() throw(Exception)
          * Dump the parameters to file for inspection.
          */
     //ParameterCollection::Instance()->DumpToFile(p_handler->GetOutputDirectoryFullPath()+"parameter_collection.xml");
-    
+
 
 }
 
 
 
 
-void TestInvertedPiBetteridgeHaematocrit_FlowOnly() throw(Exception)
+void TestInvertedPiBetteridgeHaematocrit_FlowOnly()
 {
     //create nodes
     QLength vessel_length = 50.0 * 1_um;
@@ -1643,7 +1643,7 @@ void TestInvertedPiBetteridgeHaematocrit_FlowOnly() throw(Exception)
 
 
 
-void TestInvertedPiBetteridgeHaematocrit_ChangingParameters() throw(Exception)
+void TestInvertedPiBetteridgeHaematocrit_ChangingParameters()
 {
 
 
@@ -1702,14 +1702,14 @@ void TestInvertedPiBetteridgeHaematocrit_ChangingParameters() throw(Exception)
 
     // Generate the network
 
-  
+
     //double radius = 20.0;
     //p_segment_2->SetRadius(radius*1.e-6*unit::metres);
     //double haematocrit = 0.50;
     //p_segment_2->GetFlowProperties()->SetHaematocrit(haematocrit);
     //VesselNetworkPropertyManager<2>::SetSegmentProperties(vascular_network, p_segment_2);
 
-    
+
 
     std::vector<std::shared_ptr<Vessel<2> > >::iterator vessel_iterator;
 
@@ -1719,7 +1719,7 @@ void TestInvertedPiBetteridgeHaematocrit_ChangingParameters() throw(Exception)
         {
             if((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 1)
             {
-                
+
                     if((*vessel_iterator)->GetStartNode()->rGetLocation().Convert(1_um)[0] <  10.0)
                     {
                         (*vessel_iterator)->GetStartNode()->GetFlowProperties()->SetIsInputNode(true);
@@ -1739,13 +1739,13 @@ void TestInvertedPiBetteridgeHaematocrit_ChangingParameters() throw(Exception)
 
              if((*vessel_iterator)->GetEndNode()->GetNumberOfSegments() == 1)
 	     {
-                
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  10.0)                    
+
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  10.0)
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsInputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(3320.0*unit::pascals);
                     }
-		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] >   10.0 && (*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  60.0 )                    
+		    if((*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] >   10.0 && (*vessel_iterator)->GetEndNode()->rGetLocation().Convert(1_um)[0] <  60.0 )
 		    {
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
@@ -1755,7 +1755,7 @@ void TestInvertedPiBetteridgeHaematocrit_ChangingParameters() throw(Exception)
 		  	(*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetIsOutputNode(true);
                         (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2090.0*unit::pascals);
 		    }
-              
+
             }
             /*if((*vessel_iterator)->GetStartNode()->GetNumberOfSegments() == 3)
             {
@@ -1765,10 +1765,10 @@ void TestInvertedPiBetteridgeHaematocrit_ChangingParameters() throw(Exception)
             {
 	  	                        (*vessel_iterator)->GetEndNode()->GetFlowProperties()->SetPressure(2500.0*unit::pascals);
 	    }*/
-        
+
 
 	}
- 
+
 
 
     //std::vector<std::shared_ptr<VesselSegment<2> > > segments = vascular_network->GetVesselSegments();
@@ -1827,13 +1827,13 @@ void TestInvertedPiBetteridgeHaematocrit_ChangingParameters() throw(Exception)
     auto p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
     p_oxygen_solver->SetPde(p_oxygen_pde);
     p_oxygen_solver->SetLabel("oxygen");
-    p_oxygen_solver->SetGrid(p_grid); 
+    p_oxygen_solver->SetGrid(p_grid);
     p_oxygen_solver->SetVesselNetwork(vascular_network);
     bool write=true;
     p_oxygen_solver->SetWriteSolution(write);
-    
+
     //std::string output_filename3 = output_file_handler.GetOutputDirectoryFullPath().append("HexOxygen.vtp");
-    //const std::string& rDirectory = 
+    //const std::string& rDirectory =
     const std::string& rDirectory = "TestBetteridgeHaematocritSolver_InvPi_oxygen_changing";
     std::shared_ptr<OutputFileHandler> pOutputFileHandler(new OutputFileHandler(rDirectory));
     //*pOutputFileHandler = rDirectory;
@@ -1862,12 +1862,12 @@ void TestInvertedPiBetteridgeHaematocrit_ChangingParameters() throw(Exception)
          * Dump the parameters to file for inspection.
          */
     //ParameterCollection::Instance()->DumpToFile(p_handler->GetOutputDirectoryFullPath()+"parameter_collection.xml");
-    
+
 
 }
 
 
-void TestInvertedPiBetteridgeHaematocrit_FlowBC() throw(Exception)
+void TestInvertedPiBetteridgeHaematocrit_FlowBC()
 {
 
 
@@ -1946,8 +1946,8 @@ void TestInvertedPiBetteridgeHaematocrit_FlowBC() throw(Exception)
     vascular_network->Write(output_filename2);
 
 
-  
-    
+
+
 
 }
 
