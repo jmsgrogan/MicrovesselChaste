@@ -107,11 +107,11 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
     std::ostringstream strs;
     strs << lambda;
     std::string str_lambda = strs.str();
-    // horizontal size of the domain
+    // horizontal size of the domaintwicelambda
     QLength domain_side_length_x = dimless_length*2.0*twicelambda*input_radius;
     auto p_file_handler = std::make_shared<OutputFileHandler>("Dichotomous_NoCorners_NewModel_LambdaEquals"+str_lambda, true);
 // for model without memory effects, use:    "auto p_file_handler = std::make_shared<OutputFileHandler>("Dichotomous_NoCorners_OldModel_LambdaEquals"+str_lambda, true);"
-    std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateForkingNetworkNoCorners(order, main_vert_length, input_radius, twicelambda);
+    std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateDichotomousNetworkUnevenNoCorners(order, main_vert_length, input_radius, 1.0);
 
     // identify input and output nodes and assign them properties
 
