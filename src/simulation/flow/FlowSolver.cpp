@@ -283,7 +283,59 @@ void FlowSolver<DIM>::Solve()
     PetscTools::Destroy(solution);
 }
 
+template<unsigned DIM>
+QDimensionless FlowSolver<DIM>::CheckSolution()
+{
+  QDimensionless sup_flow = 0.0;
+  QFlowRate node_flow = 0.0;
+  QFlowRate abs_node_flow = 0.0;
+  std::vector<std::shared_ptr<VesselSegment<DIM> >> current_vessels;
+  std::shared_ptr<Vessel<DIM> > current_vessel;
+  std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = this->mpVesselNetwork->GetNodes();
+  for(unsigned i = 0; i < nodes.size(); i++)
+  {
+    node_flow = 0.0;
+    abs_node_flow = 0.0;
+    double number_of_vessels = nodes[i]->GetNumberOfSegments();
+    if(!nodes[i]->GetFlowProperties()->IsInputNode() && !nodes[i]->GetFlowProperties()->IsOutputNode())
+    {
+      current_vessels = nodes[i]->GetSegments();
+      for(unsigned j = 0; j < current_vessels.size(); j++)
+      {
+        current_vessel = current_vessels[j]->GetVessel();
+        abs_node_flow = abs_node_flow + Qabs(current_vessel->GetFlowProperties()->GetFlowRate());
+        if(current_vessel->GetStartNode() == nodes[i])
+        {
+          if(current_vessel->GetEndNode()->GetFlowProperties()->GetPressure() > nodes[i]->GetFlowProperties()->GetPressure())
+          {
+            node_flow = node_flow + Qabs(current_vessel->GetFlowProperties()->GetFlowRate());
+          }
+          else
+          {
+            node_flow = node_flow - Qabs(current_vessel->GetFlowProperties()->GetFlowRate());
+          }
+        }
+        else
+        {
+          if(current_vessel->GetStartNode()->GetFlowProperties()->GetPressure() > nodes[i]->GetFlowProperties()->GetPressure())
+          {
+            node_flow = node_flow + Qabs(current_vessel->GetFlowProperties()->GetFlowRate());
+          }
+          else
+          {
+            node_flow = node_flow - Qabs(current_vessel->GetFlowProperties()->GetFlowRate());
+          }
+        }
+      }
+      if(sup_flow < number_of_vessels*Qabs(node_flow)/abs_node_flow)
+      {
+        sup_flow = number_of_vessels*Qabs(node_flow)/abs_node_flow;
+      }
+    }
+  }
+  return sup_flow;
+}
+
 // Explicit instantiation
 template class FlowSolver<2> ;
 template class FlowSolver<3> ;
-

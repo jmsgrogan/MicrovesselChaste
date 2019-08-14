@@ -40,8 +40,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNetworkGenerator.hpp"
 #include "FlowSolver.hpp"
 #include "SimulationTime.hpp"
-#include "PriesHaematocritSolver.hpp"
 #include "PriesWithMemoryHaematocritSolver.hpp"
+#include "PriesWithMemoryHaematocritSolverNonLinear.hpp"
 #include "UnitCollection.hpp"
 #include "RegularGrid.hpp"
 #include "SimulationTime.hpp"
@@ -165,8 +165,8 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
     p_oxygen_solver->SetGrid(p_grid);
 
 
-//    auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
-    auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
+    // auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
+    auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolverNonLinear<2>::Create();
     auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
     auto p_viscosity_calculator = ViscosityCalculator<2>::Create();
     p_viscosity_calculator->SetPlasmaViscosity(viscosity);
@@ -183,7 +183,7 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
     flow_solver.SetUp();
 
     unsigned max_iter = 1000;
-    double tolerance2 = 1.e-10;
+    double tolerance2 = 1.e-5;
 
     std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
     std::vector<double> previous_haematocrit(segments.size(), double(initial_haematocrit));
@@ -196,6 +196,7 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
         p_haematocrit_calculator->Calculate();
         p_viscosity_calculator->Calculate();
         // Get the residual
+        unsigned max_difference_index = 0;
         double max_difference = 0.0;
         double h_for_max = 0.0;
         double prev_for_max = 0.0;
@@ -208,10 +209,11 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
                 max_difference = difference;
                 h_for_max = current_haematocrit;
                 prev_for_max = previous_haematocrit[jdx];
+                max_difference_index = jdx;
             }
             previous_haematocrit[jdx] = current_haematocrit;
         }
-        std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << std::endl;
+        std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << " at index " << max_difference_index << std::endl;
         if(max_difference<=tolerance2)
         {
             std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
@@ -234,6 +236,9 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
             EXCEPTION("Did not converge after " + std::to_string(idx) + " iterations.");
         }
     }
+
+    std::cout << "Sup flow =" << flow_solver.CheckSolution() << std::endl;
+    std::cout << "Sup RBC = " << p_haematocrit_calculator->CheckSolution() << std::endl;
 
     SimulationTime::Instance()->SetStartTime(0.0);
 // Let's just do 1 time step; will be steady state anyway

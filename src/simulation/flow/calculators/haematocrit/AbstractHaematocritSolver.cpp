@@ -47,6 +47,59 @@ AbstractHaematocritSolver<DIM>::~AbstractHaematocritSolver()
 
 }
 
+template<unsigned DIM>
+QDimensionless AbstractHaematocritSolver<DIM>::CheckSolution()
+{
+  QDimensionless sup_rbc = 0.0;
+  QDimensionless node_rbc;
+  QDimensionless abs_node_rbc;
+  std::vector<std::shared_ptr<VesselSegment<DIM> >> current_vessels;
+  std::shared_ptr<Vessel<DIM> > current_vessel;
+  std::vector<std::shared_ptr<VesselNode<DIM> > > nodes = this->mpNetwork->GetNodes();
+  for(unsigned i = 0; i < nodes.size(); i++)
+  {
+    node_rbc = 0.0;
+    abs_node_rbc = 0.0;
+    double number_of_vessels = nodes[i]->GetNumberOfSegments();
+    if(!nodes[i]->GetFlowProperties()->IsInputNode() && !nodes[i]->GetFlowProperties()->IsOutputNode())
+    {
+      current_vessels = nodes[i]->GetSegments();
+      for(unsigned j = 0; j < current_vessels.size(); j++)
+      {
+        current_vessel = current_vessels[j]->GetVessel();
+        abs_node_rbc = abs_node_rbc + Qabs(current_vessel->GetFlowProperties()->GetFlowRate()*current_vessel->GetFlowProperties()->GetHaematocrit());
+        if(current_vessel->GetStartNode() == nodes[i])
+        {
+          if(current_vessel->GetEndNode()->GetFlowProperties()->GetPressure() > nodes[i]->GetFlowProperties()->GetPressure())
+          {
+            node_rbc = node_rbc + Qabs(current_vessel->GetFlowProperties()->GetFlowRate()*current_vessel->GetFlowProperties()->GetHaematocrit());
+          }
+          else
+          {
+            node_rbc = node_rbc - Qabs(current_vessel->GetFlowProperties()->GetFlowRate()*current_vessel->GetFlowProperties()->GetHaematocrit());
+          }
+        }
+        else
+        {
+          if(current_vessel->GetStartNode()->GetFlowProperties()->GetPressure() > nodes[i]->GetFlowProperties()->GetPressure())
+          {
+            node_rbc = node_rbc + Qabs(current_vessel->GetFlowProperties()->GetFlowRate()*current_vessel->GetFlowProperties()->GetHaematocrit());
+          }
+          else
+          {
+            node_rbc = node_rbc - Qabs(current_vessel->GetFlowProperties()->GetFlowRate()*current_vessel->GetFlowProperties()->GetHaematocrit());
+          }
+        }
+      }
+      if(sup_rbc < number_of_vessels*Qabs(node_rbc)/abs_node_rbc)
+      {
+        sup_rbc = number_of_vessels*Qabs(node_rbc)/abs_node_rbc;
+      }
+    }
+  }
+  return sup_rbc;
+}
+
 // Explicit instantiation
 template class AbstractHaematocritSolver<2>;
 template class AbstractHaematocritSolver<3>;

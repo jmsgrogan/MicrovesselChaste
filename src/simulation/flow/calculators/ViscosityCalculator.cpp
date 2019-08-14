@@ -85,7 +85,6 @@ void ViscosityCalculator<DIM>::Calculate()
         double power_term_2 = pow((2.0 * micron_radius / (2.0 * micron_radius - 1.1)), 2.0);
         double mu_rel = (1.0
                 + (mu_45 - 1.0) * (((pow((1.0 - haematocrit), c)) - 1) / ((pow((1.0 - 0.45), c)) - 1.0)) * power_term_2) * power_term_2;
-
         segments[segment_index]->GetFlowProperties()->SetViscosity(mPlasmaViscosity*mu_rel);
     }
 }

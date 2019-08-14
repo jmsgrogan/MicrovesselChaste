@@ -65,6 +65,11 @@ public:
      */
     virtual void Calculate() = 0;
 
+    /*
+     *  Method for checking for the conservation of RBCs at each non-boundary vertex
+     */
+    QDimensionless CheckSolution();
+
 };
 
 #endif

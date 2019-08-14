@@ -612,6 +612,7 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
         PetscTools::Destroy(solution);
     }
 }
+
 // Explicit instantiation
 template class PriesWithMemoryHaematocritSolver<2>;
 template class PriesWithMemoryHaematocritSolver<3>;
