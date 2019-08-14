@@ -112,7 +112,7 @@ public:
             bool fillDomain=false);
 
     /**
-     * Creates a hexagonal network corresponding to that of Alarcon et al. (2006), but with the same length for all the vessels
+     * Creates a hexagonal network, but with the same length for all the vessels
      * @param width the widht
      * @param height the height
      * @param vesselLength the vessel length
@@ -122,7 +122,7 @@ public:
             bool fillDomain=false);
 
  /**
-     * Creates a hexagonal network corresponding to that of Alarcon et al. (2006), but with the same length for all the vessels and (max) vessel radius as input
+     * Creates a hexagonal network, but with the same length for all the vessels and (max) vessel radius as input
      * @param width the widht
      * @param height the height
      * @param vesselLength the vessel length
@@ -133,7 +133,7 @@ public:
             bool fillDomain=false);
 
 /**
-     * Creates a dichotomous network with decreasing length in y direction (and constant in x) for all the vessels and (max) vessel radius as input
+     * Creates a dichotomous/forking network with decreasing length in y direction (and constant in x) for all the vessels and (max) vessel radius as input
      * @param order denotes order
      * @param main_length max length
      * @param main_radius max radius
@@ -143,11 +143,11 @@ public:
             bool fillDomain=false);
 
 /**
-     * Creates a dichotomous network with decreasing length in y direction (and constant in x) for all the vessels and (max) vessel radius as input, and with uneven splitting of the radius
+     * Creates a dichotomous network with decreasing length in y direction (and constant in x) for all the vessels, (max) vessel radius as input, and with uneven splitting of the radius
      * @param order denotes order
      * @param main_length max length
      * @param main_radius max radius
-     * @param alpha level of heterogeneity
+     * @param alpha level of heterogeneity (in radii between the two daughters)
      * @return a shared pointer to the vessel network
      */
     VesselNetworkPtr<DIM> GenerateDichotomousNetworkUneven(unsigned order, QLength main_length, QLength main_radius, double alpha,
@@ -155,7 +155,7 @@ public:
 
 
 /**
-     * Creates a dichotomous network without corners with decreasing length in y direction (and constant in x) for all the vessels and (max) vessel radius as input, and with uneven splitting of the radius
+     * Creates a dichotomous network without corners with decreasing length in y direction (and constant in x) for all the vessels, (max) vessel radius as input, and with uneven splitting of the radius
      * @param order denotes order
      * @param main_length max length
      * @param main_radius max radius
@@ -166,7 +166,7 @@ public:
             bool fillDomain=false);
 
 /**
-     * Creates a dichotomous network without corners with decreasing length in y direction and also decreasing (and further on increasing) in x for all the vessels and (max) vessel radius as input, and with uneven splitting of the radius
+     * Creates a dichotomous network without corners with decreasing length in y direction and also decreasing (and further on increasing) length in x for all the vessels, (max) vessel radius as input, and with uneven splitting of the radius
      * @param order denotes order
      * @param main_length max length
      * @param main_radius max radius
@@ -179,7 +179,7 @@ public:
 
 
 /**
-     * Creates a dichotomous network without corners with decreasing length in y direction and also decreasing (and further on increasing) in x for all the vessels and (max) vessel radius as input, with uneven splitting of the radius, and with vessel length following vessel radii
+     * Creates a dichotomous network without corners with decreasing length in y direction and also decreasing (and further on increasing) length in x for all the vessels, (max) vessel radius as input, with uneven splitting of the radius, and with vessel length following vessel radii
      * @param order denotes order
      * @param main_length max length
      * @param main_radius max radius
@@ -191,17 +191,16 @@ public:
             bool fillDomain=false);
 
 /**
-     * Creates a dichotomous network without corners with decreasing length in y direction and also decreasing (and further on increasing) in x for all the vessels and (max) vessel radius as input, with uneven splitting of the radius, and with vessel length following vessel radii....more spreaded
+     * Creates a dichotomous/forking network without corners with decreasing length in y direction (but more spreaded than initially) and also decreasing (and further on increasing) length in x for all the vessels, input (maximum) vessel radius as input, and with vessel length following vessel radii according to Murray's law
+     * These networks will be used in our paper on CFL disruption and recovery effects
      * @param order denotes order
-     * @param main_length max length
-     * @param main_radius max radius
-     * @param alpha level of heterogeneity between daughters
-     * @param theta level of decrease in length between the consecutive bifurcations
+     * @param main_length length of the vertical projection of order-1 vessels
+     * @param input_radius input vessel radius
+     * @param twicelambda - vessel length divided by vessel radius... in other words, lambda (i.e. vessel length divided by vessel diameter) times 2
      * @return a shared pointer to the vessel network
      */
-    VesselNetworkPtr<DIM> GenerateDichotomousNetworkUnevenNoCornersVaryDistanceLengthsFollowRadiiMoreSpreaded(unsigned order, QLength main_length, QLength main_radius, double alpha, double theta, double lambda,
+    VesselNetworkPtr<DIM> GenerateForkingNetworkNoCorners(unsigned order, QLength main_length, QLength input_radius, double twicelambda,
             bool fillDomain=false);
-
     /**
      * Creates a hexagonal repeating unit
      * @param vesselLength the vessel length

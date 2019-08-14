@@ -399,7 +399,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     SimulationTime::Instance()->Destroy();
 }
 
-void xTestNoCellsNontrivEquilateralModPries()
+void xTestNoCellsNontrivEquilateralModPries() 
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -1955,7 +1955,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     QLength domain_side_length_x = dimless_length*2.0*lambda*max_radius;
     std::cout << "Here, Domain length is:" << domain_side_length_x << "\n";
     auto p_file_handler = std::make_shared<OutputFileHandler>("Swarmplots_MoreSpreaded_WithX0_LengthsFollowRadii_NewModel_lambdaEquals"+str_lambda, true);
-    std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateDichotomousNetworkUnevenNoCornersVaryDistanceLengthsFollowRadiiMoreSpreaded(order, vessel_length, max_radius, alpha,theta, lambda);
+    std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateDichotomousNetworkUnevenNoCornersVaryDistanceLengthsFollowRadii_MoreSpreaded(order, vessel_length, max_radius, alpha,theta, lambda);
 
     // Assign flow properties
     //auto p_segment = p_network->GetVesselSegments()[0];
