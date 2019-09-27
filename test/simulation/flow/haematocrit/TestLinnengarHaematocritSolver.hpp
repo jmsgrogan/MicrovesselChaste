@@ -71,19 +71,8 @@ class TestLinnengarHaematocritSolver : public CxxTest::TestSuite
 
 public:
 
-<<<<<<< HEAD
-=======
-void xTestCoupledOxygenSolveFailing()
-{
-    // Specify the domain
-    QLength vessel_length = 80_um;
-    QLength domain_side_length = 2000_um;
-    QLength vessel_radius = 10_um;
-    QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
-    auto p_file_handler = std::make_shared<OutputFileHandler>("TestLinnengarHaematocritSolverFailing", true);
->>>>>>> 0397281... Keep g++-7.3 compiler happy by removing non C++11 standard exception (Merge from master)
 
-  void TestDivergingBifurcationLinnengarHaematocrit() throw(Exception)
+  void TestDivergingBifurcationLinnengarHaematocrit()
     {
     std::shared_ptr<VesselNode<2> > p_node1 = VesselNode<2>::Create(0.0_um,0.0_um);
     std::shared_ptr<VesselNode<2> > p_node2 = VesselNode<2>::Create(113.0_um,0.0_um);
@@ -129,7 +118,7 @@ p_vessel2->SetRadius(5.e-6*unit::metres);
 }
 
 
-void TestInvertedPiLinnengarHaematocrit() throw(Exception)
+void TestInvertedPiLinnengarHaematocrit()
 { 
     
     
@@ -195,7 +184,7 @@ void TestInvertedPiLinnengarHaematocrit() throw(Exception)
 
 
 
-void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
+void TestHexagonalNetworkLinnengarHaematocrit()
 {
     // Iterate over vessel lengths
     std::vector<double> lengths;
@@ -337,7 +326,7 @@ void TestHexagonalNetworkLinnengarHaematocrit() throw(Exception)
 }
 
 
-void TestHexagonalNetworkYangHaematocrit() throw(Exception)
+void TestHexagonalNetworkYangHaematocrit()
 {
     // Iterate over vessel lengths
     std::vector<double> lengths;
@@ -482,7 +471,7 @@ void TestHexagonalNetworkYangHaematocrit() throw(Exception)
 
 }
 
-void TestHexagonalNetworkYangHaematocrit_better() throw(Exception)
+void TestHexagonalNetworkYangHaematocrit_better()
 {
 
 

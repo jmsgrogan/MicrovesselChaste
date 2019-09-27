@@ -67,7 +67,7 @@ class TestWithOrWithourMemory : public CxxTest::TestSuite
 public:
 
 
-void TestNoCellsDichotomousWithOrWithoutMemoryEffects() throw(Exception)
+void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
 {
     // order of the dichotomous network
     unsigned order=5;

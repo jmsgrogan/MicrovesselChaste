@@ -74,7 +74,7 @@ class TestNoCellsBetteridgeNontrivVis : public CxxTest::TestSuite
 
 public:
 
-void xTestNoCellsNontriv() throw(Exception)
+void xTestNoCellsNontriv()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -237,7 +237,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
 
-void xTestNoCellsNontrivEquilateralBett() throw(Exception)
+void xTestNoCellsNontrivEquilateralBett()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -399,7 +399,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     SimulationTime::Instance()->Destroy();
 }
 
-void xTestNoCellsNontrivEquilateralModPries() throw(Exception)
+void xTestNoCellsNontrivEquilateralModPries()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -564,7 +564,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
 
-void xTestNoCellsNontrivEquilateralConst() throw(Exception)
+void xTestNoCellsNontrivEquilateralConst()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -726,7 +726,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     SimulationTime::Instance()->Destroy();
 }
 
-void xTestNoCellsNontrivVaryingRadii() throw(Exception)
+void xTestNoCellsNontrivVaryingRadii()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -890,7 +890,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
 
-void xTestNoCellsDichotomous() throw(Exception)
+void xTestNoCellsDichotomous()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -1053,7 +1053,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 }
 
 
-void xTestNoCellsDichotomousUneven() throw(Exception)
+void xTestNoCellsDichotomousUneven()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -1218,7 +1218,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 }
 
 
-void xTestNoCellsDichotomousUnevenModPries() throw(Exception)
+void xTestNoCellsDichotomousUnevenModPries()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -1383,7 +1383,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 }
 
 
-void xTestNoCellsDichotomousUnevenModPriesNoCorners() throw(Exception)
+void xTestNoCellsDichotomousUnevenModPriesNoCorners()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -1550,7 +1550,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
 
-void xTestNoCellsDichotomousUnevenModPriesNoCornersVaryDistance() throw(Exception)
+void xTestNoCellsDichotomousUnevenModPriesNoCornersVaryDistance()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
@@ -1718,7 +1718,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
 
-void xTestNoCellsDichotomousWithCFL_LengthsFollowRadii() throw(Exception)
+void xTestNoCellsDichotomousWithCFL_LengthsFollowRadii()
 {
     unsigned order=5;
     double theta = 1.0;
@@ -1911,7 +1911,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
 
-void TestNoCellsDichotomousWithCFL_LengthsFollowRadii() throw(Exception)
+void TestNoCellsDichotomousWithCFL_LengthsFollowRadii()
 {
     unsigned order=7;
     double theta = 1.0;
@@ -2105,7 +2105,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
 
-void xTestNoCellsNontrivInvertedPiLinn() throw(Exception)
+void xTestNoCellsNontrivInvertedPiLinn()
 {
 
  // Set up the vessel network
@@ -2364,7 +2364,7 @@ p_grid->GenerateFromPart(p_domain, spacing);
 }
 
 
-void xTestNoCellsNontrivInvertedPiYang() throw(Exception)
+void xTestNoCellsNontrivInvertedPiYang()
 {
 
  // Set up the vessel network
@@ -2623,7 +2623,7 @@ p_grid->GenerateFromPart(p_domain, spacing);
 
 
 
-void xTestNoCellsNontrivInvertedPiModPries() throw(Exception)
+void xTestNoCellsNontrivInvertedPiModPries()
 {
 
  // Set up the vessel network
@@ -2890,7 +2890,7 @@ p_grid->GenerateFromPart(p_domain, spacing);
 }
 
 
-void xTestNoCellsNontrivInvertedPiModPriesImposedFluxes_CFL() throw(Exception)
+void xTestNoCellsNontrivInvertedPiModPriesImposedFluxes_CFL()
 {
 
  // Set up the vessel network

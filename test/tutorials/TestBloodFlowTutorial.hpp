@@ -110,7 +110,7 @@ public:
      */
 
 
-    void TestEvenSimplerFlowProblem() throw (Exception)
+    void TestEvenSimplerFlowProblem()
     {
         /*
          * We will work in microns

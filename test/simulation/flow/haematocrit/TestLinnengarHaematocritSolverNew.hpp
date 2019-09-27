@@ -65,7 +65,7 @@ class TestLinnengarHaematocritSolverNew : public CxxTest::TestSuite
 
 public:
 
-void TestCoupledOxygenSolveFailing() throw(Exception)
+void TestCoupledOxygenSolveFailing()
 {
     // Specify the domain
     QLength vessel_length = 160_um;
@@ -226,7 +226,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     SimulationTime::Instance()->Destroy();
 }
 
-void xTestCoupledOxygenSolve() throw(Exception)
+void xTestCoupledOxygenSolve()
 {
     // Specify the domain
     QLength vessel_length = 80_um;

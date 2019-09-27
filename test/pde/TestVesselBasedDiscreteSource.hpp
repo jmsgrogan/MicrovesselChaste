@@ -252,7 +252,7 @@ std::cout << vessel_oxygen_concentration;
     }
 
 
-    void TestSimpleLinearEllipticFiniteDifferenceSolver_InvPI() throw(Exception)
+    void TestSimpleLinearEllipticFiniteDifferenceSolver_InvPI()
     {
     auto p_output_file_handler =
                 std::make_shared<OutputFileHandler>("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteDifferenceSolver_InvPi_Bett");
@@ -388,7 +388,7 @@ solver.SetGrid(p_grid);
     }
 
 
-   void TestSimpleLinearEllipticFiniteDifferenceSolver_Hexagonal_Betteridge() throw(Exception)
+   void TestSimpleLinearEllipticFiniteDifferenceSolver_Hexagonal_Betteridge()
     {
     auto p_output_file_handler =
                 std::make_shared<OutputFileHandler>("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteDifferenceSolver_Hexagonal_Betteridge");
@@ -569,7 +569,7 @@ p_grid->GenerateFromPart(p_domain, spacing);
     }
 
 
-void TestSimpleLinearEllipticFiniteDifferenceSolver_Hexagonal_Linninger_FE() throw(Exception)
+void TestSimpleLinearEllipticFiniteDifferenceSolver_Hexagonal_Linninger_FE()
     {
     auto p_output_file_handler =
                 std::make_shared<OutputFileHandler>("TestVesselBasedDiscreteSource/TestSimpleLinearEllipticFiniteDifferenceSolver_Hexagonal_Linninger");

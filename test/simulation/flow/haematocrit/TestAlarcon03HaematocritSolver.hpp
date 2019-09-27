@@ -290,7 +290,7 @@ public:
     }
 
 
-    void TestHexagonalNetwork_better() throw(Exception)
+    void TestHexagonalNetwork_better()
     {
         // Specify the network dimensions
         QLength vessel_length = 80.0 * 1_um;
