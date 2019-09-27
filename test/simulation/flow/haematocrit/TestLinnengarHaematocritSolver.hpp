@@ -229,7 +229,7 @@ void xTestCoupledOxygenSolveFailing()
     SimulationTime::Instance()->Destroy();
 }
 
-void TestCoupledOxygenSolve() throw(Exception)
+void TestCoupledOxygenSolve()
 {
     // Specify the domain
     QLength vessel_length = 80_um;
