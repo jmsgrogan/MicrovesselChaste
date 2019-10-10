@@ -357,7 +357,11 @@ void ModifiedPriesHaematocritSolver<DIM>::Calculate()
                          {
                              if(update_indices[idx][local_update_index]<0)
                              {
+<<<<<<< HEAD
                                  if(random_assignment[update_indices[idx][(local_update_index > 0) ? local_update_index: -local_update_index]]>my_value)
+=======
+                                 if(random_assignment[update_indices[idx][local_update_index]]>my_value)
+>>>>>>> 162b5879d69a3f7e0d629626fb53c4ff6bc0d5d3
                                  {
                                      my_value_highest = false;
                                  }

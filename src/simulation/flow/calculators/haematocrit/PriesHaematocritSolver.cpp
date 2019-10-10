@@ -339,7 +339,7 @@ void PriesHaematocritSolver<DIM>::Calculate()
                          {
                              if(update_indices[idx][local_update_index]<0)
                              {
-                                 if(random_assignment[update_indices[idx][(local_update_index > 0) ? local_update_index: -local_update_index]]>my_value)
+                                 if(random_assignment[update_indices[idx][local_update_index]]>my_value)
                                  {
                                      my_value_highest = false;
                                  }

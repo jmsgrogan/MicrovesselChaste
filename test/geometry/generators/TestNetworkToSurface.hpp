@@ -57,7 +57,7 @@ class TestNetworkToSurface : public CxxTest::TestSuite
 {
 public:
 
-    void TestSingleVessel2d() throw(Exception)
+    void TestSingleVessel2d()
     {
         std::string output_path = "TestNetworkToSurface";
         if(PetscTools::IsParallel())
@@ -94,7 +94,7 @@ public:
         writer.Write();
     }
 
-    void TestSingleVessel() throw(Exception)
+    void TestSingleVessel()
     {
         // Set up the network
         QLength length = 100_um;
@@ -129,7 +129,7 @@ public:
         writer.Write();
     }
 
-    void TestSingleVesselNoSmoothing() throw(Exception)
+    void TestSingleVesselNoSmoothing()
     {
         // Set up the network
         QLength length = 100_um;
@@ -165,7 +165,7 @@ public:
         writer.Write();
     }
 
-    void TestBifurcationVessel2d() throw(Exception)
+    void TestBifurcationVessel2d()
     {
         // Set up the network
         QLength length = 100.0_um;
@@ -211,7 +211,7 @@ public:
         writer.Write();
     }
 
-    void TestBifurcationVessel() throw(Exception)
+    void TestBifurcationVessel()
     {
         // Set up the network
         QLength length = 100_um;
@@ -261,7 +261,7 @@ public:
         writer.Write();
     }
 
-    void TestHexNetworkVessel2d() throw(Exception)
+    void TestHexNetworkVessel2d()
     {
         VesselNetworkGenerator<2> network_generator;
         std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(500_um, 500_um, 100_um, true);
@@ -293,7 +293,7 @@ public:
         writer.Write();
     }
 
-    void TestHexNetworkVessel3d() throw(Exception)
+    void TestHexNetworkVessel3d()
     {
         VesselNetworkGenerator<3> network_generator = VesselNetworkGenerator<3>();
         std::shared_ptr<VesselNetwork<3> > p_network = network_generator.GenerateHexagonalNetwork(100_um, 100_um, 30_um, true);

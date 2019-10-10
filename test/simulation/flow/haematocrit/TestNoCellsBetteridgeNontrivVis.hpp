@@ -399,7 +399,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     SimulationTime::Instance()->Destroy();
 }
 
-void xTestNoCellsNontrivEquilateralModPries() 
+void xTestNoCellsNontrivEquilateralModPries()
 {
     // Specify the domain
     QLength vessel_length = 80_um;

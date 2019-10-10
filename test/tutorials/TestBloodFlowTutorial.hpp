@@ -110,7 +110,7 @@ public:
      */
 
 
-    void TestEvenSimplerFlowProblem() throw (Exception)
+    void TestEvenSimplerFlowProblem()
     {
         /*
          * We will work in microns
@@ -241,7 +241,7 @@ public:
         //ParameterCollection::Instance()->Destroy();
        // BaseUnits::Instance()->Destroy();
     }
-    void TestSimpleFlowProblem() throw (Exception)
+    void TestSimpleFlowProblem()
     {
         /*
          * We will work in microns
@@ -330,7 +330,7 @@ public:
      *
      * In this test we will simulate haematocrit transport in a 3d vessel network.
      */
-    void TestFlowProblemWithHaematocrit() throw (Exception)
+    void TestFlowProblemWithHaematocrit()
     {
         auto p_handler =
                 std::make_shared<OutputFileHandler>("TestBloodFlowLiteratePaper/TestFlowProblemWithHaematocrit", false);
@@ -412,7 +412,7 @@ public:
      *
      * In this test the vessel network will adapt over time as a result of flow conditions.
      */
-    void TestFlowProblemStucturalAdaptation() throw (Exception)
+    void TestFlowProblemStucturalAdaptation()
     {
         auto p_handler =
                 std::make_shared<OutputFileHandler>("TestBloodFlowLiteratePaper/TestFlowProblemStucturalAdaptation", false);
@@ -488,7 +488,7 @@ public:
      * In this test the vessel network will adapt over time as a result of flow conditions and also vessels will be removed
      * to regression in low wall shear stress regions.
      */
-    void TestFlowProblemStucturalAdaptationWithRegression() throw (Exception)
+    void TestFlowProblemStucturalAdaptationWithRegression()
     {
         auto p_handler =
                 std::make_shared<OutputFileHandler>("TestBloodFlowLiteratePaper/TestFlowProblemStucturalAdaptationWithRegression", false);

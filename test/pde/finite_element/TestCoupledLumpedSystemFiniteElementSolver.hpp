@@ -70,7 +70,7 @@ class TestCoupledLumpedSystemFiniteElementSolver : public CxxTest::TestSuite
 
 public:
 
-    void TestPlaneSlowRelease() throw(Exception)
+    void TestPlaneSlowRelease()
     {
         BaseUnits::Instance()->SetReferenceLengthScale(1.0_m);
         BaseUnits::Instance()->SetReferenceConcentrationScale(1.0*unit::mole_per_metre_cubed);

@@ -59,7 +59,7 @@ class TestSolutionDependentDiscreteSource : public CxxTest::TestSuite
 
 public:
 
-    void TestSimpleLinearEllipticFiniteDifferenceSolver() throw(Exception)
+    void TestSimpleLinearEllipticFiniteDifferenceSolver()
     {
         // Solve two problems on the same grid
         std::shared_ptr<Part<3> > p_domain = Part<3>::Create();

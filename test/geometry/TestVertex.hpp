@@ -51,7 +51,7 @@ class TestVertex: public CxxTest::TestSuite
 {
 public:
 
-    void TestConstructorsAndScaling() throw (Exception)
+    void TestConstructorsAndScaling()
     {
         // Create points using constructors
         QLength reference_scale1(5_m);
@@ -97,7 +97,7 @@ public:
         TS_ASSERT_THROWS_THIS((*p_point8)[2], "Requested index out of bounds");
     }
 
-    void TestGeometryOperations() throw (Exception)
+    void TestGeometryOperations()
     {
         Vertex<2> point1(1.0_m, 2.0_m);
         Vertex<2> point2(2.0_m, 3.0_m);
@@ -143,7 +143,7 @@ public:
                 "2D rotation is about z axis only");
     }
 
-    void TestOverloadedOperators() throw (Exception)
+    void TestOverloadedOperators()
     {
         Vertex<2> point1(1.0_m, 2.0_m);
         Vertex<2> point2(2.0_m, 3.0_m);
@@ -165,13 +165,13 @@ public:
         TS_ASSERT_DELTA(point6.Convert(1_m)[1], -1.0, 1.e-6);
     }
 
-    void TestAttributes() throw (Exception)
+    void TestAttributes()
     {
         Vertex<2> point1(1.0_m, 2.0_m);
         point1.AddAttribute("BottomLeft", 1.0);
     }
 
-    void TestArchiving() throw (Exception)
+    void TestArchiving()
     {
 #if BOOST_VERSION >= 105600
         // Test Archiving

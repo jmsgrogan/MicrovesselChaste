@@ -171,8 +171,13 @@ public:
 
 
 void TestInvertedPiBetteridgeHaematocrit()
+<<<<<<< HEAD
 {
 
+=======
+{ 
+    
+>>>>>>> 162b5879d69a3f7e0d629626fb53c4ff6bc0d5d3
     PottsMeshGenerator<2> generator(200, 1, 200, 100, 1, 100); //**Changed**//
     PottsMesh<2>* p_mesh = generator.GetMesh(); //**Changed**//
     std::vector<CellPtr> cells;
@@ -463,8 +468,13 @@ simulator.AddSimulationModifier(p_microvessel_modifier);
 
 
 void TestInvertedPiBetteridgeHaematocrit_polished()
+<<<<<<< HEAD
 {
 
+=======
+{ 
+    
+>>>>>>> 162b5879d69a3f7e0d629626fb53c4ff6bc0d5d3
     std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
 
     QLength grid_spacing = 10.0 * 1_um;
@@ -661,8 +671,13 @@ simulator.AddSimulationModifier(p_microvessel_modifier);
 
 
 void TestInvertedPiBetteridgeHaematocrit_minimal()
+<<<<<<< HEAD
 {
 
+=======
+{ 
+    
+>>>>>>> 162b5879d69a3f7e0d629626fb53c4ff6bc0d5d3
     std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
 
     QLength grid_spacing = 10.0*1_um;
@@ -824,8 +839,13 @@ simulator.AddSimulationModifier(p_microvessel_modifier);
 
 
 void TestInvertedPiBetteridgeHaematocrit_minimal_playing()
+<<<<<<< HEAD
 {
 
+=======
+{ 
+    
+>>>>>>> 162b5879d69a3f7e0d629626fb53c4ff6bc0d5d3
     std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
 
     QLength grid_spacing =10.0* 1_um;

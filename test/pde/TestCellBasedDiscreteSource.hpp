@@ -57,7 +57,7 @@ class TestDiscreteSource : public CxxTest::TestSuite
 
 public:
 
-    void TestGridFunction() throw(Exception)
+    void TestGridFunction()
     {
 
     }

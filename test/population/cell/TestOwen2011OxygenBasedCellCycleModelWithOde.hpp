@@ -66,7 +66,7 @@ class TestOwen2011OxygenBasedCellCycleModelWithOde : public AbstractCellBasedTes
 {
 public:
 
-    void TestOwen2011OxygenBasedCellCycleModelWithOdeForNormalCells() throw(Exception)
+    void TestOwen2011OxygenBasedCellCycleModelWithOdeForNormalCells()
     {
         // Set up SimulationTime
         BaseUnits::Instance()->SetReferenceTimeScale(60.0*unit::seconds);
@@ -274,7 +274,7 @@ public:
         TS_ASSERT_EQUALS(p_cell_model3->ReadyToDivide(), false);
     }
 
-    void TestOwen2011OxygenBasedCellCycleModelWithOdeForCancerCells() throw(Exception)
+    void TestOwen2011OxygenBasedCellCycleModelWithOdeForCancerCells()
             {
 
         // Set up SimulationTime
@@ -415,7 +415,7 @@ public:
         TS_ASSERT_EQUALS(p_cell_model3->ReadyToDivide(), false);
     }
 
-    void TestOwen2011OxygenBasedCellCycleModelWithOdeForQuiescentCancerCells() throw(Exception)
+    void TestOwen2011OxygenBasedCellCycleModelWithOdeForQuiescentCancerCells()
     {
         // Set up SimulationTime
         BaseUnits::Instance()->SetReferenceTimeScale(60.0*unit::seconds);

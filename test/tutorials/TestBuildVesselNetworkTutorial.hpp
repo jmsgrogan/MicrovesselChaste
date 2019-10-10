@@ -103,7 +103,7 @@ public:
      * simple tests to make sure the network has been formed as expected. Then write the network to file and visualize it in Paraview. The
      * network will be built manually, which is tedious and not done much in practice. Later examples will used automatic generators.
      */
-    void TestBuildNetworkManually() throw (Exception)
+    void TestBuildNetworkManually()
     {
         /*
          * First, a note on units. In many simulations with vessel networks care is needed in managing units, as multiple computational grids and
@@ -195,7 +195,7 @@ public:
      * It is usually tedious to build a vessel network from scratch. In this test we use a generator to automatically construct a network.
      * We then write it to file, read it back in and check that it is restored as expected.
      */
-    void TestBuildNetworkFromGeneratorAndReadFromFile() throw (Exception)
+    void TestBuildNetworkFromGeneratorAndReadFromFile()
     {
         /*
          * Create a hexagonal network in 3D space using a generator. Specify the target network width and height and the desired vessel

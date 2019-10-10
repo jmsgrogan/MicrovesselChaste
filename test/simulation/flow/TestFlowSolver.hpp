@@ -545,7 +545,7 @@ public:
         p_network->Write(output_filename);
     }
 
-    void TestLoop() 
+    void TestLoop()
     {
         EXIT_IF_PARALLEL;    // Need a larger network to run in parallel
 

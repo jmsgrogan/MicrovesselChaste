@@ -56,7 +56,7 @@ class TestAngiogenesisSolver : public AbstractCellBasedWithTimingsTestSuite
 
 public:
 
-    void Test2dLatticeBasedSingleVesselGrowth() throw(Exception)
+    void Test2dLatticeBasedSingleVesselGrowth()
     {
         RandomNumberGenerator::Instance()->Reseed(123456);
 
