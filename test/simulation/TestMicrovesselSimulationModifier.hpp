@@ -257,11 +257,7 @@ public:
         simulator.Solve();
     }
 
-<<<<<<< HEAD
     void TestNodeBasedSpheroid()
-=======
-    void TestNodeBasedSpheroid()
->>>>>>> 162b5879d69a3f7e0d629626fb53c4ff6bc0d5d3
     {
         // Create the domain
         std::shared_ptr<Part<3> > p_domain = GetSimulationDomain();
