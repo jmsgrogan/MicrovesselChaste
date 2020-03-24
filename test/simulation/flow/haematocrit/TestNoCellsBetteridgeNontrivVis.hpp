@@ -1914,7 +1914,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 void TestNoCellsDichotomousWithCFL_LengthsFollowRadii()
 {
     unsigned order=7;
-    double theta = 1.0;
+    //UNUSED IN NEW INTERFACE double theta = 1.0;
 
     double dimless_length = 1.0;
 
@@ -1931,7 +1931,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     double inlet_haematocrit = 0.45;
     double initial_haematocrit = 0.45;
 
-    double alpha = 1.0;
+    //UNUSED IN NEW INTERFACE  double alpha = 1.0;
     // Generate the network
 
     VesselNetworkGenerator<2> network_generator;
@@ -1955,7 +1955,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
     QLength domain_side_length_x = dimless_length*2.0*lambda*max_radius;
     std::cout << "Here, Domain length is:" << domain_side_length_x << "\n";
     auto p_file_handler = std::make_shared<OutputFileHandler>("Swarmplots_MoreSpreaded_WithX0_LengthsFollowRadii_NewModel_lambdaEquals"+str_lambda, true);
-    std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateDichotomousNetworkUnevenNoCornersVaryDistanceLengthsFollowRadii_MoreSpreaded(order, vessel_length, max_radius, alpha,theta, lambda);
+    std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateForkingNetworkNoCorners(order, vessel_length, max_radius, /*alpha,theta,*/ 2.0*lambda);
 
     // Assign flow properties
     //auto p_segment = p_network->GetVesselSegments()[0];
