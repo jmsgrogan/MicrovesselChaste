@@ -64,6 +64,45 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 class TestWithOrWithourMemory : public CxxTest::TestSuite
 {
 
+
+private:
+    /** The following is to test that the "with memory" lambda=4 figure can be faithfully reproduced. Or at least that
+        the asymmetry in the middle of the network will be visible.
+        See bottom of next test for where this is called.*/
+    void  VerifySolutionLambdaEquals4(std::shared_ptr<VesselNetwork<2> > pNetwork, std::vector<double>& rOxygenSolution)
+    {
+        /* Note that these tests may be too fragile - 6 decimal places is more than enough to give the correct figure.*/
+        // Lowest haematocrit segments (in middle at top/bottom)
+        TS_ASSERT_DELTA(0.313475, pNetwork->GetVesselSegments()[61]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.313475, pNetwork->GetVesselSegments()[63]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+
+        TS_ASSERT_DELTA(0.313476, pNetwork->GetVesselSegments()[120]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.313476, pNetwork->GetVesselSegments()[122]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+
+        // Highest haematocrit segments (in middle and asymmetric)
+        TS_ASSERT_DELTA(0.659911, pNetwork->GetVesselSegments()[81]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.659911, pNetwork->GetVesselSegments()[83]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+
+        TS_ASSERT_DELTA(0.659897, pNetwork->GetVesselSegments()[100]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.659897, pNetwork->GetVesselSegments()[102]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+
+        double average_oxygen = 0.0;
+        for(unsigned jdx=0;jdx<rOxygenSolution.size();jdx++)
+        {
+            average_oxygen += rOxygenSolution[jdx];
+        }
+        average_oxygen /= rOxygenSolution.size();
+
+        // Average oxygen
+        TS_ASSERT_DELTA(17097.7, average_oxygen, 1.0);
+        // Low oxygen
+        TS_ASSERT_DELTA(381.278, rOxygenSolution[0], 1.0);
+        TS_ASSERT_DELTA(381.76,  rOxygenSolution[1], 1.0);
+        // High oxygen
+        TS_ASSERT_DELTA(40581.4, rOxygenSolution[21530], 1.0);
+        TS_ASSERT_DELTA(40581.4, rOxygenSolution[21505], 1.0);
+    }
+
 public:
 
 
@@ -256,6 +295,14 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
     p_network->Write(output_file);
     SimulationTime::Instance()->Destroy();
     std::cout << vessel_oxygen_concentration;
+
+    // Test that the "with memory" lambda=4 figure can be faithfully reproduced.
+    if (fabs(lambda-4.0)<1e-1)
+    {
+        VerifySolutionLambdaEquals4(p_network, solution);
+    }
+
+
     }
 }
 
