@@ -513,11 +513,11 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
 			{
 				if(Qabs(self_flow_rate)/Qabs(parent0_flow_rate) < X0)
 				{
-				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), 0.0);
+				linearSystem.SetMatrixElement(vessels[update_indices[idx][0]]->GetId(), vessels[update_indices[idx][1]]->GetId(), 0.0);
 				}
 				else if(Qabs(competitor0_flow_rate)/Qabs(parent0_flow_rate) < X0)
 				{
-				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -Qabs(parent0_flow_rate)/Qabs(self_flow_rate));
+				linearSystem.SetMatrixElement(vessels[update_indices[idx][0]]->GetId(), vessels[update_indices[idx][1]]->GetId(), -Qabs(parent0_flow_rate)/Qabs(self_flow_rate));
 				}
 				else
 				{
@@ -525,18 +525,18 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
 				double term1 = pow(modified_flow_ratio_mc,B);
 				double numer = term2*term1*flow_ratio_pm;
                        	 	double denom = 1.0+term2*term1;
-				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -numer/denom);
+				linearSystem.SetMatrixElement(vessels[update_indices[idx][0]]->GetId(), vessels[update_indices[idx][1]]->GetId(), -numer/denom);
 				}
 			}
 			else if(vessels[update_indices[idx][0]]->GetPreference() == 1)
 			{
 				if(Qabs(self_flow_rate)/Qabs(parent0_flow_rate) < X0_favor)
 				{
-				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), 0.0);
+				linearSystem.SetMatrixElement(vessels[update_indices[idx][0]]->GetId(), vessels[update_indices[idx][1]]->GetId(), 0.0);
 				}
 				else if(Qabs(competitor0_flow_rate)/Qabs(parent0_flow_rate) < X0_unfavor)
 				{
-				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -Qabs(parent0_flow_rate)/Qabs(self_flow_rate));
+				linearSystem.SetMatrixElement(vessels[update_indices[idx][0]]->GetId(), vessels[update_indices[idx][1]]->GetId(), -Qabs(parent0_flow_rate)/Qabs(self_flow_rate));
 				}
 				else
 				{
@@ -544,18 +544,18 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
 				double term1 = pow(modified_flow_ratio_mc,B);
 				double numer = term2*term1*flow_ratio_pm;
                         	double denom = 1.0+term2*term1;
-				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -numer/denom);
+				linearSystem.SetMatrixElement(vessels[update_indices[idx][0]]->GetId(),vessels[update_indices[idx][1]]->GetId(), -numer/denom);
 				}
 			}
 			else
 			{
 				if(Qabs(self_flow_rate)/Qabs(parent0_flow_rate) < X0_unfavor)
 				{
-				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), 0.0);
+				linearSystem.SetMatrixElement(vessels[update_indices[idx][0]]->GetId(), vessels[update_indices[idx][1]]->GetId(), 0.0);
 				}
 				else if(Qabs(competitor0_flow_rate)/Qabs(parent0_flow_rate) < X0_favor)
 				{
-				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -Qabs(parent0_flow_rate)/Qabs(self_flow_rate));
+				linearSystem.SetMatrixElement(vessels[update_indices[idx][0]]->GetId(), vessels[update_indices[idx][1]]->GetId(), -Qabs(parent0_flow_rate)/Qabs(self_flow_rate));
 				}
 				else
 				{
@@ -563,7 +563,7 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
 				double term1 = pow(modified_flow_ratio_mc,B);
 				double numer = term2*term1*flow_ratio_pm;
                         	double denom = 1.0+term2*term1;
-				linearSystem.SetMatrixElement(idx, vessels[update_indices[idx][1]]->GetId(), -numer/denom);
+				linearSystem.SetMatrixElement(vessels[update_indices[idx][0]]->GetId(),vessels[update_indices[idx][1]]->GetId(), -numer/denom);
 				}
 			}
 
