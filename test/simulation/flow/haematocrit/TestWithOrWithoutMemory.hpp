@@ -60,16 +60,17 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sstream>
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
+#include "Debug.hpp"
 
 class TestWithOrWithourMemory : public CxxTest::TestSuite
 {
 
 
-private:
+public:
     /** The following is to test that the "with memory" lambda=4 figure can be faithfully reproduced. Or at least that
         the asymmetry in the middle of the network will be visible.
         See bottom of next test for where this is called.*/
-    void  VerifySolutionLambdaEquals4(std::shared_ptr<VesselNetwork<2> > pNetwork, std::vector<double>& rOxygenSolution)
+    void  VerifySolutionLambdaEquals4WithMemory(std::shared_ptr<VesselNetwork<2> > pNetwork, std::vector<double>& rOxygenSolution)
     {
         /* Note that these tests may be too fragile - 6 decimal places is more than enough to give the correct figure.*/
         // Lowest haematocrit segments (in middle at top/bottom)
@@ -103,10 +104,9 @@ private:
         TS_ASSERT_DELTA(40581.4, rOxygenSolution[21505], 1.0);
     }
 
-public:
 
 
-void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
+void RunNoCellsDichotomousWithOrWithoutMemoryEffects(bool withMemory)
 {
     // order of the dichotomous network
     unsigned order=5;
@@ -144,14 +144,18 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
     QLength domain_side_length_y = 4.0*main_vert_length;
 
     std::ostringstream strs;
-    strs << lambda;
-    std::string str_lambda = strs.str();
+    if (withMemory)
+    {
+        strs << "Dichotomous_NoCorners_NewModel_LambdaEquals" << lambda;
+    }
+    else
+    {
+        strs << "Dichotomous_NoCorners_OldModel_LambdaEquals" << lambda;
+    }
+    std::string str_directory_name = strs.str();
     // horizontal size of the domain
     QLength domain_side_length_x = dimless_length*2.0*twicelambda*input_radius;
- //   auto p_file_handler = std::make_shared<OutputFileHandler>("Dichotomous_NoCorners_NewModel_LambdaEquals"+str_lambda, true);
-// for model without memory effects, use:
-    auto p_file_handler = std::make_shared<OutputFileHandler>("Dichotomous_NoCorners_NewModel_LambdaEquals"+str_lambda, true);
-// for model without memory effects, use:    "auto p_file_handler = std::make_shared<OutputFileHandler>("Dichotomous_NoCorners_OldModel_LambdaEquals"+str_lambda, true);"
+    auto p_file_handler = std::make_shared<OutputFileHandler>(str_directory_name, true);
     std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateForkingNetworkNoCorners(order, main_vert_length, input_radius, twicelambda);
 
     // identify input and output nodes and assign them properties
@@ -204,14 +208,26 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
     p_oxygen_solver->SetGrid(p_grid);
 
 
-//    auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
-    auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
+    // Switch between solvers for Pries or newer "with memory"
+    std::shared_ptr<AbstractHaematocritSolver<2>> p_abs_haematocrit_calculator;
+    if (withMemory)
+    {
+        auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
+        p_haematocrit_calculator->SetVesselNetwork(p_network);
+        p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
+        p_abs_haematocrit_calculator = p_haematocrit_calculator;
+    }
+    else
+    {
+        auto  p_haematocrit_calculator = PriesHaematocritSolver<2>::Create();
+        p_haematocrit_calculator->SetVesselNetwork(p_network);
+        p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
+        p_abs_haematocrit_calculator = p_haematocrit_calculator;
+    }
     auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
     auto p_viscosity_calculator = ViscosityCalculator<2>::Create();
     p_viscosity_calculator->SetPlasmaViscosity(viscosity);
 
-    p_haematocrit_calculator->SetVesselNetwork(p_network);
-    p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
     p_impedance_calculator->SetVesselNetwork(p_network);
     p_viscosity_calculator->SetVesselNetwork(p_network);
     p_viscosity_calculator->Calculate();
@@ -232,7 +248,7 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
         p_impedance_calculator->Calculate();
         flow_solver.SetUp();
         flow_solver.Solve();
-        p_haematocrit_calculator->Calculate();
+        p_abs_haematocrit_calculator->Calculate();
         p_viscosity_calculator->Calculate();
         // Get the residual
         double max_difference = 0.0;
@@ -299,14 +315,20 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
     // Test that the "with memory" lambda=4 figure can be faithfully reproduced.
     if (fabs(lambda-4.0)<1e-1)
     {
-        VerifySolutionLambdaEquals4(p_network, solution);
+        if (withMemory){
+            VerifySolutionLambdaEquals4WithMemory(p_network, solution);
+        }
     }
 
 
     }
 }
 
-
+    void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
+    {
+        RunNoCellsDichotomousWithOrWithoutMemoryEffects(false);
+        RunNoCellsDichotomousWithOrWithoutMemoryEffects(true);
+    }
 
 };
 
