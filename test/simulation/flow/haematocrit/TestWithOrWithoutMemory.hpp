@@ -60,16 +60,44 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sstream>
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
-#include "Debug.hpp"
 
 class TestWithOrWithourMemory : public CxxTest::TestSuite
 {
 
 
 public:
+    /** The following is to test that the Pries (without memory) lambda=4 figure can be faithfully reproduced.
+        See bottom of RunNoCellsDichotomousWithOrWithoutMemoryEffects() for where this is called.*/
+    void  VerifySolutionLambdaEquals4Pries(std::shared_ptr<VesselNetwork<2> > pNetwork, std::vector<double>& rOxygenSolution)
+    {
+        /* All vessels get 0.45 haematocrit.  This is reasonable because all radius reductions are symmetric.*/
+        // (middle)
+        TS_ASSERT_DELTA(0.45, pNetwork->GetVesselSegments()[61]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.45, pNetwork->GetVesselSegments()[120]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.45, pNetwork->GetVesselSegments()[81]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.45, pNetwork->GetVesselSegments()[100]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+
+        double average_oxygen = 0.0;
+        for(unsigned jdx=0;jdx<rOxygenSolution.size();jdx++)
+        {
+            average_oxygen += rOxygenSolution[jdx];
+        }
+        average_oxygen /= rOxygenSolution.size();
+
+        // Average oxygen
+        TS_ASSERT_DELTA(16853.2187, average_oxygen, 1.0);
+        // Low oxygen
+        TS_ASSERT_DELTA(385.507, rOxygenSolution[0], 1.0);
+        TS_ASSERT_DELTA(386.01,  rOxygenSolution[1], 1.0);
+        // High oxygen
+        TS_ASSERT_DELTA(27678.2, rOxygenSolution[16285], 1.0);
+        TS_ASSERT_DELTA(27678.2, rOxygenSolution[28585], 1.0);
+        TS_ASSERT_DELTA(27678.2, rOxygenSolution[8492], 1.0);
+    }
+
     /** The following is to test that the "with memory" lambda=4 figure can be faithfully reproduced. Or at least that
         the asymmetry in the middle of the network will be visible.
-        See bottom of next test for where this is called.*/
+        See bottom of RunNoCellsDichotomousWithOrWithoutMemoryEffects() for where this is called.*/
     void  VerifySolutionLambdaEquals4WithMemory(std::shared_ptr<VesselNetwork<2> > pNetwork, std::vector<double>& rOxygenSolution)
     {
         /* Note that these tests may be too fragile - 6 decimal places is more than enough to give the correct figure.*/
@@ -310,13 +338,17 @@ void RunNoCellsDichotomousWithOrWithoutMemoryEffects(bool withMemory)
     std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
     p_network->Write(output_file);
     SimulationTime::Instance()->Destroy();
-    std::cout << vessel_oxygen_concentration;
-
+    
     // Test that the "with memory" lambda=4 figure can be faithfully reproduced.
     if (fabs(lambda-4.0)<1e-1)
     {
-        if (withMemory){
+        if (withMemory)
+        {
             VerifySolutionLambdaEquals4WithMemory(p_network, solution);
+        }
+        else
+        {
+            VerifySolutionLambdaEquals4Pries(p_network, solution);
         }
     }
 
