@@ -42,7 +42,6 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "SimulationTime.hpp"
 #include "PriesHaematocritSolver.hpp"
 #include "PriesWithMemoryHaematocritSolver.hpp"
-#include "PriesWithMemoryHaematocritSolverNonLinear.hpp"
 #include "UnitCollection.hpp"
 #include "RegularGrid.hpp"
 #include "SimulationTime.hpp"
