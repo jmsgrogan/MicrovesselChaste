@@ -64,10 +64,95 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 class TestWithOrWithourMemory : public CxxTest::TestSuite
 {
 
+
 public:
+    /** The following is to test that the Pries (without memory) lambda=4 figure can be faithfully reproduced.
+        See bottom of RunNoCellsDichotomousWithOrWithoutMemoryEffects() for where this is called.*/
+    void  VerifySolutionLambdaEquals4Pries(std::shared_ptr<VesselNetwork<2> > pNetwork, std::vector<double>& rOxygenSolution)
+    {
+        /* All vessels get 0.45 haematocrit.  This is reasonable because all radius reductions are symmetric.*/
+        // (middle)
+        TS_ASSERT_DELTA(0.45, pNetwork->GetVesselSegments()[61]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.45, pNetwork->GetVesselSegments()[120]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.45, pNetwork->GetVesselSegments()[81]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.45, pNetwork->GetVesselSegments()[100]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+
+        /* Flow splitting (symmetric) */
+        TS_ASSERT_DELTA(5.17974e-10, pNetwork->GetVesselSegments()[124]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(2.58987e-10, pNetwork->GetVesselSegments()[0]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(2.58987e-10, pNetwork->GetVesselSegments()[1]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(1.29493e-10, pNetwork->GetVesselSegments()[4]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(1.29493e-10, pNetwork->GetVesselSegments()[5]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(1.29493e-10, pNetwork->GetVesselSegments()[8]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(1.29493e-10, pNetwork->GetVesselSegments()[9]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+
+        double average_oxygen = 0.0;
+        for(unsigned jdx=0;jdx<rOxygenSolution.size();jdx++)
+        {
+            average_oxygen += rOxygenSolution[jdx];
+        }
+        average_oxygen /= rOxygenSolution.size();
+
+        // Average oxygen
+        TS_ASSERT_DELTA(16853.2187, average_oxygen, 1.0);
+        // Low oxygen
+        TS_ASSERT_DELTA(385.507, rOxygenSolution[0], 1.0);
+        TS_ASSERT_DELTA(386.01,  rOxygenSolution[1], 1.0);
+        // High oxygen
+        TS_ASSERT_DELTA(27678.2, rOxygenSolution[16285], 1.0);
+        TS_ASSERT_DELTA(27678.2, rOxygenSolution[28585], 1.0);
+        TS_ASSERT_DELTA(27678.2, rOxygenSolution[8492], 1.0);
+    }
+
+    /** The following is to test that the "with memory" lambda=4 figure can be faithfully reproduced. Or at least that
+        the asymmetry in the middle of the network will be visible.
+        See bottom of RunNoCellsDichotomousWithOrWithoutMemoryEffects() for where this is called.*/
+    void  VerifySolutionLambdaEquals4WithMemory(std::shared_ptr<VesselNetwork<2> > pNetwork, std::vector<double>& rOxygenSolution)
+    {
+        /* Note that these tests may be too fragile - 6 decimal places is more than enough to give the correct figure.*/
+        // Lowest haematocrit segments (in middle at top/bottom)
+        TS_ASSERT_DELTA(0.313475, pNetwork->GetVesselSegments()[61]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.313475, pNetwork->GetVesselSegments()[63]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+
+        TS_ASSERT_DELTA(0.313476, pNetwork->GetVesselSegments()[120]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.313476, pNetwork->GetVesselSegments()[122]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+
+        // Highest haematocrit segments (in middle and asymmetric)
+        TS_ASSERT_DELTA(0.659911, pNetwork->GetVesselSegments()[81]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.659911, pNetwork->GetVesselSegments()[83]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+
+        TS_ASSERT_DELTA(0.659897, pNetwork->GetVesselSegments()[100]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.659897, pNetwork->GetVesselSegments()[102]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+
+        /* Flow splitting (non symmetric) */
+        TS_ASSERT_DELTA(2.23815e-10, pNetwork->GetVesselSegments()[124]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(1.11895e-10, pNetwork->GetVesselSegments()[0]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(1.1192e-10, pNetwork->GetVesselSegments()[1]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(5.07894e-11, pNetwork->GetVesselSegments()[4]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(6.11309e-11, pNetwork->GetVesselSegments()[5]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(6.11001e-11, pNetwork->GetVesselSegments()[8]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(5.07949e-11, pNetwork->GetVesselSegments()[9]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+
+        double average_oxygen = 0.0;
+        for(unsigned jdx=0;jdx<rOxygenSolution.size();jdx++)
+        {
+            average_oxygen += rOxygenSolution[jdx];
+        }
+        average_oxygen /= rOxygenSolution.size();
+
+        // Average oxygen
+        TS_ASSERT_DELTA(17097.7, average_oxygen, 1.0);
+        // Low oxygen
+        TS_ASSERT_DELTA(381.278, rOxygenSolution[0], 1.0);
+        TS_ASSERT_DELTA(381.76,  rOxygenSolution[1], 1.0);
+        // High oxygen
+        TS_ASSERT_DELTA(40581.4, rOxygenSolution[21530], 1.0);
+        TS_ASSERT_DELTA(40581.4, rOxygenSolution[21505], 1.0);
+    }
 
 
-void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
+
+void RunNoCellsDichotomousWithOrWithoutMemoryEffects(bool withMemory)
 {
     // order of the dichotomous network
     unsigned order=5;
@@ -105,14 +190,18 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
     QLength domain_side_length_y = 4.0*main_vert_length;
 
     std::ostringstream strs;
-    strs << lambda;
-    std::string str_lambda = strs.str();
+    if (withMemory)
+    {
+        strs << "Dichotomous_NoCorners_NewModel_LambdaEquals" << lambda;
+    }
+    else
+    {
+        strs << "Dichotomous_NoCorners_OldModel_LambdaEquals" << lambda;
+    }
+    std::string str_directory_name = strs.str();
     // horizontal size of the domain
     QLength domain_side_length_x = dimless_length*2.0*twicelambda*input_radius;
- //   auto p_file_handler = std::make_shared<OutputFileHandler>("Dichotomous_NoCorners_NewModel_LambdaEquals"+str_lambda, true);
-// for model without memory effects, use:
-    auto p_file_handler = std::make_shared<OutputFileHandler>("Dichotomous_NoCorners_NewModel_LambdaEquals"+str_lambda, true);
-// for model without memory effects, use:    "auto p_file_handler = std::make_shared<OutputFileHandler>("Dichotomous_NoCorners_OldModel_LambdaEquals"+str_lambda, true);"
+    auto p_file_handler = std::make_shared<OutputFileHandler>(str_directory_name, true);
     std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateForkingNetworkNoCorners(order, main_vert_length, input_radius, twicelambda);
 
     // identify input and output nodes and assign them properties
@@ -165,14 +254,27 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
     p_oxygen_solver->SetGrid(p_grid);
 
 
-    // auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
-    auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolverNonLinear<2>::Create();
+    // Switch between solvers for Pries or newer "with memory"
+    std::shared_ptr<AbstractHaematocritSolver<2>> p_abs_haematocrit_calculator;
+    if (withMemory)
+    {
+        auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
+        p_haematocrit_calculator->SetVesselNetwork(p_network);
+        p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
+        p_abs_haematocrit_calculator = p_haematocrit_calculator;
+    }
+    else
+    {
+        auto  p_haematocrit_calculator = PriesHaematocritSolver<2>::Create();
+        p_haematocrit_calculator->SetVesselNetwork(p_network);
+        p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
+        p_abs_haematocrit_calculator = p_haematocrit_calculator;
+    }
+
     auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
     auto p_viscosity_calculator = ViscosityCalculator<2>::Create();
     p_viscosity_calculator->SetPlasmaViscosity(viscosity);
 
-    p_haematocrit_calculator->SetVesselNetwork(p_network);
-    p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
     p_impedance_calculator->SetVesselNetwork(p_network);
     p_viscosity_calculator->SetVesselNetwork(p_network);
     p_viscosity_calculator->Calculate();
@@ -193,7 +295,7 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
         p_impedance_calculator->Calculate();
         flow_solver.SetUp();
         flow_solver.Solve();
-        p_haematocrit_calculator->Calculate();
+        p_abs_haematocrit_calculator->Calculate();
         p_viscosity_calculator->Calculate();
         // Get the residual
         unsigned max_difference_index = 0;
@@ -260,11 +362,29 @@ void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
     std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
     p_network->Write(output_file);
     SimulationTime::Instance()->Destroy();
-    std::cout << vessel_oxygen_concentration;
+    
+    // Test that the "with memory" lambda=4 figure can be faithfully reproduced.
+    if (fabs(lambda-4.0)<1e-1)
+    {
+        if (withMemory)
+        {
+            VerifySolutionLambdaEquals4WithMemory(p_network, solution);
+        }
+        else
+        {
+            VerifySolutionLambdaEquals4Pries(p_network, solution);
+        }
+    }
+
+
     }
 }
 
-
+    void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
+    {
+        RunNoCellsDichotomousWithOrWithoutMemoryEffects(false);
+        RunNoCellsDichotomousWithOrWithoutMemoryEffects(true);
+    }
 
 };
 
