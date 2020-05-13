@@ -40,6 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNetworkGenerator.hpp"
 #include "FlowSolver.hpp"
 #include "SimulationTime.hpp"
+#include "PriesHaematocritSolver.hpp"
 #include "PriesWithMemoryHaematocritSolver.hpp"
 #include "PriesWithMemoryHaematocritSolverNonLinear.hpp"
 #include "UnitCollection.hpp"
@@ -340,7 +341,7 @@ void RunNoCellsDichotomousWithOrWithoutMemoryEffects(bool withMemory)
     }
 
     std::cout << "Sup flow =" << flow_solver.CheckSolution() << std::endl;
-    std::cout << "Sup RBC = " << p_haematocrit_calculator->CheckSolution() << std::endl;
+    std::cout << "Sup RBC = " << p_abs_haematocrit_calculator->CheckSolution() << std::endl;
 
     SimulationTime::Instance()->SetStartTime(0.0);
 // Let's just do 1 time step; will be steady state anyway
