@@ -85,7 +85,7 @@ void TestBranchingNetworkStructure()
     QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
     double inlet_haematocrit = 0.45;
-    //double initial_haematocrit = 0.45;
+    double initial_haematocrit = 0.45;
 
     // Generate the network
 
@@ -133,7 +133,7 @@ void TestBranchingNetworkStructure()
     // Switch between solvers for Pries or newer "with memory"
     std::shared_ptr<AbstractHaematocritSolver<2>> p_abs_haematocrit_calculator;
 
-    auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
+    auto p_haematocrit_calculator = PriesHaematocritSolver<2>::Create();
     p_haematocrit_calculator->SetVesselNetwork(p_network);
     p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
     p_abs_haematocrit_calculator = p_haematocrit_calculator;
@@ -210,6 +210,7 @@ void TestBranchingNetworkStructure()
     std::cout << "Sup RBC = " << p_abs_haematocrit_calculator->CheckSolution() << std::endl;
 
     std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
+    p_network->Write(output_file);
     TS_ASSERT_DELTA(0.45, 0.45, 1e-6);
 
 }
