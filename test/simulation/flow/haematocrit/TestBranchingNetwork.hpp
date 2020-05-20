@@ -211,6 +211,14 @@ void TestBranchingNetworkStructure()
 
     std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
     TS_ASSERT_DELTA(0.45, 0.45, 1e-6);
+    std::vector<std::shared_ptr<Vessel<2> > > network_vessels =  p_network->GetVessels();
+    for(auto vessel=network_vessels.begin(); vessel!=network_vessels.end(); ++vessel)
+    {
+      std::cout << "Vessel index = " << vessel->GetGlobalIndex() << std::endl;
+      std::cout << "Vessel length = " << vessel->GetLength() << std::endl;
+      std::cout << "Vessel radius = " << vessel->GetRadius() << std::endl;
+      std::cout << "Vessel haematocrit = " << vessel->GetHaematocrit() << std::endl;
+    }
 
 }
 
