@@ -213,12 +213,12 @@ void TestBranchingNetworkStructure()
     p_network->Write(output_file);
     TS_ASSERT_DELTA(0.45, 0.45, 1e-6);
     std::vector<std::shared_ptr<Vessel<2> > > network_vessels =  p_network->GetVessels();
-    for(auto vessel=network_vessels.begin(); vessel!=network_vessels.end(); ++vessel)
+    for(unsigned k = 0; k < p_network->GetNumberOfVessels(); k++)
     {
-      std::cout << "Vessel index = " << vessel.GetGlobalIndex() << std::endl;
-      std::cout << "Vessel length = " << vessel.GetLength() << std::endl;
-      std::cout << "Vessel radius = " << vessel.GetRadius() << std::endl;
-      std::cout << "Vessel haematocrit = " << vessel.GetHaematocrit() << std::endl;
+      std::cout << "Vessel index = " << k << std::endl;
+      std::cout << "Vessel length = " << network_vessels[k]->GetLength() << std::endl;
+      std::cout << "Vessel radius = " << network_vessels[k]->GetRadius() << std::endl;
+      std::cout << "Vessel haematocrit = " << network_vessels[k]->GetFlowProperties()->GetHaematocrit() << std::endl;
     }
 
 }
