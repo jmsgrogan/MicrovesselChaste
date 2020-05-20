@@ -216,6 +216,9 @@ public:
      */
     VesselNetworkPtr<DIM> GenerateBifurcationUnit(QLength vesselLength, Vertex<DIM> startPosition = Vertex<DIM>());
 
+
+    VesselNetworkPtr<DIM> GenerateBranchingNetwork(unsigned order, QLength main_length, QLength input_radius, double twicelambda, bool fillDomain)
+
     /**
      * Creates a single vesselW
      * @param vesselLength the vessel length
