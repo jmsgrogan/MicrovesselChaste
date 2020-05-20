@@ -82,7 +82,7 @@ void TestBranchingNetworkStructure()
     	}
     QLength input_radius = 50_um;
 
-    //QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
+    QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
     double inlet_haematocrit = 0.45;
     //double initial_haematocrit = 0.45;
@@ -138,101 +138,79 @@ void TestBranchingNetworkStructure()
     p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
     p_abs_haematocrit_calculator = p_haematocrit_calculator;
 
+    auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+    auto p_viscosity_calculator = ViscosityCalculator<2>::Create();
+    p_viscosity_calculator->SetPlasmaViscosity(viscosity);
 
-    std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("test_network.vtp");
-    p_network->Write(output_file);
+    p_impedance_calculator->SetVesselNetwork(p_network);
+    p_viscosity_calculator->SetVesselNetwork(p_network);
+    p_viscosity_calculator->Calculate();
+    p_impedance_calculator->Calculate();
 
-//     auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
-//     auto p_viscosity_calculator = ViscosityCalculator<2>::Create();
-//     p_viscosity_calculator->SetPlasmaViscosity(viscosity);
+    FlowSolver<2> flow_solver;
+    flow_solver.SetVesselNetwork(p_network);
+    flow_solver.SetUp();
+
+    unsigned max_iter = 1000;
+    double tolerance2 = 1.e-5;
 //
-//     p_impedance_calculator->SetVesselNetwork(p_network);
-//     p_viscosity_calculator->SetVesselNetwork(p_network);
-//     p_viscosity_calculator->Calculate();
-//     p_impedance_calculator->Calculate();
-//
-//     FlowSolver<2> flow_solver;
-//     flow_solver.SetVesselNetwork(p_network);
-//     flow_solver.SetUp();
-//
-//     unsigned max_iter = 1000;
-//     double tolerance2 = 1.e-5;
-//
-//     std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
-//     std::vector<double> previous_haematocrit(segments.size(), double(initial_haematocrit));
-//     // iteration to solve the nonlinear problem follows (haematocrit problem is coupled to the flow problem via viscosity/impedance)
-//     for(unsigned idx=0;idx<max_iter;idx++)
-//     {
-//         p_impedance_calculator->Calculate();
-//         flow_solver.SetUp();
-//         flow_solver.Solve();
-//         p_abs_haematocrit_calculator->Calculate();
-//         p_viscosity_calculator->Calculate();
-//         // Get the residual
-//         unsigned max_difference_index = 0;
-//         double max_difference = 0.0;
-//         double h_for_max = 0.0;
-//         double prev_for_max = 0.0;
-//         for(unsigned jdx=0;jdx<segments.size();jdx++)
-//         {
-//             double current_haematocrit = segments[jdx]->GetFlowProperties()->GetHaematocrit();
-//             double difference = std::abs(current_haematocrit - previous_haematocrit[jdx]);
-//             if(difference>max_difference)
-//             {
-//                 max_difference = difference;
-//                 h_for_max = current_haematocrit;
-//                 prev_for_max = previous_haematocrit[jdx];
-//                 max_difference_index = jdx;
-//             }
-//             previous_haematocrit[jdx] = current_haematocrit;
-//         }
-//         std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << " at index " << max_difference_index << std::endl;
-//         if(max_difference<=tolerance2)
-//         {
-//             std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
-//             break;
-//         }
-//         else
-//         {
-//             // Output intermediate results
-//             if(idx%1==0)
-//             {
-//                 std::cout << "Max Difference at iter: " << idx << " is " << max_difference << std::endl;
-//                 std::string file_suffix = "IntermediateHaematocrit_" + std::to_string(idx) + ".vtp";
-//                 std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append(file_suffix);
-//                 p_network->Write(output_file);
-//             }
-//         }
-//
-//         if(idx==max_iter-1)
-//         {
-//             EXCEPTION("Did not converge after " + std::to_string(idx) + " iterations.");
-//         }
-//     }
-//
-//     std::cout << "Sup flow =" << flow_solver.CheckSolution() << std::endl;
-//     std::cout << "Sup RBC = " << p_abs_haematocrit_calculator->CheckSolution() << std::endl;
-//
-//     SimulationTime::Instance()->SetStartTime(0.0);
-// // Let's just do 1 time step; will be steady state anyway
-//     SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1.0, 1);
-//     auto p_microvessel_solver = MicrovesselSolver<2>::Create();
-//     p_microvessel_solver->SetVesselNetwork(p_network);
-//     p_microvessel_solver->SetOutputFileHandler(p_file_handler);
-//     p_microvessel_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
-//     p_microvessel_solver->Run();
-//
-//     std::vector<double> solution = p_oxygen_solver->GetSolution();
-//     double average_oxygen = 0.0;
-//     for(unsigned jdx=0;jdx<solution.size();jdx++)
-//     {
-//         average_oxygen += solution[jdx];
-//     }
-//     average_oxygen /= double(solution.size());
-//     std::cout << "Average oxygen: " << average_oxygen << std::endl;
-//     std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
-//     p_network->Write(output_file);
-       TS_ASSERT_DELTA(0.45, 0.45, 1e-6);
+    std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
+    std::vector<double> previous_haematocrit(segments.size(), double(initial_haematocrit));
+    // iteration to solve the nonlinear problem follows (haematocrit problem is coupled to the flow problem via viscosity/impedance)
+    for(unsigned idx=0;idx<max_iter;idx++)
+    {
+        p_impedance_calculator->Calculate();
+        flow_solver.SetUp();
+        flow_solver.Solve();
+        p_abs_haematocrit_calculator->Calculate();
+        p_viscosity_calculator->Calculate();
+        // Get the residual
+        unsigned max_difference_index = 0;
+        double max_difference = 0.0;
+        double h_for_max = 0.0;
+        double prev_for_max = 0.0;
+        for(unsigned jdx=0;jdx<segments.size();jdx++)
+        {
+            double current_haematocrit = segments[jdx]->GetFlowProperties()->GetHaematocrit();
+            double difference = std::abs(current_haematocrit - previous_haematocrit[jdx]);
+            if(difference>max_difference)
+            {
+                max_difference = difference;
+                h_for_max = current_haematocrit;
+                prev_for_max = previous_haematocrit[jdx];
+                max_difference_index = jdx;
+            }
+            previous_haematocrit[jdx] = current_haematocrit;
+        }
+        std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << " at index " << max_difference_index << std::endl;
+        if(max_difference<=tolerance2)
+        {
+            std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
+            break;
+        }
+        else
+        {
+            // Output intermediate results
+            if(idx%1==0)
+            {
+                std::cout << "Max Difference at iter: " << idx << " is " << max_difference << std::endl;
+                std::string file_suffix = "IntermediateHaematocrit_" + std::to_string(idx) + ".vtp";
+                std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append(file_suffix);
+                p_network->Write(output_file);
+            }
+        }
+
+        if(idx==max_iter-1)
+        {
+            EXCEPTION("Did not converge after " + std::to_string(idx) + " iterations.");
+        }
+    }
+
+    std::cout << "Sup flow =" << flow_solver.CheckSolution() << std::endl;
+    std::cout << "Sup RBC = " << p_abs_haematocrit_calculator->CheckSolution() << std::endl;
+
+    std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
+    TS_ASSERT_DELTA(0.45, 0.45, 1e-6);
 
 }
 
