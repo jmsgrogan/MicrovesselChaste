@@ -82,10 +82,10 @@ void TestBranchingNetworkStructure()
     	}
     QLength input_radius = 50_um;
 
-    QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
+    //QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
     double inlet_haematocrit = 0.45;
-    double initial_haematocrit = 0.45;
+    //double initial_haematocrit = 0.45;
 
     // Generate the network
 
@@ -100,9 +100,7 @@ void TestBranchingNetworkStructure()
 
 
     // Length of the vertical projection of first-order vessels
-    QLength main_vert_length = 0.9*twicelambda*input_radius*pow(2.0,-1.0/3.0);
-    // vertical size of the domain
-    QLength domain_side_length_y = 4.0*main_vert_length;
+    double main_vert_length = 0.9*twicelambda*input_radius*pow(2.0,-1.0/3.0);
 
     std::ostringstream strs;
     strs << "Branching_Network" << lambda;
@@ -120,10 +118,12 @@ void TestBranchingNetworkStructure()
     p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
     p_inlet_node->GetFlowProperties()->SetPressure(3320.0_Pa);
 
-    for(int i = 0; i <= int(pow(2.0, order)); i++)
+    VesselNodePtr<2> p_outlet_node;
+
+    for(int i = 0; i <= int(pow(2.0, order+1)); i++)
     {
-      VesselNodePtr<2> p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
-              Vertex<2>(domain_side_length_x, i*domain_side_length_y/pow(2.0, order)));
+      QLength vessel_position = float(i)*main_vert_length*pow(2.0, -float(order+1)+2.0);
+      p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,Vertex<2>(domain_side_length_x, vessel_position));
       p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
       p_outlet_node->GetFlowProperties()->SetPressure(2090.0_Pa);
     }
