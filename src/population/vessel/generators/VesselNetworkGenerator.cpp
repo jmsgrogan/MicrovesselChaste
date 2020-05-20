@@ -472,8 +472,7 @@ template<unsigned DIM>
 std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateBranchingNetwork(unsigned order,
                                                                                            QLength main_length,
 											   QLength input_radius,
-											   double twicelambda,
-                                                                                           bool fillDomain)
+											   double twicelambda)
 {
   // There will be no heterogeneity in radii between any two daughters
   double alpha = 1.0;
@@ -485,7 +484,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateBranch
 dimless_length += pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i_aux3-1)/3.0)-pow(0.9,2)*pow(2.0, -2.0*double(i_aux3-1)));
     }
   //dimensional horizontal length of the domain
-  QLength domain_length = dimless_length*2.0*twicelambda*input_radius;
+  //QLength domain_length = dimless_length*2.0*twicelambda*input_radius;
 
   // Vessels are laid out on a regular grid in forking pattern
   // There are extra two vessels - input and output

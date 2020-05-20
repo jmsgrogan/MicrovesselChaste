@@ -69,7 +69,7 @@ public:
     /** The following is to test that the Pries (without memory) lambda=4 figure can be faithfully reproduced.
         See bottom of RunNoCellsDichotomousWithOrWithoutMemoryEffects() for where this is called.*/
 
-void RunNoCellsDichotomousWithOrWithoutMemoryEffects()
+void TestBranchingNetworkStructure()
 {
     // order of the dichotomous network
     unsigned order=5;
@@ -82,10 +82,10 @@ void RunNoCellsDichotomousWithOrWithoutMemoryEffects()
     	}
     QLength input_radius = 50_um;
 
-    QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
+    //QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
     double inlet_haematocrit = 0.45;
-    double initial_haematocrit = 0.45;
+    // double initial_haematocrit = 0.45;
 
     // Generate the network
 
@@ -104,17 +104,11 @@ void RunNoCellsDichotomousWithOrWithoutMemoryEffects()
     // Length of the vertical projection of first-order vessels
     QLength main_vert_length = 0.9*twicelambda*input_radius*pow(2.0,-1.0/3.0);
     // vertical size of the domain
-    QLength domain_side_length_y = 4.0*main_vert_length;
+    //QLength domain_side_length_y = 4.0*main_vert_length;
 
     std::ostringstream strs;
-    if (withMemory)
-    {
-        strs << "Dichotomous_NoCorners_NewModel_LambdaEquals" << lambda;
-    }
-    else
-    {
-        strs << "Dichotomous_NoCorners_OldModel_LambdaEquals" << lambda;
-    }
+    strs << "Branching_Network" << lambda;
+
     std::string str_directory_name = strs.str();
     // horizontal size of the domain
     QLength domain_side_length_x = dimless_length*2.0*twicelambda*input_radius;
@@ -136,20 +130,12 @@ void RunNoCellsDichotomousWithOrWithoutMemoryEffects()
 
     // Switch between solvers for Pries or newer "with memory"
     std::shared_ptr<AbstractHaematocritSolver<2>> p_abs_haematocrit_calculator;
-    if (withMemory)
-    {
-        auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
-        p_haematocrit_calculator->SetVesselNetwork(p_network);
-        p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
-        p_abs_haematocrit_calculator = p_haematocrit_calculator;
-    }
-    else
-    {
-        auto  p_haematocrit_calculator = PriesHaematocritSolver<2>::Create();
-        p_haematocrit_calculator->SetVesselNetwork(p_network);
-        p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
-        p_abs_haematocrit_calculator = p_haematocrit_calculator;
-    }
+
+    auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
+    p_haematocrit_calculator->SetVesselNetwork(p_network);
+    p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
+    p_abs_haematocrit_calculator = p_haematocrit_calculator;
+
 
     std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("test_network.vtp");
     p_network->Write(output_file);
@@ -244,6 +230,7 @@ void RunNoCellsDichotomousWithOrWithoutMemoryEffects()
 //     std::cout << "Average oxygen: " << average_oxygen << std::endl;
 //     std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
 //     p_network->Write(output_file);
+       TS_ASSERT_DELTA(0.45, 0.45, 1e-6);
 
 
     }
