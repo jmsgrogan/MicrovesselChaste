@@ -61,7 +61,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
-class TestWithOrWithourMemory : public CxxTest::TestSuite
+class TestBranchingNetwork : public CxxTest::TestSuite
 {
 
 

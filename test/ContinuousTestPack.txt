@@ -64,6 +64,7 @@ simulation/flow/calculators/TestAlarcon03MetabolicStimulusCalculator.hpp
 simulation/flow/calculators/TestVesselImpedanceCalculator.hpp
 simulation/flow/calculators/TestVesselNetworkCalculators.hpp
 simulation/flow/haematocrit/TestBetteridgeHaematocritSolver.hpp
+simulation/flow/haematocrit/TestBranchingNetwork.hpp
 simulation/flow/haematocrit/TestDifferentPriesHaematocritSolvers.hpp
 simulation/flow/haematocrit/TestLinnengarHaematocritSolver.hpp
 simulation/flow/haematocrit/TestLinnengarHaematocritSolverNew.hpp
