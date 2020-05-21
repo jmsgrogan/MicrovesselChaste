@@ -40,6 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNetworkGenerator.hpp"
 #include "FlowSolver.hpp"
 #include "GardnerHaematocritSolver.hpp"
+#include "GardnerSimplfiedHaematocritSolver.hpp"
 #include "UnitCollection.hpp"
 #include "MicrovesselSolver.hpp"
 #include "Owen11Parameters.hpp"
@@ -62,7 +63,7 @@ public:
     /** The following is to test that the Gardner (without memory) lambda=4 figure can be faithfully reproduced.
         See bottom of RunNoCellsDichotomousWithOrWithoutMemoryEffects() for where this is called.*/
 
-void TestBranchingNetworkStructure()
+void TestGardner()
 {
     // order of the dichotomous network
     unsigned order=2;
@@ -96,7 +97,7 @@ void TestBranchingNetworkStructure()
     double main_vert_length = 0.9*twicelambda*input_radius*pow(2.0,-1.0/3.0);
 
     std::ostringstream strs;
-    strs << "Branching_Network" << lambda;
+    strs << "Branching_Network_Gardner" << lambda;
 
     std::string str_directory_name = strs.str();
     // horizontal size of the domain
@@ -127,6 +128,160 @@ void TestBranchingNetworkStructure()
     std::shared_ptr<AbstractHaematocritSolver<2>> g_abs_haematocrit_calculator;
 
     auto g_haematocrit_calculator = GardnerHaematocritSolver<2>::Create();
+    g_haematocrit_calculator->SetVesselNetwork(g_network);
+    g_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
+    g_abs_haematocrit_calculator = g_haematocrit_calculator;
+
+    auto g_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+    auto g_viscosity_calculator = ViscosityCalculator<2>::Create();
+    g_viscosity_calculator->SetPlasmaViscosity(viscosity);
+
+    g_impedance_calculator->SetVesselNetwork(g_network);
+    g_viscosity_calculator->SetVesselNetwork(g_network);
+    g_viscosity_calculator->Calculate();
+    g_impedance_calculator->Calculate();
+
+    FlowSolver<2> flow_solver;
+    flow_solver.SetVesselNetwork(g_network);
+    flow_solver.SetUp();
+
+    unsigned max_iter = 1000;
+    double tolerance2 = 1.e-5;
+//
+    std::vector<VesselSegmentPtr<2> > segments = g_network->GetVesselSegments();
+    std::vector<double> previous_haematocrit(segments.size(), double(initial_haematocrit));
+    // iteration to solve the nonlinear problem follows (haematocrit problem is coupled to the flow problem via viscosity/impedance)
+    for(unsigned idx=0;idx<max_iter;idx++)
+    {
+        g_impedance_calculator->Calculate();
+        flow_solver.SetUp();
+        flow_solver.Solve();
+        g_abs_haematocrit_calculator->Calculate();
+        g_viscosity_calculator->Calculate();
+        // Get the residual
+        unsigned max_difference_index = 0;
+        double max_difference = 0.0;
+        double h_for_max = 0.0;
+        double prev_for_max = 0.0;
+        for(unsigned jdx=0;jdx<segments.size();jdx++)
+        {
+            double current_haematocrit = segments[jdx]->GetFlowProperties()->GetHaematocrit();
+            double difference = std::abs(current_haematocrit - previous_haematocrit[jdx]);
+            if(difference>max_difference)
+            {
+                max_difference = difference;
+                h_for_max = current_haematocrit;
+                prev_for_max = previous_haematocrit[jdx];
+                max_difference_index = jdx;
+            }
+            previous_haematocrit[jdx] = current_haematocrit;
+        }
+        std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << " at index " << max_difference_index << std::endl;
+        if(max_difference<=tolerance2)
+        {
+            std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
+            break;
+        }
+        else
+        {
+            // Output intermediate results
+            if(idx%1==0)
+            {
+                std::cout << "Max Difference at iter: " << idx << " is " << max_difference << std::endl;
+                std::string file_suffix = "IntermediateHaematocrit_" + std::to_string(idx) + ".vtp";
+                std::string output_file = g_file_handler->GetOutputDirectoryFullPath().append(file_suffix);
+                g_network->Write(output_file);
+            }
+        }
+
+        if(idx==max_iter-1)
+        {
+            EXCEPTION("Did not converge after " + std::to_string(idx) + " iterations.");
+        }
+    }
+
+    std::cout << "Sup flow =" << flow_solver.CheckSolution() << std::endl;
+    std::cout << "Sup RBC = " << g_abs_haematocrit_calculator->CheckSolution() << std::endl;
+
+    std::string output_file = g_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
+    g_network->Write(output_file);
+    TS_ASSERT_DELTA(0.45, 0.45, 1e-6);
+    std::vector<std::shared_ptr<Vessel<2> > > network_vessels =  g_network->GetVessels();
+    for(unsigned k = 0; k < g_network->GetNumberOfVessels(); k++)
+    {
+      std::cout << "Vessel index = " << k << std::endl;
+      std::cout << "Vessel length = " << network_vessels[k]->GetLength() << std::endl;
+      std::cout << "Vessel radius = " << network_vessels[k]->GetRadius() << std::endl;
+      std::cout << "Vessel haematocrit = " << network_vessels[k]->GetFlowProperties()->GetHaematocrit() << std::endl;
+    }
+
+}
+
+void TestGardnerSimplfied()
+{
+    // order of the dichotomous network
+    unsigned order=2;
+
+    double dimless_length = 1.0;
+
+    for(unsigned i_aux=1; i_aux<order+1; i_aux++)
+    	{
+	dimless_length += pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i_aux-1)/3.0)-pow(0.9,2)*pow(2.0, -2.0*double(i_aux-1)));
+    	}
+    QLength input_radius = 100_um;
+
+    QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
+
+    double inlet_haematocrit = 0.45;
+    double initial_haematocrit = 0.45;
+
+    // Generate the network
+
+    VesselNetworkGenerator<2> network_generator;
+
+   double lambda;
+   double twicelambda;
+
+  lambda = 10.0;
+  // lambda is quotient between the length and diameter...in vessel network generator, we use twice this value as an input parameter
+  twicelambda = 2.0*lambda;
+
+
+    // Length of the vertical projection of first-order vessels
+    double main_vert_length = 0.9*twicelambda*input_radius*pow(2.0,-1.0/3.0);
+
+    std::ostringstream strs;
+    strs << "Branching_Network_GardnerSimplfied" << lambda;
+
+    std::string str_directory_name = strs.str();
+    // horizontal size of the domain
+    QLength domain_side_length_x = dimless_length*2.0*twicelambda*input_radius;
+    auto g_file_handler = std::make_shared<OutputFileHandler>(str_directory_name, true);
+    std::shared_ptr<VesselNetwork<2> > g_network = network_generator.GenerateBranchingNetwork(order, main_vert_length, input_radius, twicelambda);
+
+    // identify input and output nodes and assign them properties
+
+    VesselNodePtr<2> g_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(g_network,
+            Vertex<2>(0.0_um,2.0*main_vert_length));
+    g_inlet_node->GetFlowProperties()->SetIsInputNode(true);
+    g_inlet_node->GetFlowProperties()->SetPressure(3320.0_Pa);
+
+    VesselNodePtr<2> g_outlet_node;
+
+    for(int i = 0; i <= int(pow(2.0, order+1)); i++)
+    {
+      QLength vessel_position = float(i)*main_vert_length*pow(2.0, -float(order+1)+2.0);
+      g_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(g_network,Vertex<2>(domain_side_length_x, vessel_position));
+      g_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
+      g_outlet_node->GetFlowProperties()->SetPressure(2090.0_Pa);
+    }
+
+
+
+    // Switch between solvers for Gardner or newer "with memory"
+    std::shared_ptr<AbstractHaematocritSolver<2>> g_abs_haematocrit_calculator;
+
+    auto g_haematocrit_calculator = GardnerSimplfiedHaematocritSolver<2>::Create();
     g_haematocrit_calculator->SetVesselNetwork(g_network);
     g_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
     g_abs_haematocrit_calculator = g_haematocrit_calculator;
