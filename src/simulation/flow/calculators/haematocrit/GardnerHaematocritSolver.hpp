@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
 
-#ifndef _PriesHaematocritSolver_hpp
-#define _PriesHaematocritSolver_hpp
+#ifndef _GardenerHaematocritSolver_hpp
+#define _GardenerHaematocritSolver_hpp
 
 #include "SmartPointers.hpp"
 #include "AbstractHaematocritSolver.hpp"
@@ -42,10 +42,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /**
  * This solver calculates the distribution of haematocrit in branching vessel networks according to
- * the splitting model from Pries1989 paper (without memory effects)
+ * the splitting model from Gardener1989 paper (without memory effects)
  */
 template<unsigned DIM>
-class PriesHaematocritSolver : public AbstractHaematocritSolver<DIM>
+class GardenerHaematocritSolver : public AbstractHaematocritSolver<DIM>
 {
 
 private:
@@ -82,18 +82,18 @@ public:
     /**
      * Constructor.
      */
-    PriesHaematocritSolver();
+    GardenerHaematocritSolver();
 
     /**
      *  destructor.
      */
-    ~PriesHaematocritSolver();
+    ~GardenerHaematocritSolver();
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to a new class instance
      */
-    static std::shared_ptr<PriesHaematocritSolver<DIM> > Create();
+    static std::shared_ptr<GardenerHaematocritSolver<DIM> > Create();
 
     /**
      *  Do the solve
