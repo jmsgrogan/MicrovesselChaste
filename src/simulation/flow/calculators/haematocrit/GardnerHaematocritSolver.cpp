@@ -381,7 +381,7 @@ void GardnerHaematocritSolver<DIM>::Calculate()
                   QFlowRate competitor0_flow_rate = vessels[update_indices[idx][2]]->GetFlowProperties()->GetFlowRate();
                   QFlowRate parent0_flow_rate = vessels[update_indices[idx][1]]->GetFlowProperties()->GetFlowRate();
 
-			            flow_ratio_pm = Qabs(parent0_flow_rate)/Qabs(self_flow_rate);
+			            QDimensionless flow_ratio_pm = Qabs(parent0_flow_rate)/Qabs(self_flow_rate);
 
 			            QLength my_radius = vessels[update_indices[idx][0]]->GetRadius();
                   QLength competitor_radius = vessels[update_indices[idx][2]]->GetRadius();
@@ -391,21 +391,21 @@ void GardnerHaematocritSolver<DIM>::Calculate()
         		      double micron_competitor_radius = (competitor_radius/unit::metres)*1.e6;
         		      double micron_parent_radius = (parent_radius/unit::metres)*1.e6;
 
-			            diameter_ratio = micron_my_radius/micron_competitor_radius;
+			            QDimensionless diameter_ratio = micron_my_radius/micron_competitor_radius;
 
                   // Assign q0, p and r from Gardner2010 model
                   // Here we assume that the fractional flow rate will not fall below X0 for either branch; this assumption is easily satisfied with our networks and with the splitting model without memory effects
 
-            			q0 = 0.2/micron_parent_radius;
-                  p = 1.0 + 6.98*(1.0-vessels[update_indices[idx][1]]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
-                  r = 6.96*log(diameter_ratio);
+            			double q0 = 0.2/micron_parent_radius;
+                  double p = 1.0 + 6.98*(1.0-vessels[update_indices[idx][1]]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
+                  double r = 6.96*log(diameter_ratio);
 
-                  term1 = pow(flow_ratio_pm - q0,p);
-                  term2 = pow(1 - flow_ratio_pm - q0,p);
-                  term3 = exp(r);
+                  double term1 = pow(flow_ratio_pm - q0,p);
+                  double term2 = pow(1 - flow_ratio_pm - q0,p);
+                  double term3 = exp(r);
 
-                  numer = term3*term1;
-                  denom = term3*term1 + term2;
+                  double numer = term3*term1;
+                  double denom = term3*term1 + term2;
                   // Apply Gardner2010 rule
                   linearSystem.SetMatrixElement(update_indices[idx][0], update_indices[idx][1], -numer/denom);
                 }
