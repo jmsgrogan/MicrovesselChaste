@@ -33,7 +33,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
 
-#include "GardenerHaematocritSolver.hpp"
+#include "GardnerHaematocritSolver.hpp"
 #include "LinearSystem.hpp"
 #include "VesselNode.hpp"
 #include "Vessel.hpp"
@@ -42,7 +42,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "RandomNumberGenerator.hpp"
 
 template<unsigned DIM>
-GardenerHaematocritSolver<DIM>::GardenerHaematocritSolver() : AbstractHaematocritSolver<DIM>(),
+GardnerHaematocritSolver<DIM>::GardnerHaematocritSolver() : AbstractHaematocritSolver<DIM>(),
     mHaematocrit(0.45),
     mSolveHighConnectivityNetworks(false),
     mTurnOffFungModel(false),
@@ -53,43 +53,43 @@ GardenerHaematocritSolver<DIM>::GardenerHaematocritSolver() : AbstractHaematocri
 }
 
 template<unsigned DIM>
-GardenerHaematocritSolver<DIM>::~GardenerHaematocritSolver()
+GardnerHaematocritSolver<DIM>::~GardnerHaematocritSolver()
 {
 
 }
 
 template <unsigned DIM>
-std::shared_ptr<GardenerHaematocritSolver<DIM> > GardenerHaematocritSolver<DIM>::Create()
+std::shared_ptr<GardnerHaematocritSolver<DIM> > GardnerHaematocritSolver<DIM>::Create()
 {
-    return std::make_shared<GardenerHaematocritSolver<DIM> >();
+    return std::make_shared<GardnerHaematocritSolver<DIM> >();
 }
 
 template <unsigned DIM>
-void GardenerHaematocritSolver<DIM>::SetExceptionOnFailedConverge(bool setException)
+void GardnerHaematocritSolver<DIM>::SetExceptionOnFailedConverge(bool setException)
 {
     mExceptionOnFailedConverge = setException;
 }
 
 template<unsigned DIM>
-void GardenerHaematocritSolver<DIM>::SetUseRandomSplittingModel(bool useRandomSplittingModel)
+void GardnerHaematocritSolver<DIM>::SetUseRandomSplittingModel(bool useRandomSplittingModel)
 {
     mUseRandomSplitting = useRandomSplittingModel;
 }
 
 template<unsigned DIM>
-void GardenerHaematocritSolver<DIM>::SetUseHigherConnectivityBranches(bool useHighConnectivity)
+void GardnerHaematocritSolver<DIM>::SetUseHigherConnectivityBranches(bool useHighConnectivity)
 {
     mSolveHighConnectivityNetworks = useHighConnectivity;
 }
 
 template<unsigned DIM>
-void GardenerHaematocritSolver<DIM>::SetTurnOffFungModel(bool turnOffFungModel)
+void GardnerHaematocritSolver<DIM>::SetTurnOffFungModel(bool turnOffFungModel)
 {
     mTurnOffFungModel = turnOffFungModel;
 }
 
 template<unsigned DIM>
-void GardenerHaematocritSolver<DIM>::SetHaematocrit(QDimensionless haematocrit)
+void GardnerHaematocritSolver<DIM>::SetHaematocrit(QDimensionless haematocrit)
 {
     mHaematocrit = haematocrit;
 }
@@ -269,7 +269,7 @@ void GardnerHaematocritSolver<DIM>::Calculate()
 
                         QDimensionless flow_ratio_pm = Qabs(flow_rate)/Qabs(parent0_flow_rate);
 
-                        // There is a bifurcation, apply a haematocrit splitting rule from Gardener1989
+                        // There is a bifurcation, apply a haematocrit splitting rule from Gardner1989
                         QLength my_radius = vessels[idx]->GetRadius();
                         QLength competitor_radius = competitor_vessels[0]->GetRadius();
                         QLength parent_radius = parent_vessels[0]->GetRadius();
@@ -465,5 +465,5 @@ void GardnerHaematocritSolver<DIM>::Calculate()
 }
 
 // Explicit instantiation
-template class GardenerHaematocritSolver<2>;
-template class GardenerHaematocritSolver<3>;
+template class GardnerHaematocritSolver<2>;
+template class GardnerHaematocritSolver<3>;

@@ -59,7 +59,7 @@ class TestBranchingNetwork : public CxxTest::TestSuite
 
 
 public:
-    /** The following is to test that the Pries (without memory) lambda=4 figure can be faithfully reproduced.
+    /** The following is to test that the Gardner (without memory) lambda=4 figure can be faithfully reproduced.
         See bottom of RunNoCellsDichotomousWithOrWithoutMemoryEffects() for where this is called.*/
 
 void TestBranchingNetworkStructure()
@@ -123,10 +123,10 @@ void TestBranchingNetworkStructure()
 
 
 
-    // Switch between solvers for Pries or newer "with memory"
+    // Switch between solvers for Gardner or newer "with memory"
     std::shared_ptr<AbstractHaematocritSolver<2>> g_abs_haematocrit_calculator;
 
-    auto g_haematocrit_calculator = PriesHaematocritSolver<2>::Create();
+    auto g_haematocrit_calculator = GardnerHaematocritSolver<2>::Create();
     g_haematocrit_calculator->SetVesselNetwork(g_network);
     g_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
     g_abs_haematocrit_calculator = g_haematocrit_calculator;
