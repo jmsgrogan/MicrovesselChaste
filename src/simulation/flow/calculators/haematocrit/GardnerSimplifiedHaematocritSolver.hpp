@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
 
-#ifndef _GardnerSimplfiedHaematocritSolver_hpp
-#define _GardnerSimplfiedHaematocritSolver_hpp
+#ifndef _GardnerSimplifiedHaematocritSolver_hpp
+#define _GardnerSimplifiedHaematocritSolver_hpp
 
 #include "SmartPointers.hpp"
 #include "AbstractHaematocritSolver.hpp"
@@ -45,7 +45,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * the splitting model from Gardner1989 paper (without memory effects)
  */
 template<unsigned DIM>
-class GardnerSimplfiedHaematocritSolver : public AbstractHaematocritSolver<DIM>
+class GardnerSimplifiedHaematocritSolver : public AbstractHaematocritSolver<DIM>
 {
 
 private:
@@ -82,18 +82,18 @@ public:
     /**
      * Constructor.
      */
-    GardnerSimplfiedHaematocritSolver();
+    GardnerSimplifiedHaematocritSolver();
 
     /**
      *  destructor.
      */
-    ~GardnerSimplfiedHaematocritSolver();
+    ~GardnerSimplifiedHaematocritSolver();
 
     /**
      * Construct a new instance of the class and return a shared pointer to it.
      * @return a pointer to a new class instance
      */
-    static std::shared_ptr<GardnerSimplfiedHaematocritSolver<DIM> > Create();
+    static std::shared_ptr<GardnerSimplifiedHaematocritSolver<DIM> > Create();
 
     /**
      *  Do the solve

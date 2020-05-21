@@ -40,7 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "VesselNetworkGenerator.hpp"
 #include "FlowSolver.hpp"
 #include "GardnerHaematocritSolver.hpp"
-#include "GardnerSimplfiedHaematocritSolver.hpp"
+#include "GardnerSimplifiedHaematocritSolver.hpp"
 #include "UnitCollection.hpp"
 #include "MicrovesselSolver.hpp"
 #include "Owen11Parameters.hpp"
@@ -281,7 +281,7 @@ void TestGardnerSimplfied()
     // Switch between solvers for Gardner or newer "with memory"
     std::shared_ptr<AbstractHaematocritSolver<2>> g_abs_haematocrit_calculator;
 
-    auto g_haematocrit_calculator = GardnerSimplfiedHaematocritSolver<2>::Create();
+    auto g_haematocrit_calculator = GardnerSimplifiedHaematocritSolver<2>::Create();
     g_haematocrit_calculator->SetVesselNetwork(g_network);
     g_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
     g_abs_haematocrit_calculator = g_haematocrit_calculator;

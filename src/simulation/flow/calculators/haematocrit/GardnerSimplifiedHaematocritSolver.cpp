@@ -33,7 +33,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
 
-#include "GardnerSimplfiedHaematocritSolver.hpp"
+#include "GardnerSimplifiedHaematocritSolver.hpp"
 #include "LinearSystem.hpp"
 #include "VesselNode.hpp"
 #include "Vessel.hpp"
@@ -42,7 +42,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "RandomNumberGenerator.hpp"
 
 template<unsigned DIM>
-GardnerSimplfiedHaematocritSolver<DIM>::GardnerSimplfiedHaematocritSolver() : AbstractHaematocritSolver<DIM>(),
+GardnerSimplifiedHaematocritSolver<DIM>::GardnerSimplifiedHaematocritSolver() : AbstractHaematocritSolver<DIM>(),
     mHaematocrit(0.45),
     mSolveHighConnectivityNetworks(false),
     mTurnOffFungModel(false),
@@ -53,49 +53,49 @@ GardnerSimplfiedHaematocritSolver<DIM>::GardnerSimplfiedHaematocritSolver() : Ab
 }
 
 template<unsigned DIM>
-GardnerSimplfiedHaematocritSolver<DIM>::~GardnerSimplfiedHaematocritSolver()
+GardnerSimplifiedHaematocritSolver<DIM>::~GardnerSimplifiedHaematocritSolver()
 {
 
 }
 
 template <unsigned DIM>
-std::shared_ptr<GardnerSimplfiedHaematocritSolver<DIM> > GardnerSimplfiedHaematocritSolver<DIM>::Create()
+std::shared_ptr<GardnerSimplifiedHaematocritSolver<DIM> > GardnerSimplifiedHaematocritSolver<DIM>::Create()
 {
-    return std::make_shared<GardnerSimplfiedHaematocritSolver<DIM> >();
+    return std::make_shared<GardnerSimplifiedHaematocritSolver<DIM> >();
 }
 
 template <unsigned DIM>
-void GardnerSimplfiedHaematocritSolver<DIM>::SetExceptionOnFailedConverge(bool setException)
+void GardnerSimplifiedHaematocritSolver<DIM>::SetExceptionOnFailedConverge(bool setException)
 {
     mExceptionOnFailedConverge = setException;
 }
 
 template<unsigned DIM>
-void GardnerSimplfiedHaematocritSolver<DIM>::SetUseRandomSplittingModel(bool useRandomSplittingModel)
+void GardnerSimplifiedHaematocritSolver<DIM>::SetUseRandomSplittingModel(bool useRandomSplittingModel)
 {
     mUseRandomSplitting = useRandomSplittingModel;
 }
 
 template<unsigned DIM>
-void GardnerSimplfiedHaematocritSolver<DIM>::SetUseHigherConnectivityBranches(bool useHighConnectivity)
+void GardnerSimplifiedHaematocritSolver<DIM>::SetUseHigherConnectivityBranches(bool useHighConnectivity)
 {
     mSolveHighConnectivityNetworks = useHighConnectivity;
 }
 
 template<unsigned DIM>
-void GardnerSimplfiedHaematocritSolver<DIM>::SetTurnOffFungModel(bool turnOffFungModel)
+void GardnerSimplifiedHaematocritSolver<DIM>::SetTurnOffFungModel(bool turnOffFungModel)
 {
     mTurnOffFungModel = turnOffFungModel;
 }
 
 template<unsigned DIM>
-void GardnerSimplfiedHaematocritSolver<DIM>::SetHaematocrit(QDimensionless haematocrit)
+void GardnerSimplifiedHaematocritSolver<DIM>::SetHaematocrit(QDimensionless haematocrit)
 {
     mHaematocrit = haematocrit;
 }
 
 template<unsigned DIM>
-void GardnerSimplfiedHaematocritSolver<DIM>::Calculate()
+void GardnerSimplifiedHaematocritSolver<DIM>::Calculate()
 {
     // Give the vessels unique Ids
     std::vector<std::shared_ptr<Vessel<DIM> > > vessels = this->mpNetwork->GetVessels();
@@ -440,5 +440,5 @@ void GardnerSimplfiedHaematocritSolver<DIM>::Calculate()
 }
 
 // Explicit instantiation
-template class GardnerSimplfiedHaematocritSolver<2>;
-template class GardnerSimplfiedHaematocritSolver<3>;
+template class GardnerSimplifiedHaematocritSolver<2>;
+template class GardnerSimplifiedHaematocritSolver<3>;
