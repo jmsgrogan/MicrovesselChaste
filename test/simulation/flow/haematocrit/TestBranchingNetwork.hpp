@@ -39,16 +39,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "SmartPointers.hpp"
 #include "VesselNetworkGenerator.hpp"
 #include "FlowSolver.hpp"
-#include "SimulationTime.hpp"
-#include "PriesHaematocritSolver.hpp"
-#include "PriesWithMemoryHaematocritSolver.hpp"
+#include "GardnerHaematocritSolver.hpp"
 #include "UnitCollection.hpp"
-#include "RegularGrid.hpp"
-#include "SimulationTime.hpp"
 #include "MicrovesselSolver.hpp"
-#include "SimpleLinearEllipticFiniteDifferenceSolver.hpp"
-#include "VesselBasedDiscreteSource.hpp"
-#include "DiscreteContinuumLinearEllipticPde.hpp"
 #include "Owen11Parameters.hpp"
 #include "ViscosityCalculator.hpp"
 #include "Secomb04Parameters.hpp"
@@ -108,62 +101,62 @@ void TestBranchingNetworkStructure()
     std::string str_directory_name = strs.str();
     // horizontal size of the domain
     QLength domain_side_length_x = dimless_length*2.0*twicelambda*input_radius;
-    auto p_file_handler = std::make_shared<OutputFileHandler>(str_directory_name, true);
-    std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateBranchingNetwork(order, main_vert_length, input_radius, twicelambda);
+    auto g_file_handler = std::make_shared<OutputFileHandler>(str_directory_name, true);
+    std::shared_ptr<VesselNetwork<2> > g_network = network_generator.GenerateBranchingNetwork(order, main_vert_length, input_radius, twicelambda);
 
     // identify input and output nodes and assign them properties
 
-    VesselNodePtr<2> p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+    VesselNodePtr<2> g_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(g_network,
             Vertex<2>(0.0_um,2.0*main_vert_length));
-    p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
-    p_inlet_node->GetFlowProperties()->SetPressure(3320.0_Pa);
+    g_inlet_node->GetFlowProperties()->SetIsInputNode(true);
+    g_inlet_node->GetFlowProperties()->SetPressure(3320.0_Pa);
 
-    VesselNodePtr<2> p_outlet_node;
+    VesselNodePtr<2> g_outlet_node;
 
     for(int i = 0; i <= int(pow(2.0, order+1)); i++)
     {
       QLength vessel_position = float(i)*main_vert_length*pow(2.0, -float(order+1)+2.0);
-      p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,Vertex<2>(domain_side_length_x, vessel_position));
-      p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
-      p_outlet_node->GetFlowProperties()->SetPressure(2090.0_Pa);
+      g_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(g_network,Vertex<2>(domain_side_length_x, vessel_position));
+      g_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
+      g_outlet_node->GetFlowProperties()->SetPressure(2090.0_Pa);
     }
 
 
 
     // Switch between solvers for Pries or newer "with memory"
-    std::shared_ptr<AbstractHaematocritSolver<2>> p_abs_haematocrit_calculator;
+    std::shared_ptr<AbstractHaematocritSolver<2>> g_abs_haematocrit_calculator;
 
-    auto p_haematocrit_calculator = PriesHaematocritSolver<2>::Create();
-    p_haematocrit_calculator->SetVesselNetwork(p_network);
-    p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
-    p_abs_haematocrit_calculator = p_haematocrit_calculator;
+    auto g_haematocrit_calculator = PriesHaematocritSolver<2>::Create();
+    g_haematocrit_calculator->SetVesselNetwork(g_network);
+    g_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
+    g_abs_haematocrit_calculator = g_haematocrit_calculator;
 
-    auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
-    auto p_viscosity_calculator = ViscosityCalculator<2>::Create();
-    p_viscosity_calculator->SetPlasmaViscosity(viscosity);
+    auto g_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+    auto g_viscosity_calculator = ViscosityCalculator<2>::Create();
+    g_viscosity_calculator->SetPlasmaViscosity(viscosity);
 
-    p_impedance_calculator->SetVesselNetwork(p_network);
-    p_viscosity_calculator->SetVesselNetwork(p_network);
-    p_viscosity_calculator->Calculate();
-    p_impedance_calculator->Calculate();
+    g_impedance_calculator->SetVesselNetwork(g_network);
+    g_viscosity_calculator->SetVesselNetwork(g_network);
+    g_viscosity_calculator->Calculate();
+    g_impedance_calculator->Calculate();
 
     FlowSolver<2> flow_solver;
-    flow_solver.SetVesselNetwork(p_network);
+    flow_solver.SetVesselNetwork(g_network);
     flow_solver.SetUp();
 
     unsigned max_iter = 1000;
     double tolerance2 = 1.e-5;
 //
-    std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
+    std::vector<VesselSegmentPtr<2> > segments = g_network->GetVesselSegments();
     std::vector<double> previous_haematocrit(segments.size(), double(initial_haematocrit));
     // iteration to solve the nonlinear problem follows (haematocrit problem is coupled to the flow problem via viscosity/impedance)
     for(unsigned idx=0;idx<max_iter;idx++)
     {
-        p_impedance_calculator->Calculate();
+        g_impedance_calculator->Calculate();
         flow_solver.SetUp();
         flow_solver.Solve();
-        p_abs_haematocrit_calculator->Calculate();
-        p_viscosity_calculator->Calculate();
+        g_abs_haematocrit_calculator->Calculate();
+        g_viscosity_calculator->Calculate();
         // Get the residual
         unsigned max_difference_index = 0;
         double max_difference = 0.0;
@@ -195,8 +188,8 @@ void TestBranchingNetworkStructure()
             {
                 std::cout << "Max Difference at iter: " << idx << " is " << max_difference << std::endl;
                 std::string file_suffix = "IntermediateHaematocrit_" + std::to_string(idx) + ".vtp";
-                std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append(file_suffix);
-                p_network->Write(output_file);
+                std::string output_file = g_file_handler->GetOutputDirectoryFullPath().append(file_suffix);
+                g_network->Write(output_file);
             }
         }
 
@@ -207,13 +200,13 @@ void TestBranchingNetworkStructure()
     }
 
     std::cout << "Sup flow =" << flow_solver.CheckSolution() << std::endl;
-    std::cout << "Sup RBC = " << p_abs_haematocrit_calculator->CheckSolution() << std::endl;
+    std::cout << "Sup RBC = " << g_abs_haematocrit_calculator->CheckSolution() << std::endl;
 
-    std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
-    p_network->Write(output_file);
+    std::string output_file = g_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
+    g_network->Write(output_file);
     TS_ASSERT_DELTA(0.45, 0.45, 1e-6);
-    std::vector<std::shared_ptr<Vessel<2> > > network_vessels =  p_network->GetVessels();
-    for(unsigned k = 0; k < p_network->GetNumberOfVessels(); k++)
+    std::vector<std::shared_ptr<Vessel<2> > > network_vessels =  g_network->GetVessels();
+    for(unsigned k = 0; k < g_network->GetNumberOfVessels(); k++)
     {
       std::cout << "Vessel index = " << k << std::endl;
       std::cout << "Vessel length = " << network_vessels[k]->GetLength() << std::endl;
