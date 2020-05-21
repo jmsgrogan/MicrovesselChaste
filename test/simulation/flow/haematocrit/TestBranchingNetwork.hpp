@@ -80,7 +80,7 @@ void TestBranchingNetworkStructure()
     	{
 	dimless_length += pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i_aux-1)/3.0)-pow(0.9,2)*pow(2.0, -2.0*double(i_aux-1)));
     	}
-    QLength input_radius = 50_um;
+    QLength input_radius = 100_um;
 
     QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
