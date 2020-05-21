@@ -263,7 +263,6 @@ void GardnerHaematocritSolver<DIM>::Calculate()
                     }
                     else
                     {
-                        QFlowRate competitor0_flow_rate = competitor_vessels[0]->GetFlowProperties()->GetFlowRate();
                         QFlowRate parent0_flow_rate = parent_vessels[0]->GetFlowProperties()->GetFlowRate();
 
 
@@ -284,7 +283,7 @@ void GardnerHaematocritSolver<DIM>::Calculate()
 			                  // Here we assume that the fractional flow rate will not fall below X0 for either branch; this assumption is easily satisfied with our networks and with the splitting model without memory effects
 
 			                  double q0 = 0.2/micron_parent_radius;
-                        double p = 1.0 + 6.98*(1.0-parent_vessels[0]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
+			double p = 1.0 + 6.98*(1.0-parent_vessels[0]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
 
                         double r = 6.96*log(diameter_ratio);
 
@@ -292,10 +291,10 @@ void GardnerHaematocritSolver<DIM>::Calculate()
                         double term2 = pow(1 - flow_ratio_pm - q0,p);
 			                  double term3 = exp(r);
 
-			                  double numer = term3*term1;
+			                  double numer = term3*term1/flow_ratio_pm;
                         double denom = term3*term1 + term2;
 			                  // Apply Gardner2010 rule
-                        linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -numer/denom);
+			linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -numer/denom);
 
                         // Save the indices for later updating
                         std::vector<int> local_update_indics = std::vector<int>(3);
@@ -378,10 +377,9 @@ void GardnerHaematocritSolver<DIM>::Calculate()
                 else
                 {
                   QFlowRate self_flow_rate = vessels[update_indices[idx][0]]->GetFlowProperties()->GetFlowRate();
-                  QFlowRate competitor0_flow_rate = vessels[update_indices[idx][2]]->GetFlowProperties()->GetFlowRate();
                   QFlowRate parent0_flow_rate = vessels[update_indices[idx][1]]->GetFlowProperties()->GetFlowRate();
 
-			            QDimensionless flow_ratio_pm = Qabs(parent0_flow_rate)/Qabs(self_flow_rate);
+			            QDimensionless flow_ratio_pm = Qabs(self_flow_rate)/Qabs(parent0_flow_rate);
 
 			            QLength my_radius = vessels[update_indices[idx][0]]->GetRadius();
                   QLength competitor_radius = vessels[update_indices[idx][2]]->GetRadius();
@@ -397,16 +395,16 @@ void GardnerHaematocritSolver<DIM>::Calculate()
                   // Here we assume that the fractional flow rate will not fall below X0 for either branch; this assumption is easily satisfied with our networks and with the splitting model without memory effects
 
             			double q0 = 0.2/micron_parent_radius;
-                  double p = 1.0 + 6.98*(1.0-vessels[update_indices[idx][1]]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
+		  double p = 1.0 + 6.98*(1.0-vessels[update_indices[idx][1]]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
                   double r = 6.96*log(diameter_ratio);
 
                   double term1 = pow(flow_ratio_pm - q0,p);
                   double term2 = pow(1 - flow_ratio_pm - q0,p);
                   double term3 = exp(r);
 
-                  double numer = term3*term1;
+                  double numer = term3*term1/flow_ratio_pm;
                   double denom = term3*term1 + term2;
-                  // Apply Gardner2010 rule
+	  	  // Apply Gardner2010 rule
                   linearSystem.SetMatrixElement(update_indices[idx][0], update_indices[idx][1], -numer/denom);
                 }
             }
