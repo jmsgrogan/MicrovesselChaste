@@ -100,6 +100,19 @@ QDimensionless AbstractHaematocritSolver<DIM>::CheckSolution()
   return sup_rbc;
 }
 
+template<unsigned DIM>
+QDimensionless AbstractHaematocritSolver<DIM>::AverageHaematocrit()
+{
+  QDimensionless total_haematocrit = 0.0;
+  std::vector<std::shared_ptr<Vessel<DIM> > > vessels = this->mpNetwork->GetVessels();
+  int number_of_vessels = this->mpNetwork->GetNumberOfVessels();
+  for(int i = 0; i < number_of_vessels; i++)
+  {
+    total_haematocrit = total_haematocrit + vessels[i]->GetFlowProperties()->GetHaematocrit();
+  }
+  return total_haematocrit/number_of_vessels;
+}
+
 // Explicit instantiation
 template class AbstractHaematocritSolver<2>;
 template class AbstractHaematocritSolver<3>;

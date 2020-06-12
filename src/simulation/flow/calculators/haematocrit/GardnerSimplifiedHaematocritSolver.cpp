@@ -268,17 +268,10 @@ void GardnerSimplifiedHaematocritSolver<DIM>::Calculate()
 
                         QDimensionless flow_ratio_pm = Qabs(flow_rate)/Qabs(parent0_flow_rate);
 
-                        // There is a bifurcation, apply a haematocrit splitting rule from Gardner1989
-                        QLength my_radius = vessels[idx]->GetRadius();
-                        QLength competitor_radius = competitor_vessels[0]->GetRadius();
+                        // There is a bifurcation, apply a haematocrit splitting rule from Gardner2010
                         QLength parent_radius = parent_vessels[0]->GetRadius();
 
-        		            double micron_my_radius = (my_radius/unit::metres)*1.e6;
-        		            double micron_competitor_radius = (competitor_radius/unit::metres)*1.e6;
         		            double micron_parent_radius = (parent_radius/unit::metres)*1.e6;
-
-			                  QDimensionless diameter_ratio = micron_my_radius/micron_competitor_radius;
-
 			                  // Assign q0, p and r from Gardner2010 model
 			                  // Here we assume that the fractional flow rate will not fall below X0 for either branch; this assumption is easily satisfied with our networks and with the splitting model without memory effects
 
@@ -373,16 +366,10 @@ void GardnerSimplifiedHaematocritSolver<DIM>::Calculate()
                   QFlowRate parent0_flow_rate = vessels[update_indices[idx][1]]->GetFlowProperties()->GetFlowRate();
 
 			            QDimensionless flow_ratio_pm = Qabs(self_flow_rate)/Qabs(parent0_flow_rate);
-
-			            QLength my_radius = vessels[update_indices[idx][0]]->GetRadius();
-                  QLength competitor_radius = vessels[update_indices[idx][2]]->GetRadius();
                   QLength parent_radius = vessels[update_indices[idx][1]]->GetRadius();
 
-        		      double micron_my_radius = (my_radius/unit::metres)*1.e6;
-        		      double micron_competitor_radius = (competitor_radius/unit::metres)*1.e6;
         		      double micron_parent_radius = (parent_radius/unit::metres)*1.e6;
 
-			            QDimensionless diameter_ratio = micron_my_radius/micron_competitor_radius;
 
                   // Assign q0, p and r from Gardner2010 model
                   // Here we assume that the fractional flow rate will not fall below X0 for either branch; this assumption is easily satisfied with our networks and with the splitting model without memory effects

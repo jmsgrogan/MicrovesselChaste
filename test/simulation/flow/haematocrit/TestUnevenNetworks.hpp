@@ -68,139 +68,143 @@ class TestUnevenNetworks : public CxxTest::TestSuite
 public:
 
 // Some constants used by all tests.
-const double alpha = 4.0;
-const unsigned order = 15;
-const double y_scale = 4.0;
+const double alpha = 2.0;
+const double y_scale = 32.0;
+// const unsigned order = 4;
 
 
-void TestHexagonalNetworkNonLinear()
-{
-    // This test is for testing the new haematocrit solver on hexagonal networks
-    double dimless_length = 1.0;
-
-    for(unsigned i_aux=1; i_aux<order+1; i_aux++)
-    {
-	     dimless_length += pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i_aux-1)/3.0)-pow(0.9,2)*pow(2.0, -2.0*double(i_aux-1)));
-    }
-    QLength input_radius = 50_um;
-
-    QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
-
-    double inlet_haematocrit = 0.45;
-    double initial_haematocrit = 0.45;
-
-    // Generate the network
-
-    VesselNetworkGenerator<2> network_generator;
-
-    // alpha is quotient between the length and diameter...in vessel network generator, we use twice this value as an input parameter
-    double twicealpha = 2.0*alpha;
-
-
-    // Length of the vertical projection of first-order vessels
-    QLength main_vert_length = 0.9*twicealpha*input_radius*pow(2.0,-1.0/3.0);
-    // vertical size of the domain
-    QLength domain_side_length_y = y_scale*main_vert_length;
-
-    std::ostringstream strs;
-    strs << alpha;
-    std::string str_alpha = strs.str();
-    // horizontal size of the domain
-    QLength domain_side_length_x = dimless_length*2.0*twicealpha*input_radius;
-    auto p_file_handler = std::make_shared<OutputFileHandler>("HexagonalNetwork_Solved_Nonlinear", true);
-    // Generating the hexagonal network
-    std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(domain_side_length_x, domain_side_length_y, main_vert_length);
-
-    unsigned max_height = y_scale;
-
-    // Setting the inlet and outlet nodes for the network
-    for(unsigned idx = 0; idx <= max_height; idx++)
-    {
-      double scale = idx;
-      VesselNodePtr<2> p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, Vertex<2>(0.0_um, scale*main_vert_length));
-      VesselNodePtr<2> p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, Vertex<2>(domain_side_length_x, scale*main_vert_length));
-      p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
-      p_inlet_node->GetFlowProperties()->SetPressure(3320.0_Pa);
-      p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
-      p_outlet_node->GetFlowProperties()->SetPressure(2090.0_Pa);
-    }
-
-    //    auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
-    auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolverNonLinear<2>::Create();
-    auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
-    auto p_viscosity_calculator = ViscosityCalculator<2>::Create();
-    p_viscosity_calculator->SetPlasmaViscosity(viscosity);
-
-    p_haematocrit_calculator->SetVesselNetwork(p_network);
-    p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
-    p_impedance_calculator->SetVesselNetwork(p_network);
-    p_viscosity_calculator->SetVesselNetwork(p_network);
-    p_viscosity_calculator->Calculate();
-    p_impedance_calculator->Calculate();
-
-    FlowSolver<2> flow_solver;
-    flow_solver.SetVesselNetwork(p_network);
-    flow_solver.SetUp();
-
-    unsigned max_iter = 1000;
-    double tolerance2 = 1.e-10;
-
-    std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
-    std::vector<double> previous_haematocrit(segments.size(), double(initial_haematocrit));
-    // iteration to solve the nonlinear problem follows (haematocrit problem is coupled to the flow problem via viscosity/impedance)
-    for(unsigned idx=0;idx<max_iter;idx++)
-    {
-        p_viscosity_calculator->Calculate();
-        p_impedance_calculator->Calculate();
-        flow_solver.SetUp();
-        flow_solver.Solve();
-        p_haematocrit_calculator->Calculate();
-        // Get the residual
-        double max_difference = 0.0;
-        double h_for_max = 0.0;
-        double prev_for_max = 0.0;
-        for(unsigned jdx=0;jdx<segments.size();jdx++)
-        {
-            double current_haematocrit = segments[jdx]->GetFlowProperties()->GetHaematocrit();
-            double difference = std::abs(current_haematocrit - previous_haematocrit[jdx]);
-            if(difference>max_difference)
-            {
-                max_difference = difference;
-                h_for_max = current_haematocrit;
-                prev_for_max = previous_haematocrit[jdx];
-            }
-            previous_haematocrit[jdx] = current_haematocrit;
-        }
-        std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << std::endl;
-        if(max_difference<=tolerance2)
-        {
-            std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
-            break;
-        }
-        else
-        {
-            // Output intermediate results
-            if(idx%1==0)
-            {
-                std::cout << "Max Difference at iter: " << idx << " is " << max_difference << std::endl;
-                std::string file_suffix = "IntermediateHaematocrit_" + std::to_string(idx) + ".vtp";
-                std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append(file_suffix);
-                p_network->Write(output_file);
-            }
-        }
-
-        if(idx==max_iter-1)
-        {
-            EXCEPTION("Did not converge after " + std::to_string(idx) + " iterations.");
-        }
-    }
-    std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
-    p_network->Write(output_file);
-}
+// void TestHexagonalNetworkNonLinear()
+// {
+//     // This test is for testing the new haematocrit solver on hexagonal networks
+//     double dimless_length = 1.0;
+//
+//     for(unsigned i_aux=1; i_aux<order+1; i_aux++)
+//     {
+// 	     dimless_length += pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i_aux-1)/3.0)-pow(0.9,2)*pow(2.0, -2.0*double(i_aux-1)));
+//     }
+//     QLength input_radius = 50_um;
+//
+//     QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
+//
+//     double inlet_haematocrit = 0.45;
+//     double initial_haematocrit = 0.45;
+//
+//     // Generate the network
+//
+//     VesselNetworkGenerator<2> network_generator;
+//
+//     // alpha is quotient between the length and diameter...in vessel network generator, we use twice this value as an input parameter
+//     double twicealpha = 2.0*alpha;
+//
+//
+//     // Length of the vertical projection of first-order vessels
+//     QLength main_vert_length = 0.9*twicealpha*input_radius*pow(2.0,-1.0/3.0);
+//     // vertical size of the domain
+//     QLength domain_side_length_y = y_scale*main_vert_length;
+//
+//     std::ostringstream strs;
+//     strs << alpha;
+//     std::string str_alpha = strs.str();
+//     // horizontal size of the domain
+//     QLength domain_side_length_x = dimless_length*2.0*twicealpha*input_radius;
+//     auto p_file_handler = std::make_shared<OutputFileHandler>("HexagonalNetwork_Solved_Nonlinear", true);
+//     // Generating the hexagonal network
+//     std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateHexagonalNetwork(domain_side_length_x, domain_side_length_y, main_vert_length);
+//
+//     unsigned max_height = y_scale;
+//
+//     // Setting the inlet and outlet nodes for the network
+//     for(unsigned idx = 0; idx <= max_height; idx++)
+//     {
+//       double scale = idx;
+//       VesselNodePtr<2> p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, Vertex<2>(0.0_um, scale*main_vert_length));
+//       VesselNodePtr<2> p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network, Vertex<2>(domain_side_length_x, scale*main_vert_length));
+//       p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
+//       p_inlet_node->GetFlowProperties()->SetPressure(3320.0_Pa);
+//       p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
+//       p_outlet_node->GetFlowProperties()->SetPressure(2090.0_Pa);
+//     }
+//
+//     //    auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
+//     auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolverNonLinear<2>::Create();
+//     auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+//     auto p_viscosity_calculator = ViscosityCalculator<2>::Create();
+//     p_viscosity_calculator->SetPlasmaViscosity(viscosity);
+//
+//     p_haematocrit_calculator->SetVesselNetwork(p_network);
+//     p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
+//     p_impedance_calculator->SetVesselNetwork(p_network);
+//     p_viscosity_calculator->SetVesselNetwork(p_network);
+//     p_viscosity_calculator->Calculate();
+//     p_impedance_calculator->Calculate();
+//
+//     FlowSolver<2> flow_solver;
+//     flow_solver.SetVesselNetwork(p_network);
+//     flow_solver.SetUp();
+//
+//     unsigned max_iter = 1000;
+//     double tolerance2 = 1.e-10;
+//
+//     std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
+//     std::vector<double> previous_haematocrit(segments.size(), double(initial_haematocrit));
+//     // iteration to solve the nonlinear problem follows (haematocrit problem is coupled to the flow problem via viscosity/impedance)
+//     for(unsigned idx=0;idx<max_iter;idx++)
+//     {
+//         p_viscosity_calculator->Calculate();
+//         p_impedance_calculator->Calculate();
+//         flow_solver.SetUp();
+//         flow_solver.Solve();
+//         p_haematocrit_calculator->Calculate();
+//         // Get the residual
+//         double max_difference = 0.0;
+//         double h_for_max = 0.0;
+//         double prev_for_max = 0.0;
+//         for(unsigned jdx=0;jdx<segments.size();jdx++)
+//         {
+//             double current_haematocrit = segments[jdx]->GetFlowProperties()->GetHaematocrit();
+//             double difference = std::abs(current_haematocrit - previous_haematocrit[jdx]);
+//             if(difference>max_difference)
+//             {
+//                 max_difference = difference;
+//                 h_for_max = current_haematocrit;
+//                 prev_for_max = previous_haematocrit[jdx];
+//             }
+//             previous_haematocrit[jdx] = current_haematocrit;
+//         }
+//         std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << std::endl;
+//         if(max_difference<=tolerance2)
+//         {
+//             std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
+//             break;
+//         }
+//         else
+//         {
+//             // Output intermediate results
+//             if(idx%1==0)
+//             {
+//                 std::cout << "Max Difference at iter: " << idx << " is " << max_difference << std::endl;
+//                 std::string file_suffix = "IntermediateHaematocrit_" + std::to_string(idx) + ".vtp";
+//                 std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append(file_suffix);
+//                 p_network->Write(output_file);
+//             }
+//         }
+//
+//         if(idx==max_iter-1)
+//         {
+//             EXCEPTION("Did not converge after " + std::to_string(idx) + " iterations.");
+//         }
+//     }
+//     std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
+//     p_network->Write(output_file);
+// }
 
 
 void TestHexagonalNetworkLinear()
 {
+  // for(unsigned multiplier = 32; multiplier < 33; multiplier++)
+  for(unsigned order = 4; order < 33; order++)
+  {
+  // double y_scale = multiplier*1.0;
   // This test is for testing the new haematocrit solver on hexagonal networks
   double dimless_length = 1.0;
 
@@ -317,8 +321,11 @@ void TestHexagonalNetworkLinear()
         total_flow += segments[jdx]->GetFlowProperties()->GetFlowRate();
         total_red_blood += segments[jdx]->GetFlowProperties()->GetFlowRate()*segments[jdx]->GetFlowProperties()->GetHaematocrit();
       }
-      std::cout << "Total flow = " << total_flow << std::endl;
-      std::cout << "Total Red blood = " << total_red_blood << std::endl;
+      std::cout << "y_scale = " << y_scale << std::endl;
+      std::cout << "order = " << order << std::endl;
+      std::cout << "Sup flow = " << flow_solver.CheckSolution() << std::endl;
+      std::cout << "Sup Red blood = " << p_haematocrit_calculator->CheckSolution() << std::endl;
+      std::cout << "Average Haematocrit = " << p_haematocrit_calculator->AverageHaematocrit() << std::endl;
       // Get the residual
       double max_difference = 0.0;
       double h_for_max = 0.0;
@@ -360,6 +367,7 @@ void TestHexagonalNetworkLinear()
   }
   std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
   p_network->Write(output_file);
+  }
 }
 
 

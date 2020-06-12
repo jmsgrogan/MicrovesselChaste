@@ -70,6 +70,11 @@ public:
      */
     QDimensionless CheckSolution();
 
+    /*
+     *  Method for calculating the average Haematocrit for the network.
+     */
+    QDimensionless AverageHaematocrit();
+
 };
 
 #endif
