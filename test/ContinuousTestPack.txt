@@ -66,6 +66,7 @@ simulation/flow/calculators/TestVesselNetworkCalculators.hpp
 simulation/flow/haematocrit/TestBetteridgeHaematocritSolver.hpp
 simulation/flow/haematocrit/TestBranchingNetwork.hpp
 simulation/flow/haematocrit/TestDifferentPriesHaematocritSolvers.hpp
+simulation/flow/haematocrit/TestHexagonalUnits.hpp
 simulation/flow/haematocrit/TestLinnengarHaematocritSolver.hpp
 simulation/flow/haematocrit/TestLinnengarHaematocritSolverNew.hpp
 simulation/flow/haematocrit/TestNoCellsBetteridgeNontrivVis.hpp
