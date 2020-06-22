@@ -209,6 +209,13 @@ public:
     VesselNetworkPtr<DIM> GenerateHexagonalUnit(QLength vesselLength);
 
     /**
+     * Creates a two  hexagonal repeating unit
+     * @param vesselLength the vessel length
+     * @return a shared pointer to the vessel network
+     */
+    VesselNetworkPtr<DIM> GenerateTwoHexagonalUnits(QLength vesselLength,  QLength inputRadius, double alpha);
+
+    /**
      * Creates a bifurcation repeating unit
      * @param vesselLength the vessel length
      * @param startPosition the start position of the unit

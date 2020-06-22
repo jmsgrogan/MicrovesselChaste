@@ -437,6 +437,70 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateHexago
     return pNetwork;
 }
 
+
+template<unsigned DIM>
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateTwoHexagonalUnits(QLength vesselLength, QLength inputRadius, double alpha)
+{
+    // Generate the nodes
+    std::vector<VesselNodePtr<DIM> > nodes;
+    nodes.push_back(VesselNode<DIM>::Create(0_m, 0_m)); //0
+    nodes.push_back(VesselNode<DIM>::Create(vesselLength/sqrt(2.0), vesselLength/sqrt(2.0))); //1
+    nodes.push_back(VesselNode<DIM>::Create(0_m, sqrt(2.0) * vesselLength)); //2
+    nodes.push_back(VesselNode<DIM>::Create(vesselLength/sqrt(2.0), (sqrt(2.0) + 1.0/sqrt(2.0))*vesselLength)); //3
+    nodes.push_back(VesselNode<DIM>::Create((1.0 + 1.0/sqrt(2.0)) * vesselLength, (sqrt(2.0) + 1.0/sqrt(2.0))*vesselLength)); //4
+    nodes.push_back(VesselNode<DIM>::Create((1.0 + sqrt(2.0)) * vesselLength, vesselLength*sqrt(2.0))); //5
+    nodes.push_back(VesselNode<DIM>::Create((1.0 + 1.0/sqrt(2.0)) * vesselLength,vesselLength/sqrt(2.0))); //6
+    nodes.push_back(VesselNode<DIM>::Create((1.0 + sqrt(2.0)) * vesselLength, 2.0*sqrt(2.0)*vesselLength)); //7
+    nodes.push_back(VesselNode<DIM>::Create((2.0 + sqrt(2.0)) * vesselLength, 2.0*sqrt(2.0)*vesselLength)); //8
+    nodes.push_back(VesselNode<DIM>::Create((2.0 + sqrt(2.0) + 1.0/sqrt(2.0)) * vesselLength, (sqrt(2.0) + 1.0/sqrt(2.0))*vesselLength)); //9
+    nodes.push_back(VesselNode<DIM>::Create((2.0 + sqrt(2.0)) * vesselLength,vesselLength*sqrt(2.0))); //10
+    nodes.push_back(VesselNode<DIM>::Create((2.0 + sqrt(2.0) + 1.0/sqrt(2.0)) * vesselLength,(2*sqrt(2.0) + 1.0/sqrt(2.0)) * vesselLength)); //11
+
+    // Generate the segments and vessels
+    std::vector<std::shared_ptr<Vessel<DIM> > > vessels;
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[0], nodes[1]))); //0
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[1], nodes[2]))); //1
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[2], nodes[3]))); //2
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[3], nodes[4]))); //3
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[4], nodes[5]))); //4
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[5], nodes[6]))); //5
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[6], nodes[1]))); //6
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[4], nodes[7]))); //7
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[7], nodes[8]))); //8
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[8], nodes[9]))); //9
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[9], nodes[10]))); //10
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[10], nodes[5]))); //11
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[8], nodes[11]))); //12
+
+    QLength first_branch_radius = inputRadius*pow(alpha, 1.0/3.0);
+    QLength second_branch_radius = inputRadius*pow(1.0 - alpha, 1.0/3.0);
+    QLength second_gen_first_branch_radius = first_branch_radius*pow(alpha, 1.0/3.0);
+    QLength second_gen_second_branch_radius = first_branch_radius*pow(1.0 - alpha, 1.0/3.0);
+    QLength radius_result = pow(pow(second_branch_radius, 3.0) + pow(second_gen_second_branch_radius, 3.0), 1.0/3.0);
+    QLength radius_second_result =  pow(pow(second_gen_first_branch_radius, 3.0) + pow(radius_result, 3.0), 1.0/3.0);
+
+    vessels[0]->SetRadius(inputRadius);
+    vessels[1]->SetRadius(first_branch_radius);
+    vessels[2]->SetRadius(first_branch_radius);
+    vessels[3]->SetRadius(first_branch_radius);
+    vessels[5]->SetRadius(second_branch_radius);
+    vessels[6]->SetRadius(second_branch_radius);
+    vessels[4]->SetRadius(second_gen_second_branch_radius);
+    vessels[7]->SetRadius(second_gen_first_branch_radius);
+    vessels[8]->SetRadius(second_gen_first_branch_radius);
+    vessels[9]->SetRadius(radius_result);
+    vessels[10]->SetRadius(radius_result);
+    vessels[11]->SetRadius(radius_result);
+    vessels[12]->SetRadius(radius_second_result);
+
+    // Generate the network
+    std::shared_ptr<VesselNetwork<DIM> > pNetwork(new VesselNetwork<DIM>());
+    pNetwork->AddVessels(vessels);
+
+    return pNetwork;
+}
+
+
 template<unsigned DIM>
 std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateBifurcationUnit(QLength vesselLength,
                                                                                           Vertex<DIM> startPosition)
