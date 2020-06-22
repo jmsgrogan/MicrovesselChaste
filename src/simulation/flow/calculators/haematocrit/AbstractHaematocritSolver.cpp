@@ -61,7 +61,7 @@ QDimensionless AbstractHaematocritSolver<DIM>::CheckSolution()
     node_rbc = 0.0;
     abs_node_rbc = 0.0;
     double number_of_vessels = nodes[i]->GetNumberOfSegments();
-    if(!nodes[i]->GetFlowProperties()->IsInputNode() && !nodes[i]->GetFlowProperties()->IsOutputNode())
+    if(number_of_vessels > 2)
     {
       current_vessels = nodes[i]->GetSegments();
       for(unsigned j = 0; j < current_vessels.size(); j++)
