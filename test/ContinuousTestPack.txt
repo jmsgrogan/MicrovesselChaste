@@ -69,6 +69,7 @@ simulation/flow/haematocrit/TestDifferentPriesHaematocritSolvers.hpp
 simulation/flow/haematocrit/TestHexagonalUnits.hpp
 simulation/flow/haematocrit/TestLinnengarHaematocritSolver.hpp
 simulation/flow/haematocrit/TestLinnengarHaematocritSolverNew.hpp
+simulation/flow/haematocrit/TestNetworkComparison.hpp
 simulation/flow/haematocrit/TestNoCellsBetteridgeNontrivVis.hpp
 simulation/flow/haematocrit/TestRadiotherapy.hpp
 simulation/flow/haematocrit/TestUnevenNetworks.hpp
