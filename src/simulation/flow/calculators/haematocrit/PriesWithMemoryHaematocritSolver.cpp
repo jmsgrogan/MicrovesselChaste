@@ -167,6 +167,7 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
                     }
                 }
 
+                // Convergence
                 // If there are no competitor vessels the haematocrit is just the sum of the parent values
                 if(competitor_vessels.size()==0 or Qabs(competitor_vessels[0]->GetFlowProperties()->GetFlowRate()) == 0.0 * unit::metre_cubed_per_second)
                 {
@@ -179,7 +180,7 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
                 {
                     EXCEPTION("This solver can only work with branches with connectivity 3");
                 }
-                else
+                else // Divergence (1 parent, 1 competitor)
                 {
                     QFlowRate competitor0_flow_rate = competitor_vessels[0]->GetFlowProperties()->GetFlowRate();
                     QFlowRate parent0_flow_rate = parent_vessels[0]->GetFlowProperties()->GetFlowRate();
@@ -307,7 +308,7 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
     }
 
     // Set the parameters for iteration; we will be solving a nonlinear system
-    double tolerance = 1e-9;
+    double tolerance = 1e-10;
     double max_iterations = 1000;
     double residual = DBL_MAX;
     int iterations = 0;
@@ -453,6 +454,9 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
         }
 
         iterations++;
+        std::cout<<"Memory: iteration = "<<iterations<<"\t";
+        std::cout<<"residual = "<<residual<<"\t";
+        std::cout<<"max unconserved RBCs = "<<this->CheckSolution()<<"\n";
         if(iterations == max_iterations)
         {
             if(mExceptionOnFailedConverge)

@@ -65,6 +65,16 @@ public:
      */
     virtual void Calculate() = 0;
 
+    /*
+     *  Method for checking for the conservation of RBCs at each non-boundary vertex
+     */
+    QDimensionless CheckSolution();
+
+    /*
+     *  Method for calculating the average Haematocrit for the network.
+     */
+    QDimensionless AverageHaematocrit();
+
 };
 
 #endif
