@@ -78,7 +78,6 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AddDiscreteTermsToMatrix()
 
     auto p_linear_pde = std::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
 
-    std::cout << typeid(this->mpPde).name() << std::endl;
     if(!p_linear_pde)
     {
         EXCEPTION("PDE not recognized");
@@ -139,7 +138,6 @@ void SimpleLinearEllipticFiniteDifferenceSolver<DIM>::AssembleMatrix()
     }
 
     auto p_linear_pde = std::dynamic_pointer_cast<DiscreteContinuumLinearEllipticPde<DIM, DIM> >(this->mpPde);
-    std::cout << typeid(this->mpPde).name() << std::endl;
 
     if(!p_linear_pde)
     {

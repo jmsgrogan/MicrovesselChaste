@@ -57,22 +57,6 @@ private:
     QDimensionless mHaematocrit;
 
     /**
-     * Attempt to solve networks with connectivity > 3. Not in original model.
-     * Haematocrit splits according to flow rate ratio only in higher connectivity cases.
-     */
-    bool mSolveHighConnectivityNetworks;
-
-    /**
-     * Turn off Fung Model. Haematocrit splits according to flow rate ratio only.
-     */
-    bool mTurnOffFungModel;
-
-    /**
-     * Use a random splitting model
-     */
-    bool mUseRandomSplitting;
-
-    /**
      * Throw an exception if convergence fails
      */
     bool mExceptionOnFailedConverge;
@@ -108,24 +92,6 @@ public:
      * @param haematocrit the arterial haematocrit
      */
     void SetHaematocrit(QDimensionless haematocrit);
-
-    /**
-     * Attempt to use higher connectivity branches
-     * @param useHighConnectivity use higher connectivity branches
-     */
-    void SetUseHigherConnectivityBranches(bool useHighConnectivity);
-
-    /**
-     * Turn off Fung Model. Haematocrit splits according to flow rate ratio only.
-     * @param turnOffFungModel Haematocrit splits according to flow rate ratio only.
-     */
-    void SetTurnOffFungModel(bool turnOffFungModel);
-
-    /**
-     * Turn off Fung Model. Haematocrit splits according to flow rate ratio only.
-     * @param turnOffFungModel Haematocrit splits according to flow rate ratio only.
-     */
-    void SetUseRandomSplittingModel(bool useRandomSplittingModel);
 
 };
 
