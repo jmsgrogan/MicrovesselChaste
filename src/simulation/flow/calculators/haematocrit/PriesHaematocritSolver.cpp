@@ -182,14 +182,17 @@ void PriesHaematocritSolver<DIM>::Calculate()
                 }
                 else // Divergence (1 parent, 1 competitor)
                 {
-                    QFlowRate competitor0_flow_rate = competitor_vessels[0]->GetFlowProperties()->GetFlowRate();
-                    QFlowRate parent0_flow_rate = parent_vessels[0]->GetFlowProperties()->GetFlowRate();
-                    QDimensionless flow_ratio_pm = Qabs(parent0_flow_rate)/Qabs(flow_rate);
+                    auto me=vessels[idx];
+                    auto comp=competitor_vessels[0];
+                    auto parent=parent_vessels[0];
+                    QFlowRate competitor_flow_rate = comp->GetFlowProperties()->GetFlowRate();
+                    QFlowRate parent_flow_rate = parent->GetFlowProperties()->GetFlowRate();
+                    QDimensionless flow_ratio_pm = Qabs(parent_flow_rate)/Qabs(flow_rate);
 
                     // There is a bifurcation, apply a haematocrit splitting rule from Pries1989
-                    QLength my_radius = vessels[idx]->GetRadius();
-                    QLength competitor_radius = competitor_vessels[0]->GetRadius();
-                    QLength parent_radius = parent_vessels[0]->GetRadius();
+                    QLength my_radius = me->GetRadius();
+                    QLength competitor_radius = comp->GetRadius();
+                    QLength parent_radius = parent->GetRadius();
 
                     double micron_my_radius = (my_radius/unit::metres)*1.e6;
                     double micron_competitor_radius = (competitor_radius/unit::metres)*1.e6;
@@ -200,14 +203,14 @@ void PriesHaematocritSolver<DIM>::Calculate()
                     // Assign A, B and X0 from Pries1989 model
                     // Here we assume that the fractional flow rate will not fall below X0 for either branch; this assumption is easily satisfied with our networks and with the splitting model without memory effects
 
-                    double X0 = 0.964*(1-parent_vessels[0]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
-                    double B = 1.0 + 6.98*(1.0-parent_vessels[0]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
+                    double X0 = 0.964*(1-parent->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
+                    double B = 1.0 + 6.98*(1.0-parent->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
 
                     QDimensionless modified_flow_ratio_mc;
 
-                    modified_flow_ratio_mc = (Qabs(flow_rate)-X0*Qabs(parent0_flow_rate))/(Qabs(competitor0_flow_rate)-X0*Qabs(parent0_flow_rate));
+                    modified_flow_ratio_mc = (Qabs(flow_rate)-X0*Qabs(parent_flow_rate))/(Qabs(competitor_flow_rate)-X0*Qabs(parent_flow_rate));
 
-                    double A = -13.29*((1.0-parent_vessels[0]->GetFlowProperties()->GetHaematocrit())*(diameter_ratio*diameter_ratio-1.0))/(2.0*micron_parent_radius*(diameter_ratio*diameter_ratio+1.0));
+                    double A = -13.29*((1.0-parent->GetFlowProperties()->GetHaematocrit())*(diameter_ratio*diameter_ratio-1.0))/(2.0*micron_parent_radius*(diameter_ratio*diameter_ratio+1.0));
 
                     double term1 = pow(modified_flow_ratio_mc,B);
                     double term2 = exp(A);
@@ -215,15 +218,15 @@ void PriesHaematocritSolver<DIM>::Calculate()
                     double numer = term2*term1*flow_ratio_pm;
                     double denom = 1.0+term2*term1;
                     // Apply Pries1989 rule
-                    linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -numer/denom);
+                    linearSystem.SetMatrixElement(idx, parent->GetId(), -numer/denom);
 
 
 
                     // Save the indices for later updating
                     std::vector<int> local_update_indics = std::vector<int>(3);
-                    local_update_indics[0] = idx;
-                    local_update_indics[1] = parent_vessels[0]->GetId();
-                    local_update_indics[2] = competitor_vessels[0]->GetId();
+                    local_update_indics[0] = me->GetId();
+                    local_update_indics[1] = parent->GetId();
+                    local_update_indics[2] = comp->GetId();
                     update_indices.push_back(local_update_indics);
                 }
             }
@@ -245,14 +248,17 @@ void PriesHaematocritSolver<DIM>::Calculate()
             for(unsigned idx=0; idx<update_indices.size();idx++)
             {
                 // same as in the initialisation step
-                QFlowRate self_flow_rate = vessels[update_indices[idx][0]]->GetFlowProperties()->GetFlowRate();
-                QFlowRate competitor0_flow_rate = vessels[update_indices[idx][2]]->GetFlowProperties()->GetFlowRate();
-                QFlowRate parent0_flow_rate = vessels[update_indices[idx][1]]->GetFlowProperties()->GetFlowRate();
-                QDimensionless flow_ratio_pm = Qabs(parent0_flow_rate)/Qabs(self_flow_rate);
+                auto me=vessels[update_indices[idx][0]];
+                auto comp=vessels[update_indices[idx][2]];
+                auto parent=vessels[update_indices[idx][1]];
+                QFlowRate self_flow_rate = me->GetFlowProperties()->GetFlowRate();
+                QFlowRate competitor_flow_rate = comp->GetFlowProperties()->GetFlowRate();
+                QFlowRate parent_flow_rate = parent->GetFlowProperties()->GetFlowRate();
+                QDimensionless flow_ratio_pm = Qabs(parent_flow_rate)/Qabs(self_flow_rate);
 
-                QLength my_radius = vessels[update_indices[idx][0]]->GetRadius();
-                QLength competitor_radius = vessels[update_indices[idx][2]]->GetRadius();
-                QLength parent_radius = vessels[update_indices[idx][1]]->GetRadius();
+                QLength my_radius = me->GetRadius();
+                QLength competitor_radius = comp->GetRadius();
+                QLength parent_radius = parent->GetRadius();
 
                 double micron_my_radius = (my_radius/unit::metres)*1.e6;
                 double micron_competitor_radius = (competitor_radius/unit::metres)*1.e6;
@@ -263,13 +269,13 @@ void PriesHaematocritSolver<DIM>::Calculate()
 
 
                 double X0;
-                    X0 = 0.964*(1-vessels[update_indices[idx][1]]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
-                double B = 1.0 + 6.98*(1.0-vessels[update_indices[idx][1]]->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
+                    X0 = 0.964*(1-parent->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
+                double B = 1.0 + 6.98*(1.0-parent->GetFlowProperties()->GetHaematocrit())/(2.0*micron_parent_radius);
 
                 QDimensionless modified_flow_ratio_mc;
-                modified_flow_ratio_mc = (Qabs(self_flow_rate)-X0*Qabs(parent0_flow_rate))/(Qabs(competitor0_flow_rate)-X0*Qabs(parent0_flow_rate));
+                modified_flow_ratio_mc = (Qabs(self_flow_rate)-X0*Qabs(parent_flow_rate))/(Qabs(competitor_flow_rate)-X0*Qabs(parent_flow_rate));
 
-                double A = -13.29*((1.0-vessels[update_indices[idx][1]]->GetFlowProperties()->GetHaematocrit())*(diameter_ratio*diameter_ratio-1.0))/(2.0*micron_parent_radius*(diameter_ratio*diameter_ratio+1.0));
+                double A = -13.29*((1.0-parent->GetFlowProperties()->GetHaematocrit())*(diameter_ratio*diameter_ratio-1.0))/(2.0*micron_parent_radius*(diameter_ratio*diameter_ratio+1.0));
 
                 double term1 = pow(modified_flow_ratio_mc,B);
                 double term2 = exp(A);
@@ -277,7 +283,7 @@ void PriesHaematocritSolver<DIM>::Calculate()
                 double numer = term2*term1*flow_ratio_pm;
                 double denom = 1.0+term2*term1;
                 // Apply Pries1989 rule
-                linearSystem.SetMatrixElement(update_indices[idx][0], update_indices[idx][1], -numer/denom);
+                linearSystem.SetMatrixElement(me->GetId(), parent->GetId(), -numer/denom);
             }
         }
 
