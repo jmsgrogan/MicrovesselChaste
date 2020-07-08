@@ -182,16 +182,14 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
                 }
                 else // Divergence (1 parent, 1 competitor)
                 {
-                    auto me=vessels[idx];
-                    auto comp=competitor_vessels[0];
-                    auto parent=parent_vessels[0];
-                    UpdateBifurcation(me, comp, parent, linear_system);
+                    UpdateBifurcation(vessels[idx], competitor_vessels[0], parent_vessels[0], linear_system);
 
                     // Save the indices for later updating
                     std::vector<int> local_update_indices = std::vector<int>(3);
-                    local_update_indices[0] = me->GetId();
-                    local_update_indices[1] = parent->GetId();
-                    local_update_indices[2] = comp->GetId();
+                    assert(vessels[idx]->GetId() == idx);
+                    local_update_indices[0] = idx;
+                    local_update_indices[1] = parent_vessels[0]->GetId();
+                    local_update_indices[2] = competitor_vessels[0]->GetId();
                     update_indices.push_back(local_update_indices);
                 }
             }
@@ -212,11 +210,7 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
             linear_system.SwitchWriteModeLhsMatrix();
             for(unsigned idx=0; idx<update_indices.size();idx++)
             {
-                // same as in the initialisation step
-                auto me=vessels[update_indices[idx][0]];
-                auto comp=vessels[update_indices[idx][2]];
-                auto parent=vessels[update_indices[idx][1]];
-                UpdateBifurcation(me, comp, parent, linear_system);
+                UpdateBifurcation(vessels[update_indices[idx][0]], vessels[update_indices[idx][2]], vessels[update_indices[idx][1]], linear_system);
             }
         }
 
