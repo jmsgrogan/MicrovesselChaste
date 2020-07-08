@@ -37,6 +37,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define _PriesHaematocritSolver_hpp
 
 #include "SmartPointers.hpp"
+#include "LinearSystem.hpp"
 #include "AbstractHaematocritSolver.hpp"
 #include "UnitCollection.hpp"
 
@@ -92,6 +93,27 @@ public:
      * @param haematocrit the arterial haematocrit
      */
     void SetHaematocrit(QDimensionless haematocrit);
+
+    /**
+     * Temporary for debugging
+     * @return class name of this object
+     */
+    std::string Reflect()
+    {
+        return "PriesHaematocritSolver";
+    }
+
+    /**
+     * Writes one entry in the matrix of the system assuming that the diagonal
+     * entry is 1.  That is calculate the fraction numer/denom such that (-numer/denom)*H_parent + H_me = 0,
+     * so numer*H_parent = denom*H_me.
+     * @param me - the vessel we are calculating on
+     * @param comp - competitor/sibling vessel
+     * @param parent - parent/feeding vessel
+     * @param rLinearSystem - the linear system
+     */
+    void UpdateBifurcation(std::shared_ptr<Vessel<DIM> > me, std::shared_ptr<Vessel<DIM> > comp,
+                           std::shared_ptr<Vessel<DIM> > parent, LinearSystem& rLinearSystem);
 };
 
 #endif
