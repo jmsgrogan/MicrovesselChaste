@@ -568,6 +568,36 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateTrueFo
 
 
 template<unsigned DIM>
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateTrueRegularBifurcationUnit(QLength vesselLength, QLength inputRadius, QDimensionless alpha)
+{
+    // Generate the nodes
+    std::vector<VesselNodePtr<DIM> > nodes;
+    nodes.push_back(VesselNode<DIM>::Create(0_m, vesselLength)); //0
+    nodes.push_back(VesselNode<DIM>::Create(vesselLength, vesselLength)); //1
+    nodes.push_back(VesselNode<DIM>::Create(vesselLength*(1.0 + sqrt(3.0)/2.0), 0_m)); //2
+    nodes.push_back(VesselNode<DIM>::Create(vesselLength*(1.0 + sqrt(3.0)/2.0), 2.0*vesselLength)); //3
+
+    // Generate the segments and vessels
+    std::vector<std::shared_ptr<Vessel<DIM> > > vessels;
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[0], nodes[1]))); //0
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[1], nodes[2]))); //1
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[1], nodes[3]))); //2
+
+    QLength left_vessel_radius = inputRadius*pow(alpha, 1.0/3.0);
+    QLength right_vessel_radius = inputRadius*pow(1 - alpha, 1.0/3.0);
+
+    vessels[0]->SetRadius(inputRadius);
+    vessels[1]->SetRadius(right_vessel_radius);
+    vessels[2]->SetRadius(left_vessel_radius);
+
+    // Generate the network
+    std::shared_ptr<VesselNetwork<DIM> > p_network(new VesselNetwork<DIM>());
+    p_network->AddVessels(vessels);
+    return p_network;
+}
+
+
+template<unsigned DIM>
 std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateBranchingNetwork(unsigned order,
                                                                                            QLength main_length,
 											   QLength input_radius,
