@@ -51,8 +51,8 @@ Vessel<DIM>::Vessel() : AbstractVesselNetworkComponent<DIM>(),
         mIsHalo(false),
         mHasHalo(false),
         mOtherProcessorRank(0),
-	mDistToPrevBif(0.0 * unit::metres),
-	mPreference(3)
+	mDistToPrevBif(DOUBLE_UNSET * unit::metres),
+	mPreference(UNSIGNED_UNSET)
 {
 
 
@@ -70,8 +70,8 @@ Vessel<DIM>::Vessel(std::shared_ptr<VesselSegment<DIM> > pSegment) : AbstractVes
         mIsHalo(false),
         mHasHalo(false),
         mOtherProcessorRank(0),
-	mDistToPrevBif(0.0 * unit::metres),
-	mPreference(3)
+	mDistToPrevBif(DOUBLE_UNSET * unit::metres),
+	mPreference(UNSIGNED_UNSET)
 {
     mSegments.push_back(pSegment);
     mpFlowProperties->UpdateSegments(mSegments);
@@ -89,8 +89,8 @@ Vessel<DIM>::Vessel(std::vector<std::shared_ptr<VesselSegment<DIM> > > segments)
         mIsHalo(false),
         mHasHalo(false),
         mOtherProcessorRank(0),
-	mDistToPrevBif(0.0 * unit::metres),
-	mPreference(3)
+	mDistToPrevBif(DOUBLE_UNSET * unit::metres),
+	mPreference(UNSIGNED_UNSET)
 {
     if (segments.size() > 1)
     {
@@ -132,8 +132,8 @@ Vessel<DIM>::Vessel(std::vector<std::shared_ptr<VesselNode<DIM> > > nodes) :
         mIsHalo(false),
         mHasHalo(false),
         mOtherProcessorRank(0),
-	mDistToPrevBif(0.0 * unit::metres),
-	mPreference(3)
+	mDistToPrevBif(DOUBLE_UNSET * unit::metres),
+	mPreference(UNSIGNED_UNSET)
 {
 
     if (nodes.size() < 2)
@@ -162,8 +162,8 @@ Vessel<DIM>::Vessel(std::shared_ptr<VesselNode<DIM> > pStartNode, std::shared_pt
              mIsHalo(false),
              mHasHalo(false),
              mOtherProcessorRank(0),
-	     mDistToPrevBif(0.0 * unit::metres),
-	     mPreference(3)
+	mDistToPrevBif(DOUBLE_UNSET * unit::metres),
+	mPreference(UNSIGNED_UNSET)
 {
     mSegments.push_back(VesselSegment<DIM>::Create(pStartNode, pEndNode));
     mpFlowProperties->UpdateSegments(mSegments);
