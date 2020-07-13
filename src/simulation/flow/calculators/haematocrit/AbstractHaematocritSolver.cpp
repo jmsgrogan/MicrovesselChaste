@@ -60,7 +60,7 @@ QDimensionless AbstractHaematocritSolver<DIM>::CheckSolution()
   {
     node_rbc = 0.0;
     abs_node_rbc = 0.0;
-    double number_of_vessels = nodes[i]->GetNumberOfSegments();
+    int number_of_vessels = nodes[i]->GetNumberOfSegments();
     if(number_of_vessels > 2)
     {
       current_vessels = nodes[i]->GetSegments();
@@ -91,9 +91,9 @@ QDimensionless AbstractHaematocritSolver<DIM>::CheckSolution()
           }
         }
       }
-      if(sup_rbc < number_of_vessels*Qabs(node_rbc)/abs_node_rbc)
+      if(sup_rbc < Qabs(node_rbc)/abs_node_rbc)
       {
-        sup_rbc = number_of_vessels*Qabs(node_rbc)/abs_node_rbc;
+        sup_rbc = Qabs(node_rbc)/abs_node_rbc;
       }
     }
   }

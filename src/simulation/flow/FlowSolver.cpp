@@ -296,7 +296,7 @@ QDimensionless FlowSolver<DIM>::CheckSolution()
   {
     node_flow = 0.0;
     abs_node_flow = 0.0;
-    double number_of_vessels = nodes[i]->GetNumberOfSegments();
+    int number_of_vessels = nodes[i]->GetNumberOfSegments();
     if(number_of_vessels > 2)
     {
       current_vessels = nodes[i]->GetSegments();
@@ -327,9 +327,9 @@ QDimensionless FlowSolver<DIM>::CheckSolution()
           }
         }
       }
-      if(sup_flow < number_of_vessels*Qabs(node_flow)/abs_node_flow)
+      if(sup_flow < Qabs(node_flow)/abs_node_flow)
       {
-        sup_flow = number_of_vessels*Qabs(node_flow)/abs_node_flow;
+        sup_flow = Qabs(node_flow)/abs_node_flow;
       }
     }
   }
