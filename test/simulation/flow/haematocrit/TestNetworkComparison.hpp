@@ -64,7 +64,7 @@ class TestNetworkComparison : public CxxTest::TestSuite
 
 public:
 
-void TestBifurcationUnit()
+void TestRegularToForkedBifurcationUnit()
 {
     QLength input_radius = 50_um;
     QLength vessel_length = 1000_um;
@@ -86,7 +86,7 @@ void TestBifurcationUnit()
     // QLength domain_side_length_y = (1.0+1.0/sqrt(2.0)) * vessel_length;
 
     // horizontal size of the domain
-    auto p_file_handler = std::make_shared<OutputFileHandler>("Bifurcation_unit_comparision_test", true);
+    auto p_file_handler = std::make_shared<OutputFileHandler>("TestRegularToForkedBifurcationUnit", true);
 
     std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateTrueForkedBifurcationUnit(vessel_length, input_radius, alpha);
 
@@ -105,18 +105,21 @@ void TestBifurcationUnit()
     p_outlet_node_2->GetFlowProperties()->SetIsOutputNode(true);
     p_outlet_node_2->GetFlowProperties()->SetPressure(0.0_Pa);
 
-    std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
-    segments[0]->GetFlowProperties()->SetHaematocrit(inlet_haematocrit);
-    segments[1]->GetFlowProperties()->SetHaematocrit(0.0);
-    segments[2]->GetFlowProperties()->SetHaematocrit(0.0);
-    segments[3]->GetFlowProperties()->SetHaematocrit(0.0);
-    segments[4]->GetFlowProperties()->SetHaematocrit(0.0);
 
     auto p_haematocrit_calculator = GardnerSimplifiedHaematocritSolver<2>::Create();
     // auto p_haematocrit_calculator = PriesHaematocritSolver<2>::Create();
     auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
     auto p_viscosity_calculator = ViscosityCalculator<2>::Create();
     p_viscosity_calculator->SetPlasmaViscosity(viscosity);
+
+    p_haematocrit_calculator->SetVesselNetwork(p_network);
+    p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
+
+    std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
+    segments[1]->GetFlowProperties()->SetHaematocrit(0.4856553292270605);
+    segments[2]->GetFlowProperties()->SetHaematocrit(0.4935660741847571);
+    segments[3]->GetFlowProperties()->SetHaematocrit(0.4856553292270605);
+    segments[4]->GetFlowProperties()->SetHaematocrit(0.4935660741847571);
 
     p_impedance_calculator->SetVesselNetwork(p_network);
     p_viscosity_calculator->SetVesselNetwork(p_network);
@@ -131,12 +134,12 @@ void TestBifurcationUnit()
     double tolerance2 = 1.e-5;
     std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("InitialHaematocrit.vtp");
     p_network->Write(output_file);
-    std::vector<double> previous_haematocrit(segments.size(), double(initial_haematocrit));
+    std::vector<QDimensionless> previous_haematocrit(segments.size(), QDimensionless(initial_haematocrit));
     for(unsigned idx=0;idx<max_iter;idx++)
     {
         p_impedance_calculator->Calculate();
-        flow_solver.SetUp();
-        flow_solver.Solve();;
+        flow_solver.Update();
+        flow_solver.Solve();
         p_haematocrit_calculator->Calculate();
         p_viscosity_calculator->Calculate();
         // Get the residual
@@ -146,8 +149,8 @@ void TestBifurcationUnit()
         double prev_for_max = 0.0;
         for(unsigned jdx=0;jdx<segments.size();jdx++)
         {
-            double current_haematocrit = segments[jdx]->GetFlowProperties()->GetHaematocrit();
-            double difference = std::abs(current_haematocrit - previous_haematocrit[jdx]);
+            QDimensionless current_haematocrit = segments[jdx]->GetFlowProperties()->GetHaematocrit();
+            QDimensionless difference = std::abs(current_haematocrit - previous_haematocrit[jdx]);
             if(difference>max_difference)
             {
                 max_difference = difference;
@@ -158,7 +161,7 @@ void TestBifurcationUnit()
             previous_haematocrit[jdx] = current_haematocrit;
         }
         std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << " at index " << max_difference_index << std::endl;
-        if(max_difference<=tolerance2)
+        if(max_difference<=tolerance2 && idx > 1)
         {
             std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
             break;
@@ -179,12 +182,425 @@ void TestBifurcationUnit()
         {
             EXCEPTION("Did not converge after " + std::to_string(idx) + " iterations.");
         }
-        std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
-        p_network->Write(output_file);
     }
 
     std::cout << "Sup flow =" << flow_solver.CheckSolution() << std::endl;
     std::cout << "Sup RBC = " << p_haematocrit_calculator->CheckSolution() << std::endl;
+
+    std::vector<std::shared_ptr<VesselNode<2> > > network_nodes = p_network->GetNodes();
+
+    TS_ASSERT_DELTA(0.4856553292270605, segments[1]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+    TS_ASSERT_DELTA(0.4935660741847571, segments[2]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+    TS_ASSERT_DELTA(0.4856553292270605, segments[3]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+    TS_ASSERT_DELTA(0.4935660741847571, segments[4]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+
+    TS_ASSERT_DELTA(1.093439402730676, network_nodes[1]->GetFlowProperties()->GetPressure(), 1e-6);
+    TS_ASSERT_DELTA(network_nodes[2]->GetFlowProperties()->GetPressure(), network_nodes[1]->GetFlowProperties()->GetPressure()/2.0, 1e-6);
+    TS_ASSERT_DELTA(network_nodes[3]->GetFlowProperties()->GetPressure(), network_nodes[2]->GetFlowProperties()->GetPressure(), 1e-6);
+    output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
+    p_network->Write(output_file);
+
+}
+
+void TestForkedToForkedBifurcationUnit()
+{
+    QLength input_radius = 50_um;
+    QLength vessel_length = 1000_um;
+    QDimensionless alpha = 0.75;
+
+    QDynamicViscosity viscosity = 1.0*unit::poiseuille;
+
+    double inlet_haematocrit = 0.45;
+    double initial_haematocrit = 0.45;
+
+    // Generate the network
+
+    VesselNetworkGenerator<2> network_generator;
+
+
+    // Length of the vertical projection of first-order vessels
+    QLength domain_side_length_x = vessel_length*(2.0 + 1.0/sqrt(2.0));
+    // vertical size of the domain
+    // QLength domain_side_length_y = (1.0+1.0/sqrt(2.0)) * vessel_length;
+
+    // horizontal size of the domain
+    auto p_file_handler = std::make_shared<OutputFileHandler>("TestForkedToForkedBifurcationUnit", true);
+
+    std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateTrueForkedBifurcationUnit(vessel_length, input_radius, alpha);
+
+    // identify input and output nodes and assign them properties
+
+    VesselNodePtr<2> p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+            Vertex<2>(0.0_um,vessel_length));
+    VesselNodePtr<2> p_outlet_node_1 = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+            Vertex<2>(domain_side_length_x, (1.0-1.0/sqrt(2.0)) * vessel_length));
+    VesselNodePtr<2> p_outlet_node_2 = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+            Vertex<2>(domain_side_length_x, (1.0+1.0/sqrt(2.0)) * vessel_length));
+    p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
+    p_inlet_node->GetFlowProperties()->SetPressure(1.5_Pa);
+    p_outlet_node_1->GetFlowProperties()->SetIsOutputNode(true);
+    p_outlet_node_1->GetFlowProperties()->SetPressure(0.0_Pa);
+    p_outlet_node_2->GetFlowProperties()->SetIsOutputNode(true);
+    p_outlet_node_2->GetFlowProperties()->SetPressure(0.0_Pa);
+
+
+    auto p_haematocrit_calculator = GardnerSimplifiedHaematocritSolver<2>::Create();
+    // auto p_haematocrit_calculator = PriesHaematocritSolver<2>::Create();
+    auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+    auto p_viscosity_calculator = ViscosityCalculator<2>::Create();
+    p_viscosity_calculator->SetPlasmaViscosity(viscosity);
+
+    p_haematocrit_calculator->SetVesselNetwork(p_network);
+    p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
+
+    std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
+    segments[1]->GetFlowProperties()->SetHaematocrit(0.1814643485);
+    segments[2]->GetFlowProperties()->SetHaematocrit(0.184473768602);
+    segments[3]->GetFlowProperties()->SetHaematocrit(0.1814643485);
+    segments[4]->GetFlowProperties()->SetHaematocrit(0.184473768602);
+
+    p_impedance_calculator->SetVesselNetwork(p_network);
+    p_viscosity_calculator->SetVesselNetwork(p_network);
+    p_viscosity_calculator->Calculate();
+    p_impedance_calculator->Calculate();
+
+    FlowSolver<2> flow_solver;
+    flow_solver.SetVesselNetwork(p_network);
+    flow_solver.SetUp();
+
+    unsigned max_iter = 1000;
+    double tolerance2 = 1.e-5;
+    std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("InitialHaematocrit.vtp");
+    p_network->Write(output_file);
+    std::vector<QDimensionless> previous_haematocrit(segments.size(), QDimensionless(initial_haematocrit));
+    for(unsigned idx=0;idx<max_iter;idx++)
+    {
+        p_impedance_calculator->Calculate();
+        flow_solver.Update();
+        flow_solver.Solve();
+        p_haematocrit_calculator->Calculate();
+        p_viscosity_calculator->Calculate();
+        // Get the residual
+        unsigned max_difference_index = 0;
+        double max_difference = 0.0;
+        double h_for_max = 0.0;
+        double prev_for_max = 0.0;
+        for(unsigned jdx=0;jdx<segments.size();jdx++)
+        {
+            QDimensionless current_haematocrit = segments[jdx]->GetFlowProperties()->GetHaematocrit();
+            QDimensionless difference = std::abs(current_haematocrit - previous_haematocrit[jdx]);
+            if(difference>max_difference)
+            {
+                max_difference = difference;
+                h_for_max = current_haematocrit;
+                prev_for_max = previous_haematocrit[jdx];
+                max_difference_index = jdx;
+            }
+            previous_haematocrit[jdx] = current_haematocrit;
+        }
+        std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << " at index " << max_difference_index << std::endl;
+        if(max_difference<=tolerance2 && idx > 1)
+        {
+            std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
+            break;
+        }
+        else
+        {
+            // Output intermediate results
+            if(idx%1==0)
+            {
+                std::cout << "Max Difference at iter: " << idx << " is " << max_difference << std::endl;
+                std::string file_suffix = "IntermediateHaematocrit_" + std::to_string(idx) + ".vtp";
+                std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append(file_suffix);
+                p_network->Write(output_file);
+            }
+        }
+
+        if(idx==max_iter-1)
+        {
+            EXCEPTION("Did not converge after " + std::to_string(idx) + " iterations.");
+        }
+    }
+
+    std::cout << "Sup flow =" << flow_solver.CheckSolution() << std::endl;
+    std::cout << "Sup RBC = " << p_haematocrit_calculator->CheckSolution() << std::endl;
+
+    std::vector<std::shared_ptr<VesselNode<2> > > network_nodes = p_network->GetNodes();
+
+    TS_ASSERT_DELTA(0.1814643485, segments[1]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+    TS_ASSERT_DELTA(0.184473768602, segments[2]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+    TS_ASSERT_DELTA(0.1814643485, segments[3]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+    TS_ASSERT_DELTA(0.184473768602, segments[4]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+
+    TS_ASSERT_DELTA(0.817352172881, network_nodes[1]->GetFlowProperties()->GetPressure(), 1e-6);
+    TS_ASSERT_DELTA(network_nodes[2]->GetFlowProperties()->GetPressure(), network_nodes[1]->GetFlowProperties()->GetPressure()/2.0, 1e-6);
+    TS_ASSERT_DELTA(network_nodes[3]->GetFlowProperties()->GetPressure(), network_nodes[2]->GetFlowProperties()->GetPressure(), 1e-6);
+    output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
+    p_network->Write(output_file);
+
+}
+
+void TestRegularToRegularBifurcationUnit()
+{
+    QLength input_radius = 50_um;
+    QLength vessel_length = 1000_um;
+    QDimensionless alpha = 0.75;
+
+    QDynamicViscosity viscosity = 1.0*unit::poiseuille;
+
+    double inlet_haematocrit = 0.45;
+    double initial_haematocrit = 0.45;
+
+    // Generate the network
+
+    VesselNetworkGenerator<2> network_generator;
+
+
+    // Length of the vertical projection of first-order vessels
+    QLength domain_side_length_x = vessel_length*(1.0 + sqrt(3.0)/2.0);
+    // vertical size of the domain
+    // QLength domain_side_length_y = (1.0+1.0/sqrt(2.0)) * vessel_length;
+
+    // horizontal size of the domain
+    auto p_file_handler = std::make_shared<OutputFileHandler>("TestRegularToRegularBifurcationUnit", true);
+
+    std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateTrueRegularBifurcationUnit(vessel_length, input_radius, alpha);
+
+    // identify input and output nodes and assign them properties
+
+    VesselNodePtr<2> p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+            Vertex<2>(0.0_um,vessel_length));
+    VesselNodePtr<2> p_outlet_node_1 = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+            Vertex<2>(domain_side_length_x, 2.0*vessel_length));
+    VesselNodePtr<2> p_outlet_node_2 = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+            Vertex<2>(domain_side_length_x, 0.0_um));
+    p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
+    p_inlet_node->GetFlowProperties()->SetPressure(1.5_Pa);
+    p_outlet_node_1->GetFlowProperties()->SetIsOutputNode(true);
+    p_outlet_node_1->GetFlowProperties()->SetPressure(0.0_Pa);
+    p_outlet_node_2->GetFlowProperties()->SetIsOutputNode(true);
+    p_outlet_node_2->GetFlowProperties()->SetPressure(0.0_Pa);
+
+
+    auto p_haematocrit_calculator = GardnerSimplifiedHaematocritSolver<2>::Create();
+    // auto p_haematocrit_calculator = PriesHaematocritSolver<2>::Create();
+    auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+    auto p_viscosity_calculator = ViscosityCalculator<2>::Create();
+    p_viscosity_calculator->SetPlasmaViscosity(viscosity);
+
+    p_haematocrit_calculator->SetVesselNetwork(p_network);
+    p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
+
+    std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
+    segments[1]->GetFlowProperties()->SetHaematocrit(0.4856553292270605);
+    segments[2]->GetFlowProperties()->SetHaematocrit(0.4935660741847571);
+
+    p_impedance_calculator->SetVesselNetwork(p_network);
+    p_viscosity_calculator->SetVesselNetwork(p_network);
+    p_viscosity_calculator->Calculate();
+    p_impedance_calculator->Calculate();
+
+    FlowSolver<2> flow_solver;
+    flow_solver.SetVesselNetwork(p_network);
+    flow_solver.SetUp();
+
+    unsigned max_iter = 1000;
+    double tolerance2 = 1.e-5;
+    std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("InitialHaematocrit.vtp");
+    p_network->Write(output_file);
+    std::vector<QDimensionless> previous_haematocrit(segments.size(), QDimensionless(initial_haematocrit));
+    for(unsigned idx=0;idx<max_iter;idx++)
+    {
+        p_impedance_calculator->Calculate();
+        flow_solver.Update();
+        flow_solver.Solve();
+        p_haematocrit_calculator->Calculate();
+        p_viscosity_calculator->Calculate();
+        // Get the residual
+        unsigned max_difference_index = 0;
+        double max_difference = 0.0;
+        double h_for_max = 0.0;
+        double prev_for_max = 0.0;
+        for(unsigned jdx=0;jdx<segments.size();jdx++)
+        {
+            QDimensionless current_haematocrit = segments[jdx]->GetFlowProperties()->GetHaematocrit();
+            QDimensionless difference = std::abs(current_haematocrit - previous_haematocrit[jdx]);
+            if(difference>max_difference)
+            {
+                max_difference = difference;
+                h_for_max = current_haematocrit;
+                prev_for_max = previous_haematocrit[jdx];
+                max_difference_index = jdx;
+            }
+            previous_haematocrit[jdx] = current_haematocrit;
+        }
+        std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << " at index " << max_difference_index << std::endl;
+        if(max_difference<=tolerance2 && idx > 1)
+        {
+            std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
+            break;
+        }
+        else
+        {
+            // Output intermediate results
+            if(idx%1==0)
+            {
+                std::cout << "Max Difference at iter: " << idx << " is " << max_difference << std::endl;
+                std::string file_suffix = "IntermediateHaematocrit_" + std::to_string(idx) + ".vtp";
+                std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append(file_suffix);
+                p_network->Write(output_file);
+            }
+        }
+
+        if(idx==max_iter-1)
+        {
+            EXCEPTION("Did not converge after " + std::to_string(idx) + " iterations.");
+        }
+    }
+
+    std::cout << "Sup flow =" << flow_solver.CheckSolution() << std::endl;
+    std::cout << "Sup RBC = " << p_haematocrit_calculator->CheckSolution() << std::endl;
+
+    std::vector<std::shared_ptr<VesselNode<2> > > network_nodes = p_network->GetNodes();
+
+    TS_ASSERT_DELTA(0.4856553292270605, segments[1]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+    TS_ASSERT_DELTA(0.4935660741847571, segments[2]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+
+    TS_ASSERT_DELTA(1.093439402730676, network_nodes[1]->GetFlowProperties()->GetPressure(), 1e-6);
+    output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
+    p_network->Write(output_file);
+
+}
+
+void TestForkedToRegularBifurcationUnit()
+{
+    QLength input_radius = 50_um;
+    QLength vessel_length = 1000_um;
+    QDimensionless alpha = 0.75;
+
+    QDynamicViscosity viscosity = 1.0*unit::poiseuille;
+
+    double inlet_haematocrit = 0.45;
+    double initial_haematocrit = 0.45;
+
+    // Generate the network
+
+    VesselNetworkGenerator<2> network_generator;
+
+
+    // Length of the vertical projection of first-order vessels
+    QLength domain_side_length_x = vessel_length*(1.0 + sqrt(3.0)/2.0);
+    // vertical size of the domain
+    // QLength domain_side_length_y = (1.0+1.0/sqrt(2.0)) * vessel_length;
+
+    // horizontal size of the domain
+    auto p_file_handler = std::make_shared<OutputFileHandler>("TestForkedToRegularBifurcationUnit", true);
+
+    std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateTrueRegularBifurcationUnit(vessel_length, input_radius, alpha);
+
+    // identify input and output nodes and assign them properties
+
+    VesselNodePtr<2> p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+            Vertex<2>(0.0_um,vessel_length));
+    VesselNodePtr<2> p_outlet_node_1 = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+            Vertex<2>(domain_side_length_x, 2.0*vessel_length));
+    VesselNodePtr<2> p_outlet_node_2 = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+            Vertex<2>(domain_side_length_x, 0.0_um));
+    p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
+    p_inlet_node->GetFlowProperties()->SetPressure(1.5_Pa);
+    p_outlet_node_1->GetFlowProperties()->SetIsOutputNode(true);
+    p_outlet_node_1->GetFlowProperties()->SetPressure(0.0_Pa);
+    p_outlet_node_2->GetFlowProperties()->SetIsOutputNode(true);
+    p_outlet_node_2->GetFlowProperties()->SetPressure(0.0_Pa);
+
+
+    auto p_haematocrit_calculator = GardnerSimplifiedHaematocritSolver<2>::Create();
+    // auto p_haematocrit_calculator = PriesHaematocritSolver<2>::Create();
+    auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+    auto p_viscosity_calculator = ViscosityCalculator<2>::Create();
+    p_viscosity_calculator->SetPlasmaViscosity(viscosity);
+
+    p_haematocrit_calculator->SetVesselNetwork(p_network);
+    p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
+
+    std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
+    segments[1]->GetFlowProperties()->SetHaematocrit(0.1814643485);
+    segments[2]->GetFlowProperties()->SetHaematocrit(0.184473768602);
+
+    p_impedance_calculator->SetVesselNetwork(p_network);
+    p_viscosity_calculator->SetVesselNetwork(p_network);
+    p_viscosity_calculator->Calculate();
+    p_impedance_calculator->Calculate();
+
+    FlowSolver<2> flow_solver;
+    flow_solver.SetVesselNetwork(p_network);
+    flow_solver.SetUp();
+
+    unsigned max_iter = 1000;
+    double tolerance2 = 1.e-5;
+    std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("InitialHaematocrit.vtp");
+    p_network->Write(output_file);
+    std::vector<QDimensionless> previous_haematocrit(segments.size(), QDimensionless(initial_haematocrit));
+    for(unsigned idx=0;idx<max_iter;idx++)
+    {
+        p_impedance_calculator->Calculate();
+        flow_solver.Update();
+        flow_solver.Solve();
+        p_haematocrit_calculator->Calculate();
+        p_viscosity_calculator->Calculate();
+        // Get the residual
+        unsigned max_difference_index = 0;
+        double max_difference = 0.0;
+        double h_for_max = 0.0;
+        double prev_for_max = 0.0;
+        for(unsigned jdx=0;jdx<segments.size();jdx++)
+        {
+            QDimensionless current_haematocrit = segments[jdx]->GetFlowProperties()->GetHaematocrit();
+            QDimensionless difference = std::abs(current_haematocrit - previous_haematocrit[jdx]);
+            if(difference>max_difference)
+            {
+                max_difference = difference;
+                h_for_max = current_haematocrit;
+                prev_for_max = previous_haematocrit[jdx];
+                max_difference_index = jdx;
+            }
+            previous_haematocrit[jdx] = current_haematocrit;
+        }
+        std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << " at index " << max_difference_index << std::endl;
+        if(max_difference<=tolerance2 && idx > 1)
+        {
+            std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
+            break;
+        }
+        else
+        {
+            // Output intermediate results
+            if(idx%1==0)
+            {
+                std::cout << "Max Difference at iter: " << idx << " is " << max_difference << std::endl;
+                std::string file_suffix = "IntermediateHaematocrit_" + std::to_string(idx) + ".vtp";
+                std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append(file_suffix);
+                p_network->Write(output_file);
+            }
+        }
+
+        if(idx==max_iter-1)
+        {
+            EXCEPTION("Did not converge after " + std::to_string(idx) + " iterations.");
+        }
+    }
+
+    std::cout << "Sup flow =" << flow_solver.CheckSolution() << std::endl;
+    std::cout << "Sup RBC = " << p_haematocrit_calculator->CheckSolution() << std::endl;
+
+    std::vector<std::shared_ptr<VesselNode<2> > > network_nodes = p_network->GetNodes();
+
+    TS_ASSERT_DELTA(0.1814643485, segments[1]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+    TS_ASSERT_DELTA(0.184473768602, segments[2]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+
+    TS_ASSERT_DELTA(0.817352172881, network_nodes[1]->GetFlowProperties()->GetPressure(), 1e-6);
+    output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
+    p_network->Write(output_file);
 
 }
 
