@@ -588,6 +588,14 @@ void TestSimpleLinearEllipticFiniteDifferenceSolver_Hexagonal_Linninger_FE()
 
 
 
+std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+p_domain->AddRectangle(1000.0 * 1_um, 1000.0 * 1_um);
+
+std::shared_ptr<RegularGrid<2> > p_grid = RegularGrid<2>::Create();
+QLength spacing(0.5*unit::microns);
+p_grid->GenerateFromPart(p_domain, spacing);
+     
+
     //auto p_grid = RegularGrid<2>::Create();
     //QLength grid_spacing = Owen11Parameters::mpLatticeSpacing->GetValue("User");
     //QLength grid_spacing = 40.0 * 1_um;
@@ -604,7 +612,7 @@ void TestSimpleLinearEllipticFiniteDifferenceSolver_Hexagonal_Linninger_FE()
 
     // Generate the network
     VesselNetworkGenerator<2> vascular_network_generator;
-    std::shared_ptr<VesselNetwork<2> > vascular_network = vascular_network_generator.GenerateHexagonalNetwork(1400.0 * 1_um,
+    std::shared_ptr<VesselNetwork<2> > vascular_network = vascular_network_generator.GenerateHexagonalNetwork(1000.0 * 1_um,
                                                                                                                     1000.0 * 1_um,
                                                                                                                     vessel_length);
 
@@ -695,25 +703,26 @@ void TestSimpleLinearEllipticFiniteDifferenceSolver_Hexagonal_Linninger_FE()
     flowsolver.SetUp();
     flowsolver.Solve();
 
+       OutputFileHandler output_file_handler("TestSLEFDS_Hex_Lin", false);
+    std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("Hexagonal_Linninger.vtp");
+    vascular_network->Write(output_filename);
+
     //std::shared_ptr<LinnengarHaematocritSolver<2> > p_haematocrit_calculator(new LinnengarHaematocritSolver<2>());
     std::shared_ptr<LinnengarHaematocritSolver<2> > p_haematocrit_calculator(new LinnengarHaematocritSolver<2>());
     p_haematocrit_calculator->SetVesselNetwork(vascular_network);
     //p_haematocrit_calculator->SetLinnM(3.0);
     p_haematocrit_calculator->Calculate();
 
-       OutputFileHandler output_file_handler("TestSLEFDS_Hex_Lin", false);
-    std::string output_filename = output_file_handler.GetOutputDirectoryFullPath().append("Hexagonal_Linninger.vtp");
-    vascular_network->Write(output_filename);
 
 
-    std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
-    p_domain->AddRectangle(1200.0 * 1_um, 960.5 * 1_um);
+    //std::shared_ptr<Part<2> > p_domain = Part<2>::Create();
+    //p_domain->AddRectangle(1200.0 * 1_um, 960.5 * 1_um);
      
-        std::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator =
+    //    std::shared_ptr<DiscreteContinuumMeshGenerator<2> > p_mesh_generator =
                DiscreteContinuumMeshGenerator<2>::Create();
-        p_mesh_generator->SetDomain(p_domain);
-        p_mesh_generator->SetMaxElementArea(Qpow3(0.5*vessel_length));
-        p_mesh_generator->Update();
+    //    p_mesh_generator->SetDomain(p_domain);
+    //    p_mesh_generator->SetMaxElementArea(Qpow3(0.5*vessel_length));
+    //    p_mesh_generator->Update();
 
         // Choose the PDE
         std::shared_ptr<DiscreteContinuumLinearEllipticPde<2> > p_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
@@ -738,7 +747,8 @@ void TestSimpleLinearEllipticFiniteDifferenceSolver_Hexagonal_Linninger_FE()
 
         // Set up and run the solver
         SimpleLinearEllipticFiniteDifferenceSolver<2> solver;
-        solver.SetGrid(p_mesh_generator->GetMesh());
+        //solver.SetGrid(p_mesh_generator->GetMesh());
+        solver.SetGrid(p_grid);
         solver.SetPde(p_pde);
         solver.SetVesselNetwork(vascular_network);
         solver.SetFileHandler(p_output_file_handler);
