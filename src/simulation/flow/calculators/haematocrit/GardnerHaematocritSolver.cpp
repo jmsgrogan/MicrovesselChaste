@@ -291,7 +291,7 @@ void GardnerHaematocritSolver<DIM>::Calculate()
                         double term2 = pow(1 - flow_ratio_pm - q0,p);
 			                  double term3 = exp(r);
 
-			                  double numer = term3*term1/flow_ratio_pm;
+			                  double numer = term3*term1;
                         double denom = term3*term1 + term2;
 			                  // Apply Gardner2010 rule
 			linearSystem.SetMatrixElement(idx, parent_vessels[0]->GetId(), -numer/denom);
@@ -402,7 +402,7 @@ void GardnerHaematocritSolver<DIM>::Calculate()
                   double term2 = pow(1 - flow_ratio_pm - q0,p);
                   double term3 = exp(r);
 
-                  double numer = term3*term1/flow_ratio_pm;
+                  double numer = term3*term1;
                   double denom = term3*term1 + term2;
 	  	  // Apply Gardner2010 rule
                   linearSystem.SetMatrixElement(update_indices[idx][0], update_indices[idx][1], -numer/denom);
