@@ -223,6 +223,8 @@ public:
      */
     VesselNetworkPtr<DIM> GenerateBifurcationUnit(QLength vesselLength, Vertex<DIM> startPosition = Vertex<DIM>());
 
+	VesselNetworkGenerator<DIM> GenerateTriangleNetwork(QLength vesselLength, QLength vesselRadius, QDimensionless alpha, Vertex<DIM> startPosition = Vertex<DIM>());
+
     VesselNetworkPtr<DIM> GenerateTrueForkedBifurcationUnit(QLength vesselLength, QLength inputRadius, QDimensionless alpha);
 
     VesselNetworkPtr<DIM>GenerateTrueRegularBifurcationUnit(QLength vesselLength, QLength inputRadius, QDimensionless alpha);

@@ -531,6 +531,51 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateBifurc
     return p_network;
 }
 
+
+template<unsigned DIM>
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateTriangleNetwork(QLength vesselLength, QLength vesselRadius, QDimensionless alpha, Vertex<DIM> startPosition)
+{
+    // Generate the nodes
+    std::vector<VesselNodePtr<DIM> > nodes;
+    nodes.push_back(VesselNode<DIM>::Create(0_m, vesselLength)); //0
+    nodes.push_back(VesselNode<DIM>::Create(0_m, 0_m)); //1
+    nodes.push_back(VesselNode<DIM>::Create(vesselLength, vesselLength)); //2
+    nodes.push_back(VesselNode<DIM>::Create(vesselLength, 0_m)); //3
+    nodes.push_back(VesselNode<DIM>::Create(vesselLength*3.0/2.0, sqrt(3.0)*vesselLength/2.0)); //4
+    nodes.push_back(VesselNode<DIM>::Create(vesselLength*5.0/2.0, sqrt(3.0)*vesselLength/2.0)); //5
+
+    // Generate the segments and vessels
+    std::vector<std::shared_ptr<Vessel<DIM> > > vessels;
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[0], nodes[2]))); //0
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[1], nodes[3]))); //1
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[2], nodes[3]))); //2
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[2], nodes[4]))); //3
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[3], nodes[4]))); //4
+    vessels.push_back(Vessel<DIM>::Create(VesselSegment<DIM>::Create(nodes[4], nodes[5]))); //5
+
+	vessels[0]->SetRadius(vesselRadius);
+	vessels[1]->SetRadius(vesselRadius);
+	vessels[2]->SetRadius(vesselRadius*alpha);
+	vessels[3]->SetRadius(vesselRadius);
+	vessels[4]->SetRadius(vesselRadius);
+	vessels[5]->SetRadius(vesselRadius);
+
+	vessels[0]->SetLength(vesselLength);
+	vessels[1]->SetLength(vesselLength);
+	vessels[2]->SetLength(vesselLength);
+	vessels[3]->SetLength(vesselLength);
+	vessels[4]->SetLength(vesselLength);
+	vessels[5]->SetLength(vesselLength);
+
+    // Generate the network
+    std::shared_ptr<VesselNetwork<DIM> > p_network(new VesselNetwork<DIM>());
+    p_network->AddVessels(vessels);
+    p_network->Translate(startPosition);
+    p_network->UpdateAll();
+    return p_network;
+}
+
+
 template<unsigned DIM>
 std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateTrueForkedBifurcationUnit(QLength vesselLength, QLength inputRadius, QDimensionless alpha)
 {
