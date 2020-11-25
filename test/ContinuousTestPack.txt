@@ -72,6 +72,7 @@ simulation/flow/haematocrit/TestLinnengarHaematocritSolverNew.hpp
 simulation/flow/haematocrit/TestNetworkComparison.hpp
 simulation/flow/haematocrit/TestNoCellsBetteridgeNontrivVis.hpp
 simulation/flow/haematocrit/TestRadiotherapy.hpp
+simulation/flow/haematocrit/TestTriangleNetwork.hpp
 simulation/flow/haematocrit/TestUnevenNetworks.hpp
 simulation/flow/haematocrit/TestWithOrWithoutMemory.hpp
 simulation/angiogenesis/migration_rules/TestLatticeBasedMigrationRules.hpp
