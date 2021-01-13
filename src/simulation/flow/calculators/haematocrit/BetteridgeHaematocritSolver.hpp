@@ -71,6 +71,21 @@ private:
      */
     bool mSolveHighConnectivityNetworks;
 
+    /**
+     * Turn off Fung Model. Haematocrit splits according to flow rate ratio only.
+     */
+    bool mTurnOffFungModel;
+
+    /**
+     * Use a random splitting model
+     */
+    bool mUseRandomSplitting;
+
+    /**
+     * Throw an exception if convergence fails
+     */
+    bool mExceptionOnFailedConverge;
+
 public:
 
     /**
@@ -119,6 +134,19 @@ public:
      * @param useHighConnectivity use higher connectivity branches
      */
     void SetUseHigherConnectivityBranches(bool useHighConnectivity);
+
+    /**
+     * Turn off Fung Model. Haematocrit splits according to flow rate ratio only.
+     * @param turnOffFungModel Haematocrit splits according to flow rate ratio only.
+     */
+    void SetTurnOffFungModel(bool turnOffFungModel);
+
+    /**
+     * Turn off Fung Model. Haematocrit splits according to flow rate ratio only.
+     * @param turnOffFungModel Haematocrit splits according to flow rate ratio only.
+     */
+    void SetUseRandomSplittingModel(bool useRandomSplittingModel);
+
 };
 
 #endif

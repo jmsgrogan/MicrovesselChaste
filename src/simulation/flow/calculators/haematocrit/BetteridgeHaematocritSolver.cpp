@@ -39,13 +39,17 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Vessel.hpp"
 #include "Exception.hpp"
 #include "ReplicatableVector.hpp"
+#include "RandomNumberGenerator.hpp"
 
 template<unsigned DIM>
 BetteridgeHaematocritSolver<DIM>::BetteridgeHaematocritSolver() : AbstractHaematocritSolver<DIM>(),
     mTHR(2.5),
     mAlpha(0.5),
     mHaematocrit(0.45),
-    mSolveHighConnectivityNetworks(false)
+    mSolveHighConnectivityNetworks(false),
+    mTurnOffFungModel(false),
+    mUseRandomSplitting(false),
+    mExceptionOnFailedConverge(true)
 {
 
 }
@@ -60,6 +64,18 @@ template <unsigned DIM>
 std::shared_ptr<BetteridgeHaematocritSolver<DIM> > BetteridgeHaematocritSolver<DIM>::Create()
 {
     return std::make_shared<BetteridgeHaematocritSolver<DIM> >();
+}
+
+template <unsigned DIM>
+void BetteridgeHaematocritSolver<DIM>::SetExceptionOnFailedConverge(bool setException)
+{
+    mExceptionOnFailedConverge = setException;
+}
+
+template<unsigned DIM>
+void BetteridgeHaematocritSolver<DIM>::SetUseRandomSplittingModel(bool useRandomSplittingModel)
+{
+    mUseRandomSplitting = useRandomSplittingModel;
 }
 
 template<unsigned DIM>
@@ -81,6 +97,12 @@ void BetteridgeHaematocritSolver<DIM>::SetUseHigherConnectivityBranches(bool use
 }
 
 template<unsigned DIM>
+void BetteridgeHaematocritSolver<DIM>::SetTurnOffFungModel(bool turnOffFungModel)
+{
+    mTurnOffFungModel = turnOffFungModel;
+}
+
+template<unsigned DIM>
 void BetteridgeHaematocritSolver<DIM>::SetHaematocrit(QDimensionless haematocrit)
 {
     mHaematocrit = haematocrit;
@@ -91,6 +113,15 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
 {
     // Give the vessels unique Ids
     std::vector<std::shared_ptr<Vessel<DIM> > > vessels = this->mpNetwork->GetVessels();
+    std::vector<double> random_assignment;
+    if(mUseRandomSplitting)
+    {
+        for(unsigned idx=0; idx<vessels.size(); idx++)
+        {
+            random_assignment.push_back(RandomNumberGenerator::Instance()->ranf());
+        }
+    }
+
     for(unsigned idx=0; idx<vessels.size(); idx++)
     {
         vessels[idx]->SetId(idx);
@@ -194,7 +225,7 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
                     {
                         EXCEPTION("This solver can only work with branches with connectivity 3");
                     }
-                    else if(high_connectivity_node and mSolveHighConnectivityNetworks)
+                    else if((high_connectivity_node and mSolveHighConnectivityNetworks) or mTurnOffFungModel or mUseRandomSplitting)
                     {
                         // Haematocrit fraction is given by the fractional flow rate. Get the fraction of
                         // the total outflow going into this channel.
@@ -202,19 +233,47 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
                         std::vector<int> local_update_indics;
                         local_update_indics.push_back(int(idx));
 
-                        QFlowRate outflow_rate = 0.0*unit::metre_cubed_per_second;
-                        for(unsigned comp_index=0; comp_index<competitor_vessels.size(); comp_index++)
+                        if(mUseRandomSplitting)
                         {
-                            local_update_indics.push_back(-1*competitor_vessels[comp_index]->GetId());
-                            outflow_rate = outflow_rate + Qabs(competitor_vessels[comp_index]->GetFlowProperties()->GetFlowRate());
+                            double my_value = random_assignment[idx];
+                            bool my_value_highest = true;
+                            for(unsigned comp_index=0; comp_index<competitor_vessels.size(); comp_index++)
+                            {
+                                local_update_indics.push_back(-1*competitor_vessels[comp_index]->GetId());
+                                if(random_assignment[competitor_vessels[comp_index]->GetId()]>my_value)
+                                {
+                                    my_value_highest = false;
+                                    break;
+                                }
+                            }
+                            double fraction = 0.3/double(competitor_vessels.size());
+                            if(my_value_highest)
+                            {
+                                fraction = 0.7;
+                            }
+                            for(unsigned parent_index=0; parent_index<parent_vessels.size(); parent_index++)
+                            {
+                                local_update_indics.push_back(parent_vessels[parent_index]->GetId());
+                                linearSystem.SetMatrixElement(idx, parent_vessels[parent_index]->GetId(), -fraction);
+                            }
+                            update_indices.push_back(local_update_indics);
                         }
-                        double fraction = Qabs(flow_rate)/(Qabs(flow_rate)+outflow_rate);
-                        for(unsigned parent_index=0; parent_index<parent_vessels.size(); parent_index++)
+                        else
                         {
-                            local_update_indics.push_back(parent_vessels[parent_index]->GetId());
-                            linearSystem.SetMatrixElement(idx, parent_vessels[parent_index]->GetId(), -fraction);
+                            QFlowRate outflow_rate = 0.0*unit::metre_cubed_per_second;
+                            for(unsigned comp_index=0; comp_index<competitor_vessels.size(); comp_index++)
+                            {
+                                local_update_indics.push_back(-1*competitor_vessels[comp_index]->GetId());
+                                outflow_rate = outflow_rate + Qabs(competitor_vessels[comp_index]->GetFlowProperties()->GetFlowRate());
+                            }
+                            double fraction = Qabs(flow_rate)/(Qabs(flow_rate)+outflow_rate);
+                            for(unsigned parent_index=0; parent_index<parent_vessels.size(); parent_index++)
+                            {
+                                local_update_indics.push_back(parent_vessels[parent_index]->GetId());
+                                linearSystem.SetMatrixElement(idx, parent_vessels[parent_index]->GetId(), -fraction);
+                            }
+                            update_indices.push_back(local_update_indics);
                         }
-                        update_indices.push_back(local_update_indics);
                     }
                     else
                     {
@@ -272,23 +331,55 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
             linearSystem.SwitchWriteModeLhsMatrix();
             for(unsigned idx=0; idx<update_indices.size();idx++)
             {
-                if(update_indices[idx].size()>3)
+                if(update_indices[idx].size()>3 or mTurnOffFungModel or mUseRandomSplitting)
                 {
-                    QFlowRate self_flow_rate = vessels[update_indices[idx][0]]->GetFlowProperties()->GetFlowRate();
-                    QFlowRate outflow_rate = 0.0*unit::metre_cubed_per_second;
-                    for(unsigned local_update_index=1;local_update_index<update_indices[idx].size();local_update_index++)
+                    if(mUseRandomSplitting)
+                     {
+                         double my_value = random_assignment[update_indices[idx][0]];
+                         bool my_value_highest = true;
+                         unsigned counter = 0;
+                         for(unsigned local_update_index=1; local_update_index<update_indices[idx].size(); local_update_index++)
+                         {
+                             if(update_indices[idx][local_update_index]<0)
+                             {
+                                 if(random_assignment[update_indices[idx][local_update_index]]>my_value)
+                                 {
+                                     my_value_highest = false;
+                                 }
+                                 counter++;
+                             }
+                         }
+                         double fraction = 0.3/double(counter);
+                         if(my_value_highest)
+                         {
+                             fraction = 0.7;
+                         }
+                         for(unsigned local_update_index=1;local_update_index<update_indices[idx].size();local_update_index++)
+                         {
+                             if(update_indices[idx][local_update_index]>=0)
+                             {
+                                 linearSystem.SetMatrixElement(update_indices[idx][0], update_indices[idx][local_update_index], -fraction);
+                             }
+                         }
+                     }
+                    else
                     {
-                        if(update_indices[idx][local_update_index]<0)
+                        QFlowRate self_flow_rate = vessels[update_indices[idx][0]]->GetFlowProperties()->GetFlowRate();
+                        QFlowRate outflow_rate = 0.0*unit::metre_cubed_per_second;
+                        for(unsigned local_update_index=1;local_update_index<update_indices[idx].size();local_update_index++)
                         {
-                            outflow_rate = outflow_rate + Qabs(vessels[abs(update_indices[idx][local_update_index])]->GetFlowProperties()->GetFlowRate());
+                            if(update_indices[idx][local_update_index]<0)
+                            {
+                                outflow_rate = outflow_rate + Qabs(vessels[abs(update_indices[idx][local_update_index])]->GetFlowProperties()->GetFlowRate());
+                            }
                         }
-                    }
-                    double fraction = Qabs(self_flow_rate)/(Qabs(self_flow_rate)+outflow_rate);
-                    for(unsigned local_update_index=1;local_update_index<update_indices[idx].size();local_update_index++)
-                    {
-                        if(update_indices[idx][local_update_index]>=0)
+                        double fraction = Qabs(self_flow_rate)/(Qabs(self_flow_rate)+outflow_rate);
+                        for(unsigned local_update_index=1;local_update_index<update_indices[idx].size();local_update_index++)
                         {
-                            linearSystem.SetMatrixElement(update_indices[idx][0], update_indices[idx][local_update_index], -fraction);
+                            if(update_indices[idx][local_update_index]>=0)
+                            {
+                                linearSystem.SetMatrixElement(update_indices[idx][0], update_indices[idx][local_update_index], -fraction);
+                            }
                         }
                     }
                 }
@@ -352,7 +443,15 @@ void BetteridgeHaematocritSolver<DIM>::Calculate()
         iterations++;
         if(iterations == max_iterations)
         {
-            std::cout << "Warning: haematocrit calculation failed to converge" << std::endl;
+            if(mExceptionOnFailedConverge)
+            {
+                EXCEPTION("Haematocrit calculation failed to converge.");
+            }
+            else
+            {
+                std::cout << "Warning: haematocrit calculation failed to converge" << std::endl;
+            }
+
         }
 
         PetscTools::Destroy(solution);
