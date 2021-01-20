@@ -107,7 +107,11 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::ComputeRHSFunction(const Vec cu
     if(mStoreIntermediate)
     {
         PetscInt totalSteps;
+#if ( PETSC_VERSION_MAJOR==3 && PETSC_VERSION_MINOR>=8 )
+        TSGetStepNumber(ts, &totalSteps);
+#else
         TSGetTotalSteps(ts, &totalSteps);
+#endif
         if(totalSteps%mIntermediateSolutionFrequency==0)
         {
             // Get the current time
@@ -472,13 +476,22 @@ void SimpleParabolicFiniteDifferenceSolver<DIM>::Solve()
 
     SNESSetTolerances(snes, abstol, reltol, stol, maxits, maxf);
     SNESSetMaxLinearSolveFailures(snes, maxFails);
+#if ( PETSC_VERSION_MAJOR==3 && PETSC_VERSION_MINOR>=8 )
+    TSSetMaxSteps(ts, time_steps_max);
+    TSSetMaxTime(ts, time_total_max);
+#else
     TSSetDuration(ts, time_steps_max, time_total_max);
+#endif
     TSSetExactFinalTime(ts,TS_EXACTFINALTIME_INTERPOLATE);
 
     // Set initial timestep
     PetscReal dt;
     dt = mTimeIncrement;
+#if ( PETSC_VERSION_MAJOR==3 && PETSC_VERSION_MINOR>=8 )
+    TSSetTimeStep(ts, dt);
+#else
     TSSetInitialTimeStep(ts, mSolveStartTime, dt);
+#endif
 
     // Do the solve
     TSSolve(ts, previous_solution);
