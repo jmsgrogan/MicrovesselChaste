@@ -27,8 +27,8 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef TESTWITHORWITHOUTMEMORY_HPP
-#define TESTWITHORWITHOUTMEMORY_HPP
+#ifndef TESTTRIANGLENETWORK_HPP
+#define TESTTRIANGLENETWORK_HPP
 
 #include <cxxtest/TestSuite.h>
 #include <boost/lexical_cast.hpp>
@@ -41,6 +41,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "FlowSolver.hpp"
 #include "SimulationTime.hpp"
 #include "GardnerHaematocritSolver.hpp"
+#include "PriesWithMemoryHaematocritSolver.hpp"
 #include "UnitCollection.hpp"
 #include "RegularGrid.hpp"
 #include "SimulationTime.hpp"
@@ -69,38 +70,41 @@ public:
 
 void FindPressureDifferences(QDimensionless step_size)
 {
-	QDimensionless diameter_ratio_length_change = 0.01;
-	QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
+	QDynamicViscosity viscosity = 1.0*unit::poiseuille;
+	QDimensionless inlet_haematocrit = 0.6;
+	QDimensionless max_difference, difference;
+	QPressure lower_pressure, higher_pressure;
 	
 	QLength radius_length = 5.0;
 	QLength vessel_length = 10000.0;
-	unsigned k_max = 10.0/diameter_ratio_length_change +1;
+	unsigned k_max = 1.0/step_size +1;
+	VesselNetworkGenerator<2> network_generator;
+	QDimensionless radius_ratio = step_size;
    for (unsigned k_aux=1; k_aux<k_max; k_aux++)
    {
-    
+	std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateTriangleNetwork(vessel_length,radius_length,radius_ratio);
+	std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
     std::ostringstream strs;
-    strs << "Triangle_network" << lambda;
-    }
+    strs << "Triangle_network" << std::endl;
 
     std::string str_directory_name = strs.str();
     // horizontal size of the domain
     auto p_file_handler = std::make_shared<OutputFileHandler>(str_directory_name, true);
-    std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateTriangleNetwork(vessel_length,radius_length, k_aux*diameter_ratio_length_change);
 
     // identify input and output nodes and assign them properties
 
     VesselNodePtr<2> p_inlet_node_1 = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,Vertex<2>(0.0_um,0.0_um));
 	VesselNodePtr<2> p_inlet_node_2 = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,Vertex<2>(0.0_um,vessel_length));
-    VesselNodePtr<2> p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,Vertex<2>(vesselLength*5.0/2.0, sqrt(3.0)*vesselLength/2.0));
+    VesselNodePtr<2> p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,Vertex<2>(vessel_length*5.0/2.0, sqrt(3.0)*vessel_length/2.0));
     p_inlet_node_1->GetFlowProperties()->SetIsInputNode(true);
 	p_inlet_node_2->GetFlowProperties()->SetIsInputNode(true);
 	p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
     p_outlet_node->GetFlowProperties()->SetPressure(0.0_Pa);
 
-    auto p_haematocrit_calculator = GardnerHaematocritSolver<2>::Create();
+    //auto p_haematocrit_calculator = GardnerHaematocritSolver<2>::Create();
+	auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
     p_haematocrit_calculator->SetVesselNetwork(p_network);
     p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
-    p_abs_haematocrit_calculator = p_haematocrit_calculator;
 
     auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
     auto p_viscosity_calculator = ViscosityCalculator<2>::Create();
@@ -108,7 +112,7 @@ void FindPressureDifferences(QDimensionless step_size)
 
     p_impedance_calculator->SetVesselNetwork(p_network);
     p_viscosity_calculator->SetVesselNetwork(p_network);
-    p_viscosity_calculator->Calculate();
+	p_viscosity_calculator->Calculate();
     p_impedance_calculator->Calculate();
 
     FlowSolver<2> flow_solver;
@@ -118,33 +122,37 @@ void FindPressureDifferences(QDimensionless step_size)
     unsigned max_iter = 1000;
     double tolerance2 = 1.e-8;
 
-    std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
-	segments[0]->GetFlowProperties()->SetHaematocrit(0.6)
-	segments[1]->GetFlowProperties()->SetHaematocrit(0.6)
-	segments[2]->GetFlowProperties()->SetHaematocrit(0.9)
-	segments[3]->GetFlowProperties()->SetHaematocrit(0.0)
-	segments[4]->GetFlowProperties()->SetHaematocrit(0.0)
-	segments[5]->GetFlowProperties()->SetHaematocrit(0.0)
+	segments[0]->GetFlowProperties()->SetHaematocrit(0.6);
+	segments[1]->GetFlowProperties()->SetHaematocrit(0.6);
+	segments[2]->GetFlowProperties()->SetHaematocrit(0.0);
+	segments[3]->GetFlowProperties()->SetHaematocrit(0.0);
+	segments[4]->GetFlowProperties()->SetHaematocrit(0.3);
+	segments[5]->GetFlowProperties()->SetHaematocrit(0.0);
 	
-	QPressure lower_pressure = 0.1_Pa;
-	QPressure higher_pressure = 0.5_Pa;
+	QPressure lower_pressure = 1000_Pa;
+	QPressure higher_pressure = 5000_Pa;
 
-    std::vector<QDimensionless> previous_haematocrit(segments.size(), QDimensionless(initial_haematocrit));
-	std::vector<QDimensionless> current_haematocrit(segments.size(), QDimensionless(initial_haematocrit));
-	std::vector<QDimensionless> first_haematocrit_simulation(segments.size(), 0.0);
+    std::vector<QDimensionless> previous_haematocrit(segments.size(), QDimensionless(0.0));
+	std::vector<QDimensionless> current_haematocrit(segments.size(), QDimensionless(0.0));
+	std::vector<QDimensionless> first_haematocrit(segments.size(), QDimensionless(0.0));
     // iteration to solve the nonlinear problem follows (haematocrit problem is coupled to the flow problem via viscosity/impedance)
-	for(unsigned i=0;i<100,i++)
+	for(unsigned i=0;i < 1;i++)
 	{
-		QPressure new_pressure = (lower_pressure+higher_pressure)/2.0;
-		p_input_node_1->GetFlowProperties()->SetPressure(new_pressure);
-		p_input_node_1->GetFlowProperties()->SetPressure(1.0 - new_pressure);
+		QPressure new_pressure = (lower_pressure + higher_pressure)/2.0;
+		p_inlet_node_1->GetFlowProperties()->SetPressure(new_pressure);
+		p_inlet_node_1->GetFlowProperties()->SetPressure(10000.0 - new_pressure);
 		for(unsigned idx=0;idx<max_iter;idx++)
     	{	
+			p_viscosity_calculator->Calculate();
         	p_impedance_calculator->Calculate();
-        	flow_solver.SetUp();
+			flow_solver.Update();
         	flow_solver.Solve();
-        	p_abs_haematocrit_calculator->Calculate();
-        	p_viscosity_calculator->Calculate();
+			for(unsigned jdx = 0; jdx < segments.size();jdx++){
+				std::cout << "Haematocrit in vessel " << jdx << ": "<< segments[jdx]->GetFlowProperties()->GetHaematocrit() << std::endl;
+				std::cout << "Impedance in vessel " << jdx << ": "<< segments[jdx]->GetFlowProperties()->GetImpedance() << std::endl;
+				std::cout << "Flow in vessel " << jdx << ": "<< segments[jdx]->GetFlowProperties()->GetFlowRate() << std::endl;
+			}
+        	p_haematocrit_calculator->Calculate();
         	// Get the residual
         	unsigned max_difference_index = 0;
         	double max_difference = 0.0;
@@ -153,6 +161,8 @@ void FindPressureDifferences(QDimensionless step_size)
         	for(unsigned jdx=0;jdx<segments.size();jdx++)
         	{
         	    double current_haematocrit = segments[jdx]->GetFlowProperties()->GetHaematocrit();
+				std::cout << "Previous haematocrit: " << previous_haematocrit[jdx] << std::endl;
+				std::cout << "Current haematocrit: " << current_haematocrit <<std::endl;
         	    double difference = std::abs(current_haematocrit - previous_haematocrit[jdx]);
         	    if(difference>max_difference)
         	    {
@@ -164,7 +174,7 @@ void FindPressureDifferences(QDimensionless step_size)
         	    previous_haematocrit[jdx] = current_haematocrit;
         	}
         	std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << " at index " << max_difference_index << std::endl;
-        	if(max_difference<=tolerance2)
+        	if(max_difference<=tolerance2 && idx > 0)
         	{
         	    std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
         	    break;
@@ -187,26 +197,26 @@ void FindPressureDifferences(QDimensionless step_size)
         	}
     	}
 
-		first_haematocrit_simulation[0] = current_haematocrit[0];
-		first_haematocrit_simulation[1] = current_haematocrit[1]; 
-		first_haematocrit_simulation[2] = current_haematocrit[2]; 
-		first_haematocrit_simulation[3] = current_haematocrit[3]; 
-		first_haematocrit_simulation[4] = current_haematocrit[4];
-		first_haematocrit_simulation[5] = current_haematocrit[5];
+		first_haematocrit[0] = current_haematocrit[0];
+		first_haematocrit[1] = current_haematocrit[1]; 
+		first_haematocrit[2] = current_haematocrit[2]; 
+		first_haematocrit[3] = current_haematocrit[3]; 
+		first_haematocrit[4] = current_haematocrit[4];
+		first_haematocrit[5] = current_haematocrit[5];
 
-		segments[0]->GetFlowProperties()->SetHaematocrit(0.6)
-		segments[1]->GetFlowProperties()->SetHaematocrit(0.6)
-		segments[2]->GetFlowProperties()->SetHaematocrit(0.0)
-		segments[3]->GetFlowProperties()->SetHaematocrit(0.9)
-		segments[4]->GetFlowProperties()->SetHaematocrit(0.0)
-		segments[5]->GetFlowProperties()->SetHaematocrit(0.0)
+		segments[0]->GetFlowProperties()->SetHaematocrit(0.6);
+		segments[1]->GetFlowProperties()->SetHaematocrit(0.6);
+		segments[2]->GetFlowProperties()->SetHaematocrit(0.0);
+		segments[3]->GetFlowProperties()->SetHaematocrit(0.9);
+		segments[4]->GetFlowProperties()->SetHaematocrit(0.0);
+		segments[5]->GetFlowProperties()->SetHaematocrit(0.0);
 
 		for(unsigned idx=0;idx<max_iter;idx++)
     	{	
         	p_impedance_calculator->Calculate();
         	flow_solver.SetUp();
         	flow_solver.Solve();
-        	p_abs_haematocrit_calculator->Calculate();
+        	p_haematocrit_calculator->Calculate();
         	p_viscosity_calculator->Calculate();
         	// Get the residual
         	unsigned max_difference_index = 0;
@@ -227,7 +237,7 @@ void FindPressureDifferences(QDimensionless step_size)
         	    previous_haematocrit[jdx] = current_haematocrit;
         	}
         	std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << " at index " << max_difference_index << std::endl;
-        	if(max_difference<=tolerance2)
+        	if(max_difference<=tolerance2 && idx > 0)
         	{
         	    std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
         	    break;
@@ -249,11 +259,13 @@ void FindPressureDifferences(QDimensionless step_size)
             	EXCEPTION("Did not converge after " + std::to_string(idx) + " iterations.");
         	}
     	}
-	
-		max_difference = 0.0;
-		for(unsigned jdx=0;jdx<segments.size();jdx++)
-        {
-            difference = std::abs(current_haematocrit - first_haematocrit_simulation[jdx]);
+
+		double max_difference = 0.0;
+		for(unsigned k=0;k<segments.size();k++)
+        {	
+			double current_haematocrit = segments[k]->GetFlowProperties()->GetHaematocrit();
+			double previous_haematocrit = first_haematocrit[k];
+            double difference = std::abs(current_haematocrit - previous_haematocrit);
             if(difference>max_difference)
             {
                 max_difference = difference;
@@ -272,28 +284,28 @@ void FindPressureDifferences(QDimensionless step_size)
 	
 	QPressure pressure_lower_bound = lower_pressure;
 
-	std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
-	segments[0]->GetFlowProperties()->SetHaematocrit(0.6)
-	segments[1]->GetFlowProperties()->SetHaematocrit(0.6)
-	segments[2]->GetFlowProperties()->SetHaematocrit(0.9)
-	segments[3]->GetFlowProperties()->SetHaematocrit(0.0)
-	segments[4]->GetFlowProperties()->SetHaematocrit(0.0)
-	segments[5]->GetFlowProperties()->SetHaematocrit(0.0)
+	segments[0]->GetFlowProperties()->SetHaematocrit(0.6);
+	segments[1]->GetFlowProperties()->SetHaematocrit(0.6);
+	segments[2]->GetFlowProperties()->SetHaematocrit(0.9);
+	segments[3]->GetFlowProperties()->SetHaematocrit(0.0);
+	segments[4]->GetFlowProperties()->SetHaematocrit(0.0);
+	segments[5]->GetFlowProperties()->SetHaematocrit(0.0);
 	
-	QPressure lower_pressure = 0.5_Pa;
-	QPressure higher_pressure = 0.9_Pa;
+	
+	lower_pressure = 5000_Pa;
+	higher_pressure = 9000_Pa;
 
-    for(unsigned i=0;i<100,i++)
+    for(unsigned i=0;i<1;i++)
 	{
 		QPressure new_pressure = (lower_pressure+higher_pressure)/2.0;
-		p_input_node_1->GetFlowProperties()->SetPressure(new_pressure);
-		p_input_node_1->GetFlowProperties()->SetPressure(1.0 - new_pressure);
+		p_inlet_node_1->GetFlowProperties()->SetPressure(new_pressure);
+		p_inlet_node_1->GetFlowProperties()->SetPressure(10000.0 - new_pressure);
 		for(unsigned idx=0;idx<max_iter;idx++)
     	{	
         	p_impedance_calculator->Calculate();
         	flow_solver.SetUp();
         	flow_solver.Solve();
-        	p_abs_haematocrit_calculator->Calculate();
+        	p_haematocrit_calculator->Calculate();
         	p_viscosity_calculator->Calculate();
         	// Get the residual
         	unsigned max_difference_index = 0;
@@ -314,7 +326,7 @@ void FindPressureDifferences(QDimensionless step_size)
         	    previous_haematocrit[jdx] = current_haematocrit;
         	}
         	std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << " at index " << max_difference_index << std::endl;
-        	if(max_difference<=tolerance2)
+        	if(max_difference<=tolerance2 && idx > 0)
         	{
         	    std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
         	    break;
@@ -337,26 +349,26 @@ void FindPressureDifferences(QDimensionless step_size)
         	}
     	}
 
-		first_haematocrit_simulation[0] = current_haematocrit[0];
-		first_haematocrit_simulation[1] = current_haematocrit[1]; 
-		first_haematocrit_simulation[2] = current_haematocrit[2]; 
-		first_haematocrit_simulation[3] = current_haematocrit[3]; 
-		first_haematocrit_simulation[4] = current_haematocrit[4];
-		first_haematocrit_simulation[5] = current_haematocrit[5];
+		first_haematocrit[0] = current_haematocrit[0];
+		first_haematocrit[1] = current_haematocrit[1]; 
+		first_haematocrit[2] = current_haematocrit[2]; 
+		first_haematocrit[3] = current_haematocrit[3]; 
+		first_haematocrit[4] = current_haematocrit[4];
+		first_haematocrit[5] = current_haematocrit[5];
 
-		segments[0]->GetFlowProperties()->SetHaematocrit(0.6)
-		segments[1]->GetFlowProperties()->SetHaematocrit(0.6)
-		segments[2]->GetFlowProperties()->SetHaematocrit(0.0)
-		segments[3]->GetFlowProperties()->SetHaematocrit(0.9)
-		segments[4]->GetFlowProperties()->SetHaematocrit(0.0)
-		segments[5]->GetFlowProperties()->SetHaematocrit(0.0)
+		segments[0]->GetFlowProperties()->SetHaematocrit(0.6);
+		segments[1]->GetFlowProperties()->SetHaematocrit(0.6);
+		segments[2]->GetFlowProperties()->SetHaematocrit(0.0);
+		segments[3]->GetFlowProperties()->SetHaematocrit(0.9);
+		segments[4]->GetFlowProperties()->SetHaematocrit(0.0);
+		segments[5]->GetFlowProperties()->SetHaematocrit(0.0);
 
 		for(unsigned idx=0;idx<max_iter;idx++)
     	{	
         	p_impedance_calculator->Calculate();
         	flow_solver.SetUp();
         	flow_solver.Solve();
-        	p_abs_haematocrit_calculator->Calculate();
+        	p_haematocrit_calculator->Calculate();
         	p_viscosity_calculator->Calculate();
         	// Get the residual
         	unsigned max_difference_index = 0;
@@ -377,7 +389,7 @@ void FindPressureDifferences(QDimensionless step_size)
         	    previous_haematocrit[jdx] = current_haematocrit;
         	}
         	std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << " at index " << max_difference_index << std::endl;
-        	if(max_difference<=tolerance2)
+        	if(max_difference<=tolerance2 && idx > 0)
         	{
         	    std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
         	    break;
@@ -399,11 +411,13 @@ void FindPressureDifferences(QDimensionless step_size)
             	EXCEPTION("Did not converge after " + std::to_string(idx) + " iterations.");
         	}
     	}
-	
-		max_difference = 0.0;
-		for(unsigned jdx=0;jdx<segments.size();jdx++)
-        {
-            difference = std::abs(current_haematocrit - first_haematocrit_simulation[jdx]);
+
+		double max_difference = 0.0;
+		for(unsigned k=0;k<segments.size();k++)
+        {	
+			double current_haematocrit = segments[k]->GetFlowProperties()->GetHaematocrit();
+			double previous_haematocrit = first_haematocrit[k];
+            double difference = std::abs(current_haematocrit - previous_haematocrit);
             if(difference>max_difference)
             {
                 max_difference = difference;
@@ -417,23 +431,25 @@ void FindPressureDifferences(QDimensionless step_size)
 		{
 			higher_pressure = new_pressure;
 		}
-
+		
+		
 	}
 	
 	QPressure pressure_higher_bound = higher_pressure;
 
-	std::cout<< k_aux*diameter_ratio_length_change << "," << std::abs(pressure_higher_bound - pressure_lower_bound) << std::endl;
+	std::cout<< radius_ratio << "," << QPressure(std::abs(pressure_higher_bound - pressure_lower_bound)) << std::endl;
+	radius_ratio = radius_ratio + step_size;
 
 
 
     }
 }
 
-    void TestNoCellsDichotomousWithOrWithoutMemoryEffects()
+    void TestTriangleNetworksWithDifferentSteps()
     {
 		FindPressureDifferences(1.0);
     }
 
 };
 
-#endif // TESTWITHORWITHOUTMEMORY_HPP
+#endif // TESTTRIANGLENETWORK_HPP

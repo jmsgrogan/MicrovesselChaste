@@ -533,7 +533,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateBifurc
 
 
 template<unsigned DIM>
-std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateTriangleNetwork(QLength vesselLength, QLength vesselRadius, QDimensionless alpha, Vertex<DIM> startPosition)
+std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateTriangleNetwork(QLength vesselLength, QLength vesselRadius,QDimensionless alpha, Vertex<DIM> startPosition)
 {
     // Generate the nodes
     std::vector<VesselNodePtr<DIM> > nodes;
@@ -559,13 +559,6 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateTriang
 	vessels[3]->SetRadius(vesselRadius);
 	vessels[4]->SetRadius(vesselRadius);
 	vessels[5]->SetRadius(vesselRadius);
-
-	vessels[0]->SetLength(vesselLength);
-	vessels[1]->SetLength(vesselLength);
-	vessels[2]->SetLength(vesselLength);
-	vessels[3]->SetLength(vesselLength);
-	vessels[4]->SetLength(vesselLength);
-	vessels[5]->SetLength(vesselLength);
 
     // Generate the network
     std::shared_ptr<VesselNetwork<DIM> > p_network(new VesselNetwork<DIM>());
