@@ -88,6 +88,12 @@ std::vector<QConcentrationFlowRate > VesselBasedDiscreteSource<DIM>::GetConstant
         if(segment_map[idx].size()>0)
         {
             haematocrit_ratio = segment_map[idx][0]->GetVessel()->GetFlowProperties()->GetHaematocrit()/mReferenceHaematocrit;
+            /* If there's a bifurcation with a deadend as one of the segments, then it will have no flow or haematocrit in it. */
+            if (segment_map[idx].size()==3 && haematocrit_ratio == 0.0)
+            {
+                // Select one of the other two segments instead
+                haematocrit_ratio = segment_map[idx][1]->GetVessel()->GetFlowProperties()->GetHaematocrit()/mReferenceHaematocrit;
+            }
         }
         values[idx] = values[idx] + vessel_densities[idx]*mVesselPermeability * (1.0/reference_length) * mReferenceConcentration * haematocrit_ratio;
     }
