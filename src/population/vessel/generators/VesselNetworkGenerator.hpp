@@ -103,7 +103,7 @@ public:
                     std::vector<std::shared_ptr<Vertex<DIM> > >());
     /**
      * Creates a hexagonal network corresponding to that of Alarcon et al. (2006)
-     * @param width the widht
+     * @param width the width
      * @param height the height
      * @param vesselLength the vessel length
      * @return a shared pointer to the vessel network
@@ -113,7 +113,7 @@ public:
 
     /**
      * Creates a hexagonal network, but with the same length for all the vessels
-     * @param width the widht
+     * @param width the width
      * @param height the height
      * @param vesselLength the vessel length
      * @return a shared pointer to the vessel network
@@ -123,7 +123,7 @@ public:
 
  /**
      * Creates a hexagonal network, but with the same length for all the vessels and (max) vessel radius as input
-     * @param width the widht
+     * @param width the width
      * @param height the height
      * @param vesselLength the vessel length
      * @param main_radius max radius
