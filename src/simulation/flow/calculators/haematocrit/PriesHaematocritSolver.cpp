@@ -40,6 +40,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Exception.hpp"
 #include "ReplicatableVector.hpp"
 #include "RandomNumberGenerator.hpp"
+//#include "Debug.hpp"
 
 template<unsigned DIM>
 PriesHaematocritSolver<DIM>::PriesHaematocritSolver() : AbstractHaematocritSolver<DIM>(),
@@ -216,6 +217,12 @@ void PriesHaematocritSolver<DIM>::Calculate()
 
         Vec solution = PetscTools::CreateVec(vessels.size());
         linear_system.AssembleFinalLinearSystem();
+        //if (iterations>20&& iterations<24)
+        //{
+        //    TRACE("Joe");PRINT_VARIABLE(iterations);
+        //    linear_system.DisplayMatrix();
+        //    linear_system.DisplayRhs();
+        //}
         solution = linear_system.Solve();
         ReplicatableVector a(solution);
 
@@ -276,16 +283,36 @@ void PriesHaematocritSolver<DIM>::UpdateBifurcation(std::shared_ptr<Vessel<DIM> 
     QDimensionless parent_haematocrit = parent->GetFlowProperties()->GetHaematocrit();
 
     // Assign A, B and X0 from Pries1989 model
-    // Here we assume that the fractional flow rate will not fall below X0 for either branch; this assumption is easily satisfied with our networks and with the splitting model without memory effects
-
+    
     double X0 = 0.964*(1-parent_haematocrit)/(2.0*micron_parent_radius);
     double B = 1.0 + 6.98*(1.0-parent_haematocrit)/(2.0*micron_parent_radius);
 
-    QDimensionless modified_flow_ratio_mc = (Qabs(my_flow_rate)-X0*Qabs(parent_flow_rate))/(Qabs(competitor_flow_rate)-X0*Qabs(parent_flow_rate));
+    QFlowRate modified_flow_ratio_num = Qabs(my_flow_rate)-X0*Qabs(parent_flow_rate);
+    QFlowRate modified_flow_ratio_den = Qabs(competitor_flow_rate)-X0*Qabs(parent_flow_rate);
+    if (modified_flow_ratio_num <= 0)
+    {
+        //This flow is below the plasma skimming limit, and hence gets no haematocrit
+        rLinearSystem.SetMatrixElement(me->GetId(), parent->GetId(), 0.0);
+        //PRINT_3_VARIABLES(comp->GetId(),me->GetId(), parent->GetId());
+        return;     
+    }
+    if (modified_flow_ratio_den <= 0)
+    {
+        //The competitor's flow is below the plasma skimming limit, and hence this vessel gets all the parent's RBCs
+        rLinearSystem.SetMatrixElement(me->GetId(), parent->GetId(), -Qabs(parent_flow_rate/my_flow_rate));
+        //PRINT_3_VARIABLES(me->GetId(),comp->GetId(), parent->GetId());
+        return;
+    }
+    
+    // We only continue when we know that the fractional flow rate will not fall below X0 for either branch.
+    // In this case there is no plasma skimming.
+    
+    QDimensionless modified_flow_ratio_mc = modified_flow_ratio_num / modified_flow_ratio_den;
 
     double A = -13.29*((1.0-parent_haematocrit)*(diameter_ratio*diameter_ratio-1.0))/(2.0*micron_parent_radius*(diameter_ratio*diameter_ratio+1.0));
 
     double term1 = pow(modified_flow_ratio_mc,B);
+    assert(!std::isnan(term1));
     double term2 = exp(A);
 
     double numer = term2*term1*flow_ratio_pm;
