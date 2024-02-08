@@ -149,7 +149,7 @@ std::shared_ptr<CaBasedCellPopulation<DIM> > Owen11CellPopulationGenerator<DIM>:
             dimensions[1], 0, 0,
                                                                                                    extents_z, 0, 0));
 
-    PottsMesh<DIM>* p_mesh = mpPottsMeshGenerator->GetMesh();
+    boost::shared_ptr<PottsMesh<DIM> > p_mesh = mpPottsMeshGenerator->GetMesh();
 
     // There is a bug in Chaste causing index out of bounds for large grid spacing. It may be better to use a scaling here
     // so grid spacing is always one.

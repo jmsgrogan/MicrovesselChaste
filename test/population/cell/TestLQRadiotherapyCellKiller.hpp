@@ -70,7 +70,7 @@ public:
     void TestSimulationWithOer()
     {
         PottsMeshGenerator<2> generator(5, 0, 0, 5, 0, 0);
-        PottsMesh<2>* p_mesh = generator.GetMesh();
+        boost::shared_ptr<PottsMesh<2> > p_mesh = generator.GetMesh();
 
         // Fill the domain with tumour cells
         std::vector<unsigned> location_indices;
@@ -141,7 +141,7 @@ public:
     void TestSimulationWithoutOer()
     {
         PottsMeshGenerator<2> generator(5, 0, 0, 5, 0, 0);
-        PottsMesh<2>* p_mesh = generator.GetMesh();
+        boost::shared_ptr<PottsMesh<2> > p_mesh = generator.GetMesh();
 
         // Fill the domain with tumour cells
         std::vector<unsigned> location_indices;

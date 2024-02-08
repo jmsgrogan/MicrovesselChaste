@@ -80,7 +80,7 @@ public:
         division_rule.SetVesselNetwork(p_network);
 
         PottsMeshGenerator<3> generator(10, 0, 0, 10, 0, 0, 1, 0, 0);
-        PottsMesh<3>* p_mesh = generator.GetMesh();
+        boost::shared_ptr<PottsMesh<3> > p_mesh = generator.GetMesh();
 
         // Create a tumour cells in a cylinder in the middle of the domain
         std::vector<unsigned> location_indices;

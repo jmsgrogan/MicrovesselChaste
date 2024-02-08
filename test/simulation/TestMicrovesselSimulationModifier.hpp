@@ -209,7 +209,7 @@ public:
         unsigned num_y = unsigned(p_domain->GetBoundingBox()[3]/spacing) + 1;
         unsigned num_z = unsigned(p_domain->GetBoundingBox()[5]/spacing) + 1;
         PottsMeshGenerator<3> generator(num_x, 0, 0, num_y, 0, 0, num_z, 0, 0);
-        PottsMesh<3>* p_mesh = generator.GetMesh();
+        boost::shared_ptr<PottsMesh<3> > p_mesh = generator.GetMesh();
         p_mesh->Scale(spacing/cell_lenth_scale, spacing/cell_lenth_scale, spacing/cell_lenth_scale);
 
         // Create a tumour cells in a cylinder in the middle of the domain
