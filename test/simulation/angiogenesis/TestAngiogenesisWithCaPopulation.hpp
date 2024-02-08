@@ -99,7 +99,7 @@ public:
 
         // Set up the cell population
         PottsMeshGenerator<2> generator(20, 0, 0, 20, 0, 0);
-        PottsMesh<2>* p_mesh = generator.GetMesh();
+        boost::shared_ptr<PottsMesh<2> > p_mesh = generator.GetMesh();
         std::vector<unsigned> location_indices;
         for (unsigned index = 0; index < p_mesh->GetNumNodes(); index++)
         {

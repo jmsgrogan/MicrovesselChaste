@@ -73,7 +73,7 @@ public:
     {
         // Create the mesh
         PottsMeshGenerator<3> generator(20, 0, 0, 20, 0, 0, 21, 0, 0);
-        PottsMesh<3>* p_mesh = generator.GetMesh();
+        boost::shared_ptr<PottsMesh<3> > p_mesh = generator.GetMesh();
 
         // Create the vessel network: single vessel in middle of domain
         VesselNetworkGenerator<3> network_generator;
