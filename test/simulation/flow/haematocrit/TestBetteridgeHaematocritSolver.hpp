@@ -174,7 +174,7 @@ void TestInvertedPiBetteridgeHaematocrit()
 {
     
     PottsMeshGenerator<2> generator(200, 1, 200, 100, 1, 100); //**Changed**//
-    PottsMesh<2>* p_mesh = generator.GetMesh(); //**Changed**//
+    boost::shared_ptr<PottsMesh<2> > p_mesh = generator.GetMesh(); //**Changed**//
     std::vector<CellPtr> cells;
 
     //MAKE_PTR(TransitCellProliferativeType, p_transit_type);
