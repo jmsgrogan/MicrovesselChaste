@@ -2433,10 +2433,15 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateForkin
 
     double aux_dimless_length = 1.0;
 
+    // Each unit is scaled by (1/2)**3 but its height is always 0.9*its diagonal length
+    // Here we calculate the width of each unit which is related by sqrt(1^2-0.9^2).
+    
     for(unsigned i_aux2=0; i_aux2<i; i_aux2++)
-    	{
-	aux_dimless_length += pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i_aux2)/3.0)-pow(0.9,2.0)*pow(2.0, -2.0*double(i_aux2)));
-    	}
+    {
+	//\TODO Bug: see the correction below:
+    //  aux_dimless_length += pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i_aux2)/3.0)-pow(0.9,2.0)*pow(2.0, -2.0*double(i_aux2)/3));
+	    aux_dimless_length += pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i_aux2)/3.0)-pow(0.9,2.0)*pow(2.0, -2.0*double(i_aux2)));
+    }
     
     // auxiliary variable calculating x-coordinates for nodes of vessels to be added
     QLength aux_dimensional_length = aux_dimless_length*twicelambda*input_radius;
@@ -2460,7 +2465,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateForkin
   					     VesselNode<DIM>::Create((aux_dimless_length+pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i)/3.0)-pow(0.9,2.0)*pow(2.0, -2.0*double(i))))*twicelambda*input_radius,
 	                                                                     pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j))));
 
-	    // OwnerRank here will serve to store information on vessel order
+        // OwnerRank here will serve to store information on vessel order
 	    pAuxVessel->SetOwnerRank(i+1);  
 	    // radii follow Murray's law
             pAuxVessel->SetRadius(pow(alpha,double(count)+1.0)*input_radius/pow(1.0+alpha*alpha*alpha,(double(i)+1.0)/3.0));
