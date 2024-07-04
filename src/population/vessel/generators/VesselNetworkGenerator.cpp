@@ -1364,8 +1364,8 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateDichot
 											   QLength main_radius,
                                                                                            bool fillDomain)
 {
-
-    QLength domain_length = (1.0+double(order))*2.0*main_length;
+   EXCEPTION("This method is not fully tested.  If it is not used then it should be deleted");
+   QLength domain_length = (1.0+double(order))*2.0*main_length;
     // Vessels are laid out on a regular grid in dichotomous pattern
     // The repeating unit looks like this:
     //     ___
@@ -1571,6 +1571,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateDichot
                                                                                            bool fillDomain)
 {
 
+    EXCEPTION("This method is not fully tested.  If it is not used then it should be deleted");
     QLength domain_length = (1.0+double(order))*2.0*main_length;
     // Vessels are laid out on a regular grid in dichotomous pattern
     // The repeating unit looks like this:
@@ -1789,6 +1790,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateDichot
 											   double alpha,
                                                                                            bool fillDomain)
 {
+    // N.B. This method is not fully tested.  It's only used in TestNoCellsBetteridgeNontrivVis.hpp
 
     QLength domain_length = (1.0+double(order))*2.0*main_length;
     // Vessels are laid out on a regular grid in dichotomous pattern
@@ -1973,7 +1975,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateDichot
 											   double theta,
                                                                                            bool fillDomain)
 {
-
+    EXCEPTION("This method is not fully tested.  If it is not used then it should be deleted");
     //QLength domain_length = (1.0+double(order))*2.0*main_length;
     QLength domain_length = ((1.0-pow(theta,double(order)+1.0))/(1.0-theta))*2.0*main_length;
     // Vessels are laid out on a regular grid in dichotomous pattern
@@ -2183,6 +2185,7 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateDichot
 											   double lambda,
                                                                                            bool fillDomain)
 {
+    EXCEPTION("This method is not fully tested.  If it is not used then it should be deleted");
 
     double dimless_length = 1.0;
 
@@ -2405,25 +2408,28 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateDichot
 
 template<unsigned DIM>
 std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateForkingNetworkNoCorners(unsigned order,
-                                                                                        QLength main_length,
+                                                                                        QLength first_vertical_length,
 											                                            QLength input_radius,
 											                                            double twicelambda,
                                                                                         bool fillDomain)
 {
     // There will be no heterogeneity in radii between any two daughters
     double alpha = 1.0;
-
+    
+    // Scale by the input_length
+    double input_length = twicelambda*input_radius;
     double dimless_length = 1.0;
     
-    // Note that this function should only be used if the relationship between lambda, input_radius and main_length is correct.
-    // main_length is dubious because it's actually the length of the vertical project of the first generation i.e.
-    // QLength main_vert_length = 0.9*twicelambda*input_radius*pow(2.0,-1.0/3.0);
+    // Note that this function should only be used if the relationship between lambda, input_radius and first_vertical_length is correct.
+    // The old name "main_length" was dubious because it's actually the length of the vertical project of the first generation i.e.
+    // QLength first_vert_length = 0.9*twicelambda*input_radius*pow(2.0,-1.0/3.0);
     // This ought to be calculated in this generator rather than fed in.
-
-    PRINT_2_VARIABLES(main_length, 0.9*twicelambda*input_radius*pow(2.0,-1.0/3.0));
-
+    
+    // Check that first_vertical_length is consistant
+    assert(fabs(first_vertical_length - 0.9*input_length*pow(2.0,-1.0/3.0)) < 1e-10);
+    
     /* Bug hypothesis:
-     * Vertical positions of the forking network are calculated with respect to main_length (Lvert_1)
+     * Vertical positions of the forking network are calculated with respect to first_vertical_length (Lvert_1)
      * Horizontal positions appear to calculated like this, but then scaled with respect to the length of the feed vessel vessel
      * Expected lengths of vessels and vessel radii are calculated with respect to the length/radius of the feed vessel
      * Discrepencies are expected to be about 0.9*cube_root(1/2) = 0.714 or 1/1.4
@@ -2497,11 +2503,11 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateForkin
             // count = number of 1s in j
         
             // add vessels to the first half of the domain
-            double y_start = pow(0.5,double(i)-1.0)*main_length*(1.0+2.0*double(j)); // SCALE Lvert_1
-            double y_outer = pow(0.5,double(i)-1.0)*main_length*(1.5+2.0*double(j)); // SCALE Lvert_1
-            double y_inner = pow(0.5,double(i)-1.0)*main_length*(0.5+2.0*double(j)); // SCALE Lvert_1
+            double y_start = pow(0.5,double(i)-1.0)*first_vertical_length*(1.0+2.0*double(j)); // SCALE Lvert_1
+            double y_outer = pow(0.5,double(i)-1.0)*first_vertical_length*(1.5+2.0*double(j)); // SCALE Lvert_1
+            double y_inner = pow(0.5,double(i)-1.0)*first_vertical_length*(0.5+2.0*double(j)); // SCALE Lvert_1
             PRINT_4_VARIABLES(y_start,y_outer,y_inner, y_outer-y_start);
-            PRINT_4_VARIABLES(y_start/main_length,y_outer/main_length,y_inner/main_length, (y_outer-y_start)/main_length);
+            PRINT_4_VARIABLES(y_start/first_vertical_length,y_outer/first_vertical_length,y_inner/first_vertical_length, (y_outer-y_start)/first_vertical_length);
 
             pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(aux_dimensional_length, y_start),
                                 VesselNode<DIM>::Create((aux_dimless_length+lengths_horz[i+1])*twicelambda*input_radius, y_outer)); //SCALE feed vessel & Lvert_1
@@ -2587,20 +2593,20 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateForkin
 
     // add input vessel
  
-    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(0.0*main_length,         2.0*main_length),
-                                    VesselNode<DIM>::Create(twicelambda*input_radius, 2.0*main_length));  //SCALE feed vessel & Lvert_1
+    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(0.0*first_vertical_length,         2.0*first_vertical_length),
+                                    VesselNode<DIM>::Create(twicelambda*input_radius, 2.0*first_vertical_length));  //SCALE feed vessel & Lvert_1
 
     pAuxVessel->SetOwnerRank(0);
     pAuxVessel->SetRadius(input_radius);
     //PRINT_2_VARIABLES(pAuxVessel->GetRadius(), input_radius);
-    //PRINT_2_VARIABLES(pAuxVessel->GetLength(), main_length);
+    //PRINT_2_VARIABLES(pAuxVessel->GetLength(), first_vertical_length);
     //PRINT_VARIABLE(pAuxVessel->GetLength() / (2.0*pAuxVessel->GetRadius()));
     pVesselNetwork->AddVessel(pAuxVessel);
 
     // add output vessel
 
-    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length,                         2.0*main_length),
-                                    VesselNode<DIM>::Create(domain_length-twicelambda*input_radius, 2.0*main_length));  //SCALE feed vessel
+    pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(domain_length,                         2.0*first_vertical_length),
+                                    VesselNode<DIM>::Create(domain_length-twicelambda*input_radius, 2.0*first_vertical_length));  //SCALE feed vessel
     pAuxVessel->SetOwnerRank(0);
     pAuxVessel->SetRadius(input_radius);
     pVesselNetwork->AddVessel(pAuxVessel);

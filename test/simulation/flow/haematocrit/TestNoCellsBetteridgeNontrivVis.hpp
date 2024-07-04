@@ -1944,7 +1944,7 @@ QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
 
 
 // Specify the domain
-    QLength vessel_length = 0.9*lambda*max_radius*pow(2.0,-1.0/3.0);
+    QLength vessel_length = 0.9*2.0*lambda*max_radius*pow(2.0,-1.0/3.0);
     //int units_in_y = 6;
     QLength domain_side_length_y = 4.0*vessel_length;
 

@@ -194,12 +194,12 @@ public:
      * Creates a dichotomous/forking network without corners with decreasing length in y direction (but more spreaded than initially) and also decreasing (and further on increasing) length in x for all the vessels, input (maximum) vessel radius as input, and with vessel length following vessel radii according to Murray's law
      * These networks will be used in our paper on CFL disruption and recovery effects
      * @param order denotes order
-     * @param main_length length of the vertical projection of order-1 vessels
+     * @param first_vertical_length length of the vertical projection of order-1 vessels --- this is redundant and is recalculated in the method
      * @param input_radius input vessel radius
      * @param twicelambda - vessel length divided by vessel radius... in other words, lambda (i.e. vessel length divided by vessel diameter) times 2
      * @return a shared pointer to the vessel network
      */
-    VesselNetworkPtr<DIM> GenerateForkingNetworkNoCorners(unsigned order, QLength main_length, QLength input_radius, double twicelambda,
+    VesselNetworkPtr<DIM> GenerateForkingNetworkNoCorners(unsigned order, QLength first_vertical_length, QLength input_radius, double twicelambda,
             bool fillDomain=false);
     /**
      * Creates a hexagonal repeating unit
