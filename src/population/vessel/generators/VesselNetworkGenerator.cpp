@@ -2445,15 +2445,15 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateForkin
 
     for(unsigned i_aux3=1; i_aux3<order+1; i_aux3++)
     {
-        double parent_diag = pow(2.0,-1.0*double(i_aux3-1)/3.0); // Vessel lengths scale like Murray's law
+        double diag = pow(2.0,-1.0*double(i_aux3-1)/3.0); // Vessel lengths scale like Murray's law
         //PRINT_2_VARIABLES(parent_diag, lengths[i_aux3-1]);
-        lengths[i_aux3]= pow(2.0,-1/3)*parent_diag;
-        double parent_vert = pow(2.0,-1.0*double(i_aux3-1));     // Vessel verticals scale with Lv_i = Lv_{i-1} / 2
+        lengths[i_aux3] = diag;
+        double vert = pow(2.0,-1.0*double(i_aux3-1));     // Vessel verticals scale with Lv_i = Lv_{i-1} / 2
         //PRINT_2_VARIABLES(parent_vert, lengths_vert[i_aux3-1]);
-        lengths_vert[i_aux3]= pow(2.0,-1/3)*parent_vert;
-        double parent_horz = sqrt(parent_diag*parent_diag-81.0*parent_vert*parent_vert/100.0);
+        lengths_vert[i_aux3]= vert;
+        double horz = sqrt(diag*diag-81.0*vert*vert/100.0);
         //PRINT_2_VARIABLES(parent_horz, lengths_horz[i_aux3-1]);
-        lengths_horz[i_aux3] = pow(2.0,-1/3)*parent_horz; // Now apply Murray's law to the previous unit
+        lengths_horz[i_aux3] = horz; // Now apply Murray's law to the previous unit
         //PRINT_4_VARIABLES(parent_diag,parent_vert,parent_horz,lengths_horz[i_aux3]); 
         dimless_length += lengths_horz[i_aux3];
     }
