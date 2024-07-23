@@ -78,15 +78,15 @@ public:
         TS_ASSERT_DELTA(0.45, pNetwork->GetVesselSegments()[100]->GetFlowProperties()->GetHaematocrit(), 1e-6);
 
         /* Flow splitting (symmetric) */
-        TS_ASSERT_DELTA(5.17974e-10, pNetwork->GetVesselSegments()[124]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
-        TS_ASSERT_DELTA(2.58987e-10, pNetwork->GetVesselSegments()[0]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
-        TS_ASSERT_DELTA(2.58987e-10, pNetwork->GetVesselSegments()[1]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
-        TS_ASSERT_DELTA(1.29493e-10, pNetwork->GetVesselSegments()[4]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
-        TS_ASSERT_DELTA(1.29493e-10, pNetwork->GetVesselSegments()[5]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
-        TS_ASSERT_DELTA(1.29493e-10, pNetwork->GetVesselSegments()[8]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
-        TS_ASSERT_DELTA(1.29493e-10, pNetwork->GetVesselSegments()[9]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(6.02470e-10, pNetwork->GetVesselSegments()[124]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(3.01235e-10, pNetwork->GetVesselSegments()[0]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(3.01235e-10, pNetwork->GetVesselSegments()[1]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(1.50617e-10, pNetwork->GetVesselSegments()[4]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(1.50617e-10, pNetwork->GetVesselSegments()[5]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(1.50617e-10, pNetwork->GetVesselSegments()[8]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(1.50617e-10, pNetwork->GetVesselSegments()[9]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
 
-        TS_ASSERT_EQUALS(rOxygenSolution.size(), 32775u);
+        TS_ASSERT_EQUALS(rOxygenSolution.size(), 27945u);
         double average_oxygen = 0.0;
         for(unsigned jdx=0;jdx<rOxygenSolution.size();jdx++)
         {
@@ -95,21 +95,18 @@ public:
         average_oxygen /= rOxygenSolution.size();
 
         // Average oxygen
-        TS_ASSERT_DELTA(16853.2187, average_oxygen, 1.0);
+        TS_ASSERT_DELTA(16487.8034, average_oxygen, 1.0);
         
         // Low oxygen
         double lo_oxygen = *std::min_element(rOxygenSolution.begin(), rOxygenSolution.end());
-        TS_ASSERT_DELTA(385.507, lo_oxygen, 1.0);
+        TS_ASSERT_DELTA(427.1682, lo_oxygen, 1.0);
         // Corners of grid 
-        TS_ASSERT_DELTA(385.507, rOxygenSolution[0], 1.0);
-        TS_ASSERT_DELTA(396.3250, rOxygenSolution[32774], 1.0);
+        TS_ASSERT_DELTA(427.1682, rOxygenSolution[0], 1.0);
+        TS_ASSERT_DELTA(437.8718, rOxygenSolution[27944], 1.0);
 
         // High oxygen
         double hi_oxygen = *std::max_element(rOxygenSolution.begin(), rOxygenSolution.end());
-        TS_ASSERT_DELTA(27678.2, hi_oxygen, 1.0);
-        TS_ASSERT_DELTA(27678.2, rOxygenSolution[16285], 1.0);
-        TS_ASSERT_DELTA(27678.2, rOxygenSolution[28585], 1.0);
-        TS_ASSERT_DELTA(27678.2, rOxygenSolution[8492], 1.0);
+        TS_ASSERT_DELTA(27678.2, hi_oxygen, 1.0);        
     }
 
     /** The following is to test that the "with memory" lambda=4 figure can be faithfully reproduced. Or at least that
@@ -119,27 +116,27 @@ public:
     {
         /* Note that these tests may be too fragile - 6 decimal places is more than enough to give the correct figure.*/
         // Lowest haematocrit segments (in middle at top/bottom)
-        TS_ASSERT_DELTA(0.313434, pNetwork->GetVesselSegments()[61]->GetFlowProperties()->GetHaematocrit(), 1e-6);
-        TS_ASSERT_DELTA(0.313434, pNetwork->GetVesselSegments()[63]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.313429, pNetwork->GetVesselSegments()[61]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.313429, pNetwork->GetVesselSegments()[63]->GetFlowProperties()->GetHaematocrit(), 1e-6);
 
-        TS_ASSERT_DELTA(0.313434, pNetwork->GetVesselSegments()[120]->GetFlowProperties()->GetHaematocrit(), 1e-6);
-        TS_ASSERT_DELTA(0.313434, pNetwork->GetVesselSegments()[122]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.313429, pNetwork->GetVesselSegments()[120]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.313429, pNetwork->GetVesselSegments()[122]->GetFlowProperties()->GetHaematocrit(), 1e-6);
 
         // Highest haematocrit segments (in middle and asymmetric)
-        TS_ASSERT_DELTA(0.659899, pNetwork->GetVesselSegments()[81]->GetFlowProperties()->GetHaematocrit(), 1e-6);
-        TS_ASSERT_DELTA(0.659899, pNetwork->GetVesselSegments()[83]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.659897, pNetwork->GetVesselSegments()[81]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.659897, pNetwork->GetVesselSegments()[83]->GetFlowProperties()->GetHaematocrit(), 1e-6);
 
-        TS_ASSERT_DELTA(0.659899, pNetwork->GetVesselSegments()[100]->GetFlowProperties()->GetHaematocrit(), 1e-6);
-        TS_ASSERT_DELTA(0.659899, pNetwork->GetVesselSegments()[102]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.659897, pNetwork->GetVesselSegments()[100]->GetFlowProperties()->GetHaematocrit(), 1e-6);
+        TS_ASSERT_DELTA(0.659897, pNetwork->GetVesselSegments()[102]->GetFlowProperties()->GetHaematocrit(), 1e-6);
 
         /* Flow splitting (non symmetric) */
-        TS_ASSERT_DELTA(2.24118e-10, pNetwork->GetVesselSegments()[124]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
-        TS_ASSERT_DELTA(1.12059e-10, pNetwork->GetVesselSegments()[0]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
-        TS_ASSERT_DELTA(1.12059e-10, pNetwork->GetVesselSegments()[1]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
-        TS_ASSERT_DELTA(5.08728e-11, pNetwork->GetVesselSegments()[4]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
-        TS_ASSERT_DELTA(6.11861e-11, pNetwork->GetVesselSegments()[5]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
-        TS_ASSERT_DELTA(6.11861e-11, pNetwork->GetVesselSegments()[8]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
-        TS_ASSERT_DELTA(5.08728e-11, pNetwork->GetVesselSegments()[9]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(2.60036e-10, pNetwork->GetVesselSegments()[124]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(1.30018e-10, pNetwork->GetVesselSegments()[0]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(1.30018e-10, pNetwork->GetVesselSegments()[1]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(5.90302e-11, pNetwork->GetVesselSegments()[4]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(7.09878e-11, pNetwork->GetVesselSegments()[5]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(7.09878e-11, pNetwork->GetVesselSegments()[8]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
+        TS_ASSERT_DELTA(5.90302e-11, pNetwork->GetVesselSegments()[9]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
 
         double average_oxygen = 0.0;
         for(unsigned jdx=0;jdx<rOxygenSolution.size();jdx++)
@@ -149,21 +146,44 @@ public:
         average_oxygen /= rOxygenSolution.size();
 
         // Average oxygen
-        TS_ASSERT_DELTA(17077.7, average_oxygen, 1.0);
+        TS_ASSERT_DELTA(16672.5076, average_oxygen, 1.0);
         
         // Low oxygen
         double lo_oxygen = *std::min_element(rOxygenSolution.begin(), rOxygenSolution.end());
-        TS_ASSERT_DELTA(381.278, lo_oxygen, 1.0);
+        TS_ASSERT_DELTA(420.0851, lo_oxygen, 1.0);
         // Corners of grid 
-        TS_ASSERT_DELTA(381.278, rOxygenSolution[0], 1.0);
-        TS_ASSERT_DELTA(392.1925, rOxygenSolution[32774], 1.0);
+        TS_ASSERT_DELTA(420.0851, rOxygenSolution[0], 1.0);
+        TS_ASSERT_DELTA(431.0519, rOxygenSolution[27944], 1.0);
 
         // High oxygen
         double hi_oxygen = *std::max_element(rOxygenSolution.begin(), rOxygenSolution.end());
         TS_ASSERT_DELTA(40581.4, hi_oxygen, 1.0);
     }
 
-
+    /** Verify that the network is as advertised:
+     *  * The lengths scale like (1/2)**(1/3)
+     *  * The length/diammeter ratio matches lambda
+     **/
+    void VerifyForkingNetwork(std::shared_ptr<VesselNetwork<2> > pNetwork, unsigned lambda)
+    {
+        std::vector<std::shared_ptr<Vessel<2> > > vessels = pNetwork->GetVessels();
+        std::vector<unsigned> rank_counts(6);
+        const double l1 = pow(0.5,1.0/3.0);
+        const QLength input_length = 2.0*lambda*50_um;//input_radius;
+        for (unsigned index=0; index<vessels.size(); index++)
+        {
+            unsigned actual_lambda=std::lroundf( (vessels[index]->GetLength()/(2.0*vessels[index]->GetRadius())));
+            TS_ASSERT_EQUALS(actual_lambda, lambda);
+            rank_counts[vessels[index]->GetOwnerRank()]++;
+            double expected_length = input_length * pow(l1, vessels[index]->GetOwnerRank());
+            TS_ASSERT_DELTA(vessels[index]->GetLength(), expected_length, 1e-14);
+        }
+        // Check that we have seen all the levels
+        for (unsigned i=0; i<6; i++)
+        {
+            TS_ASSERT_EQUALS(rank_counts[i], (unsigned) pow(2,i+1));
+        }
+    }
 
 void RunNoCellsDichotomousWithOrWithoutMemoryEffects(bool withMemory)
 {
@@ -173,9 +193,10 @@ void RunNoCellsDichotomousWithOrWithoutMemoryEffects(bool withMemory)
     double dimless_length = 1.0;
 
     for(unsigned i_aux=1; i_aux<order+1; i_aux++)
-    	{
-	dimless_length += /*pow(2.0,-1/3)* */ sqrt(pow(2.0,-2.0*double(i_aux-1)/3.0)-pow(0.9,2)*pow(2.0, -2.0*double(i_aux-1)));
-    	}
+    {
+	    dimless_length += pow(2.0,-1.0/3.0)*
+        sqrt(pow(2.0,-2.0*double(i_aux-1)/3.0)-pow(0.9,2)*pow(2.0, -2.0*double(i_aux-1)));
+    }
     QLength input_radius = 50_um;
 
     QDynamicViscosity viscosity = 1.e-3*unit::poiseuille;
@@ -187,14 +208,11 @@ void RunNoCellsDichotomousWithOrWithoutMemoryEffects(bool withMemory)
 
     VesselNetworkGenerator<2> network_generator;
 
-   unsigned lambda;
-   double twicelambda;
-
    for (unsigned k_aux=1; k_aux<5; k_aux++)
    {
-    lambda = 2+k_aux*2;
+     const unsigned lambda = 2+k_aux*2;
         // lambda is quotient between the length and diameter...in vessel network generator, we use twice this value as an input parameter
-    twicelambda = 2.0*lambda;
+     const double twicelambda = 2.0*lambda;
 
 
     // Length of the vertical projection of first-order vessels
@@ -240,9 +258,9 @@ void RunNoCellsDichotomousWithOrWithoutMemoryEffects(bool withMemory)
     {
         // Check grid size - this should depend on lambda, because the input radius is fixed to 50_um
         // and the grid_spacing is fixed to 10_um
-        TS_ASSERT_EQUALS(dimensions[0], 285u);
+        TS_ASSERT_EQUALS(dimensions[0], 243u);
         TS_ASSERT_EQUALS(dimensions[1], 115u);
-        TS_ASSERT_EQUALS(dimensions[0]* dimensions[1], 32775u); //Number of points in grid
+        TS_ASSERT_EQUALS(dimensions[0]* dimensions[1], 27945u); //Number of points in grid
     }
     
     p_grid->SetDimensions(dimensions);
@@ -380,7 +398,7 @@ void RunNoCellsDichotomousWithOrWithoutMemoryEffects(bool withMemory)
     SimulationTime::Instance()->Destroy();
     
     // Test that the "with memory" lambda=4 figure can be faithfully reproduced.
-    if (fabs(lambda-4.0)<1e-1)
+    if (lambda == 4u)
     {
         if (withMemory)
         {
@@ -391,6 +409,7 @@ void RunNoCellsDichotomousWithOrWithoutMemoryEffects(bool withMemory)
             VerifySolutionLambdaEquals4Pries(p_network, solution);
         }
     }
+    VerifyForkingNetwork(p_network, lambda);
 
 
     }

@@ -381,11 +381,13 @@ void PriesWithMemoryHaematocritSolver<DIM>::CalculateVesselPreferences(std::vect
         }
         //me->SetDistToPrevBif(parent->GetLength());
         
-        if (me->GetDistToPrevBif() != parent->GetLength())
+        // If there was a "GetDistToPrevBif" set, then check if it was correct
+        // (Relative floating point comparison because the length may have been calculated slightly differently.)
+        double length_difference_relative = (me->GetDistToPrevBif() - parent->GetLength())/parent->GetLength();
+        if (fabs(length_difference_relative) > 1e-14)
         {
             WARNING("Set distance to previous bifurcation does not match actual distance");
         }
-        //PRINT_2_VARIABLES(updateIndices[idx][0], favoured);
     }
 }
 

@@ -2417,15 +2417,15 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateForkin
     double alpha = 1.0;
     
     // Scale by the input_length
-    double input_length = twicelambda*input_radius;
-    double dimless_length = 1.0;
+    const double input_length = twicelambda*input_radius;
+    double dimless_length = 1.0; // Should always be used in place of *input_length* (feed vessel)
     
-    // Note that this function should only be used if the relationship between lambda, input_radius and first_vertical_length is correct.
-    // The old name "main_length" was dubious because it's actually the length of the vertical project of the first generation i.e.
-    // QLength first_vert_length = 0.9*twicelambda*input_radius*pow(2.0,-1.0/3.0);
-    // This ought to be calculated in this generator rather than fed in.
-    
-    // Check that first_vertical_length is consistant
+    /* Check that first_vertical_length is consistent.
+     * Note that this function should only be used if the relationship between lambda, input_radius and first_vertical_length is correct.
+     * The old name "main_length" was dubious because it's actually the length of the vertical project of the first generation i.e.
+     * QLength first_vert_length = 0.9*twicelambda*input_radius*pow(2.0,-1.0/3.0);
+     * This ought to be calculated in this generator rather than fed in.
+     */
     assert(fabs(first_vertical_length - 0.9*input_length*pow(2.0,-1.0/3.0)) < 1e-10);
     
     /* Bug hypothesis:
@@ -2439,30 +2439,29 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateForkin
     std::vector<double> lengths(order+1);
     std::vector<double> lengths_horz(order+1);
     std::vector<double> lengths_vert(order+1);
+    
+    // Encode the first vessel as unit length
     lengths[0] = 1.0;
     lengths_horz[0] = 1.0;
-    lengths_vert[0] = 1.0;
+    lengths_vert[0] = 0.0;
 
     for(unsigned i_aux3=1; i_aux3<order+1; i_aux3++)
     {
-        double diag = pow(2.0,-1.0*double(i_aux3-1)/3.0); // Vessel lengths scale like Murray's law
-        //PRINT_2_VARIABLES(parent_diag, lengths[i_aux3-1]);
-        lengths[i_aux3] = diag;
-        double vert = pow(2.0,-1.0*double(i_aux3-1));     // Vessel verticals scale with Lv_i = Lv_{i-1} / 2
-        //PRINT_2_VARIABLES(parent_vert, lengths_vert[i_aux3-1]);
-        lengths_vert[i_aux3]= vert;
-        double horz = sqrt(diag*diag-81.0*vert*vert/100.0);
-        //PRINT_2_VARIABLES(parent_horz, lengths_horz[i_aux3-1]);
-        lengths_horz[i_aux3] = horz; // Now apply Murray's law to the previous unit
-        //PRINT_4_VARIABLES(parent_diag,parent_vert,parent_horz,lengths_horz[i_aux3]); 
+        double length = pow(2.0,-1.0*double(i_aux3)/3.0); // Vessel lengths scale like Murray's law
+        lengths[i_aux3] = length; 
+        double vert = lengths_vert[i_aux3-1]/2.0;
+        if (i_aux3 == 1) // First generation has to have a vertical component 
+        {
+            vert = 0.9*length;
+        }
+        lengths_vert[i_aux3] = vert;
+        //double horz = sqrt(length*length-81.0*vert*vert/100.0);
+        double horz = sqrt(length*length-vert*vert);
+        lengths_horz[i_aux3] = pow(2.0,-1/3)*horz; // Now apply Murray's law to the previous unit
         dimless_length += lengths_horz[i_aux3];
     }
-    PRINT_VECTOR(lengths);
-    PRINT_VECTOR(lengths_vert);
-    PRINT_VECTOR(lengths_horz);
-    //PRINT_2_VARIABLES(dimless_length, std::accumulate(lengths_horz.begin(), lengths_horz.end(), 0.0));
     //dimensional horizontal length of the domain
-    QLength domain_length = dimless_length*2.0*twicelambda*input_radius; //SCALE feed vessel
+    QLength domain_length = dimless_length*2.0*input_length; //Scale by feed vessel
     
     // Vessels are laid out on a regular grid in forking pattern
     // There are extra two vessels - input and output 
@@ -2473,19 +2472,14 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateForkin
 
     for(unsigned i=0; i<order; i++)
     {
-
-        double aux_dimless_length = 1.0;
-
-        // Each unit is scaled by (1/2)**3 but its height is always 0.9*its diagonal length
-        // Here we calculate the width of each unit which is related by sqrt(1^2-0.9^2).
-    
-        for(unsigned i_aux2=0; i_aux2<i; i_aux2++)
+        double aux_dimless_length = 0.0;
+        for(unsigned i_aux2=0; i_aux2<=i; i_aux2++)
         {
-            aux_dimless_length += lengths_horz[i_aux2+1];//pow(2.0,-1/3)*sqrt(pow(2.0,-2.0*double(i_aux2)/3.0)-pow(0.9,2.0)*pow(2.0, -2.0*double(i_aux2)));
+            aux_dimless_length += lengths_horz[i_aux2];
         }
         
         // auxiliary variable calculating x-coordinates for nodes of vessels to be added
-        QLength aux_dimensional_length = aux_dimless_length*twicelambda*input_radius;  //SCALE feed vessel
+        QLength aux_dimensional_length = aux_dimless_length*input_length;
         //PRINT_VARIABLE(twicelambda*input_radius);
 
         // the following for loop calculates order of the vessels being added
@@ -2503,11 +2497,11 @@ std::shared_ptr<VesselNetwork<DIM> > VesselNetworkGenerator<DIM>::GenerateForkin
             // count = number of 1s in j
         
             // add vessels to the first half of the domain
-            double y_start = pow(0.5,double(i)-1.0)*first_vertical_length*(1.0+2.0*double(j)); // SCALE Lvert_1
-            double y_outer = pow(0.5,double(i)-1.0)*first_vertical_length*(1.5+2.0*double(j)); // SCALE Lvert_1
-            double y_inner = pow(0.5,double(i)-1.0)*first_vertical_length*(0.5+2.0*double(j)); // SCALE Lvert_1
-            PRINT_4_VARIABLES(y_start,y_outer,y_inner, y_outer-y_start);
-            PRINT_4_VARIABLES(y_start/first_vertical_length,y_outer/first_vertical_length,y_inner/first_vertical_length, (y_outer-y_start)/first_vertical_length);
+            // note that the vertical distances are scaled with first_vertical_length (called Lvert_1 in paper)
+            double y_step = pow(0.5,double(i)-1.0)*first_vertical_length;  // SCALE Lvert_1
+            double y_start = y_step*(1.0+2.0*double(j));
+            double y_outer = y_step*(1.5+2.0*double(j));
+            double y_inner = y_step*(0.5+2.0*double(j));
 
             pAuxVessel = Vessel<DIM>::Create(VesselNode<DIM>::Create(aux_dimensional_length, y_start),
                                 VesselNode<DIM>::Create((aux_dimless_length+lengths_horz[i+1])*twicelambda*input_radius, y_outer)); //SCALE feed vessel & Lvert_1
