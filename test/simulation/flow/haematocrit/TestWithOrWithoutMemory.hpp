@@ -86,6 +86,7 @@ public:
         TS_ASSERT_DELTA(1.29493e-10, pNetwork->GetVesselSegments()[8]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
         TS_ASSERT_DELTA(1.29493e-10, pNetwork->GetVesselSegments()[9]->GetFlowProperties()->GetFlowRate()/unit::metre_cubed_per_second, 1e-15);
 
+        TS_ASSERT_EQUALS(rOxygenSolution.size(), 32775u);
         double average_oxygen = 0.0;
         for(unsigned jdx=0;jdx<rOxygenSolution.size();jdx++)
         {
@@ -95,10 +96,17 @@ public:
 
         // Average oxygen
         TS_ASSERT_DELTA(16853.2187, average_oxygen, 1.0);
+        
         // Low oxygen
+        double lo_oxygen = *std::min_element(rOxygenSolution.begin(), rOxygenSolution.end());
+        TS_ASSERT_DELTA(385.507, lo_oxygen, 1.0);
+        // Corners of grid 
         TS_ASSERT_DELTA(385.507, rOxygenSolution[0], 1.0);
-        TS_ASSERT_DELTA(386.01,  rOxygenSolution[1], 1.0);
+        TS_ASSERT_DELTA(396.3250, rOxygenSolution[32774], 1.0);
+
         // High oxygen
+        double hi_oxygen = *std::max_element(rOxygenSolution.begin(), rOxygenSolution.end());
+        TS_ASSERT_DELTA(27678.2, hi_oxygen, 1.0);
         TS_ASSERT_DELTA(27678.2, rOxygenSolution[16285], 1.0);
         TS_ASSERT_DELTA(27678.2, rOxygenSolution[28585], 1.0);
         TS_ASSERT_DELTA(27678.2, rOxygenSolution[8492], 1.0);
@@ -142,12 +150,17 @@ public:
 
         // Average oxygen
         TS_ASSERT_DELTA(17077.7, average_oxygen, 1.0);
+        
         // Low oxygen
+        double lo_oxygen = *std::min_element(rOxygenSolution.begin(), rOxygenSolution.end());
+        TS_ASSERT_DELTA(381.278, lo_oxygen, 1.0);
+        // Corners of grid 
         TS_ASSERT_DELTA(381.278, rOxygenSolution[0], 1.0);
-        TS_ASSERT_DELTA(381.76,  rOxygenSolution[1], 1.0);
+        TS_ASSERT_DELTA(392.1925, rOxygenSolution[32774], 1.0);
+
         // High oxygen
-        TS_ASSERT_DELTA(40581.4, rOxygenSolution[21530], 1.0);
-        TS_ASSERT_DELTA(40581.4, rOxygenSolution[21505], 1.0);
+        double hi_oxygen = *std::max_element(rOxygenSolution.begin(), rOxygenSolution.end());
+        TS_ASSERT_DELTA(40581.4, hi_oxygen, 1.0);
     }
 
 
@@ -174,12 +187,12 @@ void RunNoCellsDichotomousWithOrWithoutMemoryEffects(bool withMemory)
 
     VesselNetworkGenerator<2> network_generator;
 
-   double lambda;
+   unsigned lambda;
    double twicelambda;
 
    for (unsigned k_aux=1; k_aux<5; k_aux++)
    {
-    lambda = 2.0+double(k_aux)*2.0;
+    lambda = 2+k_aux*2;
         // lambda is quotient between the length and diameter...in vessel network generator, we use twice this value as an input parameter
     twicelambda = 2.0*lambda;
 
@@ -223,6 +236,15 @@ void RunNoCellsDichotomousWithOrWithoutMemoryEffects(bool withMemory)
     dimensions[0] = unsigned((domain_side_length_x)/(grid_spacing))+1; // num x
     dimensions[1] = unsigned((domain_side_length_y)/(grid_spacing))+1; // num_y
     dimensions[2] = 1;
+    if (lambda == 4u)
+    {
+        // Check grid size - this should depend on lambda, because the input radius is fixed to 50_um
+        // and the grid_spacing is fixed to 10_um
+        TS_ASSERT_EQUALS(dimensions[0], 285u);
+        TS_ASSERT_EQUALS(dimensions[1], 115u);
+        TS_ASSERT_EQUALS(dimensions[0]* dimensions[1], 32775u); //Number of points in grid
+    }
+    
     p_grid->SetDimensions(dimensions);
 
     /**
