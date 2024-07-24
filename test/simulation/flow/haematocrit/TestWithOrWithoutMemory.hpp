@@ -61,7 +61,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "PetscAndVtkSetupAndFinalize.hpp"
 
-class TestWithOrWithourMemory : public CxxTest::TestSuite
+class TestWithOrWithoutMemory : public CxxTest::TestSuite
 {
 
 
@@ -205,213 +205,210 @@ void RunNoCellsDichotomousWithOrWithoutMemoryEffects(bool withMemory)
     double initial_haematocrit = 0.45;
 
     // Generate the network
-
     VesselNetworkGenerator<2> network_generator;
 
-   for (unsigned k_aux=1; k_aux<5; k_aux++)
-   {
-     const unsigned lambda = 2+k_aux*2;
+    for (unsigned k_aux=1; k_aux<5; k_aux++)
+    {
+        const unsigned lambda = 2+k_aux*2;
         // lambda is quotient between the length and diameter...in vessel network generator, we use twice this value as an input parameter
-     const double twicelambda = 2.0*lambda;
+        const double twicelambda = 2.0*lambda;
 
 
-    // Length of the vertical projection of first-order vessels
-    QLength main_vert_length = 0.9*twicelambda*input_radius*pow(2.0,-1.0/3.0);
-    // vertical size of the domain
-    QLength domain_side_length_y = 4.0*main_vert_length;
+        // Length of the vertical projection of first-order vessels
+        QLength main_vert_length = 0.9*twicelambda*input_radius*pow(2.0,-1.0/3.0);
+        // vertical size of the domain
+        QLength domain_side_length_y = 4.0*main_vert_length;
 
-    std::ostringstream strs;
-    if (withMemory)
-    {
-        strs << "Dichotomous_NoCorners_NewModel_LambdaEquals" << lambda;
-    }
-    else
-    {
-        strs << "Dichotomous_NoCorners_OldModel_LambdaEquals" << lambda;
-    }
-    std::string str_directory_name = strs.str();
-    // horizontal size of the domain
-    QLength domain_side_length_x = dimless_length*2.0*twicelambda*input_radius;
-    auto p_file_handler = std::make_shared<OutputFileHandler>(str_directory_name, true);
-    std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateForkingNetworkNoCorners(order, main_vert_length, input_radius, twicelambda);
-
-    // identify input and output nodes and assign them properties
-
-    VesselNodePtr<2> p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
-            Vertex<2>(0.0_um,2.0*main_vert_length));
-    VesselNodePtr<2> p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
-            Vertex<2>(domain_side_length_x, 2.0*main_vert_length));
-    p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
-    p_inlet_node->GetFlowProperties()->SetPressure(3320.0_Pa);
-    p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
-    p_outlet_node->GetFlowProperties()->SetPressure(2090.0_Pa);
-
-    //grid for finite difference solver
-    auto p_grid = RegularGrid<2>::Create();
-    QLength grid_spacing = 10_um;
-    p_grid->SetSpacing(grid_spacing);
-    c_vector<unsigned, 3> dimensions;
-    dimensions[0] = unsigned((domain_side_length_x)/(grid_spacing))+1; // num x
-    dimensions[1] = unsigned((domain_side_length_y)/(grid_spacing))+1; // num_y
-    dimensions[2] = 1;
-    if (lambda == 4u)
-    {
-        // Check grid size - this should depend on lambda, because the input radius is fixed to 50_um
-        // and the grid_spacing is fixed to 10_um
-        TS_ASSERT_EQUALS(dimensions[0], 243u);
-        TS_ASSERT_EQUALS(dimensions[1], 115u);
-        TS_ASSERT_EQUALS(dimensions[0]* dimensions[1], 27945u); //Number of points in grid
-    }
-    
-    p_grid->SetDimensions(dimensions);
-
-    /**
-     * Next set up the PDE for oxygen. Cells will act as a continuum oxygen sink
-     */
-    auto p_oxygen_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
-    p_oxygen_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpOxygenDiffusivity->GetValue("User"));
-    p_oxygen_pde->SetContinuumLinearInUTerm(-1.0*Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
-
-    /**
-    * Vessels release oxygen depending on their haematocrit levels (discrete sinks); see also the description in the supplementary material in our paper on the memory effects
-    */
-    auto p_vessel_oxygen_source = VesselBasedDiscreteSource<2>::Create();
-    QSolubility oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
-            GenericParameters::mpGasConcentrationAtStp->GetValue("User");
-    QConcentration vessel_oxygen_concentration = oxygen_solubility_at_stp *
-            Owen11Parameters::mpReferencePartialPressure->GetValue("User");
-    p_vessel_oxygen_source->SetReferenceConcentration(vessel_oxygen_concentration);
-    p_vessel_oxygen_source->SetVesselPermeability(Owen11Parameters::mpVesselOxygenPermeability->GetValue("User"));
-    p_vessel_oxygen_source->SetReferenceHaematocrit(Owen11Parameters::mpInflowHaematocrit->GetValue("User"));
-    p_oxygen_pde->AddDiscreteSource(p_vessel_oxygen_source);
-
-    /*
-    * Set up a finite difference solver and pass it the pde and grid.
-    */
-    auto p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
-    p_oxygen_solver->SetPde(p_oxygen_pde);
-    p_oxygen_solver->SetLabel("oxygen");
-    p_oxygen_solver->SetGrid(p_grid);
-
-
-    // Switch between solvers for Pries or newer "with memory"
-    std::shared_ptr<AbstractHaematocritSolver<2>> p_abs_haematocrit_calculator;
-    if (withMemory)
-    {
-        auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
-        p_haematocrit_calculator->SetVesselNetwork(p_network);
-        p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
-        p_abs_haematocrit_calculator = p_haematocrit_calculator;
-    }
-    else
-    {
-        auto  p_haematocrit_calculator = PriesHaematocritSolver<2>::Create();
-        p_haematocrit_calculator->SetVesselNetwork(p_network);
-        p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
-        p_abs_haematocrit_calculator = p_haematocrit_calculator;
-    }
-    auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
-    auto p_viscosity_calculator = ViscosityCalculator<2>::Create();
-    p_viscosity_calculator->SetPlasmaViscosity(viscosity);
-
-    p_impedance_calculator->SetVesselNetwork(p_network);
-    p_viscosity_calculator->SetVesselNetwork(p_network);
-    p_viscosity_calculator->Calculate();
-    p_impedance_calculator->Calculate();
-
-    FlowSolver<2> flow_solver;
-    flow_solver.SetVesselNetwork(p_network);
-    flow_solver.SetUp();
-
-    unsigned max_iter = 1000;
-    double tolerance2 = 1.e-10;
-
-    std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
-    std::vector<double> previous_haematocrit(segments.size(), double(initial_haematocrit));
-    // iteration to solve the nonlinear problem follows (haematocrit problem is coupled to the flow problem via viscosity/impedance)
-    for(unsigned idx=0;idx<max_iter;idx++)
-    {
-        p_impedance_calculator->Calculate();
-        flow_solver.SetUp();
-        flow_solver.Solve();
-        p_abs_haematocrit_calculator->Calculate();
-        p_viscosity_calculator->Calculate();
-        // Get the residual
-        double max_difference = 0.0;
-        double h_for_max = 0.0;
-        double prev_for_max = 0.0;
-        for(unsigned jdx=0;jdx<segments.size();jdx++)
-        {
-            double current_haematocrit = segments[jdx]->GetFlowProperties()->GetHaematocrit();
-            double difference = std::abs(current_haematocrit - previous_haematocrit[jdx]);
-            if(difference>max_difference)
-            {
-                max_difference = difference;
-                h_for_max = current_haematocrit;
-                prev_for_max = previous_haematocrit[jdx];
-            }
-            previous_haematocrit[jdx] = current_haematocrit;
-        }
-        std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << std::endl;
-        if(max_difference<=tolerance2)
-        {
-            std::cout << "Converged after: " << idx << " iterations. " <<  std::endl;
-            break;
-        }
-        else
-        {
-            // Output intermediate results
-            if(idx%1==0)
-            {
-                std::cout << "Max Difference at iter: " << idx << " is " << max_difference << std::endl;
-                std::string file_suffix = "IntermediateHaematocrit_" + std::to_string(idx) + ".vtp";
-                std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append(file_suffix);
-                p_network->Write(output_file);
-            }
-        }
-
-        if(idx==max_iter-1)
-        {
-            EXCEPTION("Did not converge after " + std::to_string(idx) + " iterations.");
-        }
-    }
-
-    SimulationTime::Instance()->SetStartTime(0.0);
-// Let's just do 1 time step; will be steady state anyway
-    SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1.0, 1);
-    auto p_microvessel_solver = MicrovesselSolver<2>::Create();
-    p_microvessel_solver->SetVesselNetwork(p_network);
-    p_microvessel_solver->SetOutputFileHandler(p_file_handler);
-    p_microvessel_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
-    p_microvessel_solver->Run();
-
-    std::vector<double> solution = p_oxygen_solver->GetSolution();
-    double average_oxygen = 0.0;
-    for(unsigned jdx=0;jdx<solution.size();jdx++)
-    {
-        average_oxygen += solution[jdx];
-    }
-    average_oxygen /= double(solution.size());
-    std::cout << "Average oxygen: " << average_oxygen << std::endl;
-    std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
-    p_network->Write(output_file);
-    SimulationTime::Instance()->Destroy();
-    
-    // Test that the "with memory" lambda=4 figure can be faithfully reproduced.
-    if (lambda == 4u)
-    {
+        std::ostringstream strs;
         if (withMemory)
         {
-            VerifySolutionLambdaEquals4WithMemory(p_network, solution);
+            strs << "Dichotomous_NoCorners_NewModel_LambdaEquals" << lambda;
         }
         else
         {
-            VerifySolutionLambdaEquals4Pries(p_network, solution);
+            strs << "Dichotomous_NoCorners_OldModel_LambdaEquals" << lambda;
         }
-    }
-    VerifyForkingNetwork(p_network, lambda);
+        std::string str_directory_name = strs.str();
+        // horizontal size of the domain
+        QLength domain_side_length_x = dimless_length*2.0*twicelambda*input_radius;
+        auto p_file_handler = std::make_shared<OutputFileHandler>(str_directory_name, true);
+        std::shared_ptr<VesselNetwork<2> > p_network = network_generator.GenerateForkingNetworkNoCorners(order, main_vert_length, input_radius, twicelambda);
+
+        // identify input and output nodes and assign them properties
+
+        VesselNodePtr<2> p_inlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+                Vertex<2>(0.0_um,2.0*main_vert_length));
+        VesselNodePtr<2> p_outlet_node = VesselNetworkGeometryCalculator<2>::GetNearestNode(p_network,
+                Vertex<2>(domain_side_length_x, 2.0*main_vert_length));
+        p_inlet_node->GetFlowProperties()->SetIsInputNode(true);
+        p_inlet_node->GetFlowProperties()->SetPressure(3320.0_Pa);
+        p_outlet_node->GetFlowProperties()->SetIsOutputNode(true);
+        p_outlet_node->GetFlowProperties()->SetPressure(2090.0_Pa);
+
+        //grid for finite difference solver
+        auto p_grid = RegularGrid<2>::Create();
+        QLength grid_spacing = 10_um;
+        p_grid->SetSpacing(grid_spacing);
+        c_vector<unsigned, 3> dimensions;
+        dimensions[0] = unsigned((domain_side_length_x)/(grid_spacing))+1; // num x
+        dimensions[1] = unsigned((domain_side_length_y)/(grid_spacing))+1; // num_y
+        dimensions[2] = 1;
+        if (lambda == 4u)
+        {
+            // Check grid size - this should depend on lambda, because the input radius is fixed to 50_um
+            // and the grid_spacing is fixed to 10_um
+            TS_ASSERT_EQUALS(dimensions[0], 243u);
+            TS_ASSERT_EQUALS(dimensions[1], 115u);
+            TS_ASSERT_EQUALS(dimensions[0]* dimensions[1], 27945u); //Number of points in grid
+        }
+        
+        p_grid->SetDimensions(dimensions);
+
+        /**
+         * Next set up the PDE for oxygen. Cells will act as a continuum oxygen sink
+         */
+        auto p_oxygen_pde = DiscreteContinuumLinearEllipticPde<2>::Create();
+        p_oxygen_pde->SetIsotropicDiffusionConstant(Owen11Parameters::mpOxygenDiffusivity->GetValue("User"));
+        p_oxygen_pde->SetContinuumLinearInUTerm(-1.0*Owen11Parameters::mpCellOxygenConsumptionRate->GetValue("User"));
+
+        /**
+        * Vessels release oxygen depending on their haematocrit levels (discrete sinks); see also the description in the supplementary material in our paper on the memory effects
+        */
+        auto p_vessel_oxygen_source = VesselBasedDiscreteSource<2>::Create();
+        QSolubility oxygen_solubility_at_stp = Secomb04Parameters::mpOxygenVolumetricSolubility->GetValue("User") *
+                GenericParameters::mpGasConcentrationAtStp->GetValue("User");
+        QConcentration vessel_oxygen_concentration = oxygen_solubility_at_stp *
+                Owen11Parameters::mpReferencePartialPressure->GetValue("User");
+        p_vessel_oxygen_source->SetReferenceConcentration(vessel_oxygen_concentration);
+        p_vessel_oxygen_source->SetVesselPermeability(Owen11Parameters::mpVesselOxygenPermeability->GetValue("User"));
+        p_vessel_oxygen_source->SetReferenceHaematocrit(Owen11Parameters::mpInflowHaematocrit->GetValue("User"));
+        p_oxygen_pde->AddDiscreteSource(p_vessel_oxygen_source);
+
+        /*
+        * Set up a finite difference solver and pass it the pde and grid.
+        */
+        auto p_oxygen_solver = SimpleLinearEllipticFiniteDifferenceSolver<2>::Create();
+        p_oxygen_solver->SetPde(p_oxygen_pde);
+        p_oxygen_solver->SetLabel("oxygen");
+        p_oxygen_solver->SetGrid(p_grid);
 
 
+        // Switch between solvers for Pries or newer "with memory"
+        std::shared_ptr<AbstractHaematocritSolver<2>> p_abs_haematocrit_calculator;
+        if (withMemory)
+        {
+            auto p_haematocrit_calculator = PriesWithMemoryHaematocritSolver<2>::Create();
+            p_haematocrit_calculator->SetVesselNetwork(p_network);
+            p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
+            p_abs_haematocrit_calculator = p_haematocrit_calculator;
+        }
+        else
+        {
+            auto  p_haematocrit_calculator = PriesHaematocritSolver<2>::Create();
+            p_haematocrit_calculator->SetVesselNetwork(p_network);
+            p_haematocrit_calculator->SetHaematocrit(inlet_haematocrit);
+            p_abs_haematocrit_calculator = p_haematocrit_calculator;
+        }
+        auto p_impedance_calculator = VesselImpedanceCalculator<2>::Create();
+        auto p_viscosity_calculator = ViscosityCalculator<2>::Create();
+        p_viscosity_calculator->SetPlasmaViscosity(viscosity);
+
+        p_impedance_calculator->SetVesselNetwork(p_network);
+        p_viscosity_calculator->SetVesselNetwork(p_network);
+        p_viscosity_calculator->Calculate();
+        p_impedance_calculator->Calculate();
+
+        FlowSolver<2> flow_solver;
+        flow_solver.SetVesselNetwork(p_network);
+        flow_solver.SetUp();
+
+        unsigned max_iter = 1000;
+        double tolerance2 = 1.e-10;
+
+        std::vector<VesselSegmentPtr<2> > segments = p_network->GetVesselSegments();
+        std::vector<double> previous_haematocrit(segments.size(), double(initial_haematocrit));
+        // iteration to solve the nonlinear problem follows (haematocrit problem is coupled to the flow problem via viscosity/impedance)
+        for(unsigned idx=0;idx<max_iter;idx++)
+        {
+            p_impedance_calculator->Calculate();
+            flow_solver.SetUp();
+            flow_solver.Solve();
+            p_abs_haematocrit_calculator->Calculate();
+            p_viscosity_calculator->Calculate();
+            // Get the residual
+            double max_difference = 0.0;
+            //double h_for_max = 0.0;
+            //double prev_for_max = 0.0;
+            for(unsigned jdx=0;jdx<segments.size();jdx++)
+            {
+                double current_haematocrit = segments[jdx]->GetFlowProperties()->GetHaematocrit();
+                double difference = std::abs(current_haematocrit - previous_haematocrit[jdx]);
+                if(difference>max_difference)
+                {
+                    max_difference = difference;
+                    //h_for_max = current_haematocrit;
+                    //prev_for_max = previous_haematocrit[jdx];
+                }
+                previous_haematocrit[jdx] = current_haematocrit;
+            }
+            //std::cout << "H at max difference: " << h_for_max << ", Prev H at max difference:" << prev_for_max << std::endl;
+            if(max_difference<=tolerance2)
+            {
+                std::cout << "Converged after: " << idx << " iterations. max difference (in H) = "<<  max_difference <<"."<<  std::endl;
+                break;
+            }
+            else
+            {
+                // Output intermediate results
+                if(idx%1==0)
+                {
+                    //std::cout << "Max Difference at iter: " << idx << " is " << max_difference << std::endl;
+                    std::string file_suffix = "IntermediateHaematocrit_" + std::to_string(idx) + ".vtp";
+                    std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append(file_suffix);
+                    p_network->Write(output_file);
+                }
+            }
+
+            if(idx==max_iter-1)
+            {
+                EXCEPTION("Did not converge after " + std::to_string(idx) + " iterations.");
+            }
+        }
+
+        SimulationTime::Instance()->SetStartTime(0.0);
+        // Let's just do 1 time step; will be steady state anyway
+        SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1.0, 1);
+        auto p_microvessel_solver = MicrovesselSolver<2>::Create();
+        p_microvessel_solver->SetVesselNetwork(p_network);
+        p_microvessel_solver->SetOutputFileHandler(p_file_handler);
+        p_microvessel_solver->AddDiscreteContinuumSolver(p_oxygen_solver);
+        p_microvessel_solver->Run();
+
+        std::vector<double> solution = p_oxygen_solver->GetSolution();
+        double average_oxygen = 0.0;
+        for(unsigned jdx=0;jdx<solution.size();jdx++)
+        {
+            average_oxygen += solution[jdx];
+        }
+        average_oxygen /= double(solution.size());
+        std::cout << "Average oxygen: " << average_oxygen << std::endl;
+        std::string output_file = p_file_handler->GetOutputDirectoryFullPath().append("FinalHaematocrit.vtp");
+        p_network->Write(output_file);
+        SimulationTime::Instance()->Destroy();
+        
+        // Test that the "with memory" lambda=4 figure can be faithfully reproduced.
+        if (lambda == 4u)
+        {
+            if (withMemory)
+            {
+                VerifySolutionLambdaEquals4WithMemory(p_network, solution);
+            }
+            else
+            {
+                VerifySolutionLambdaEquals4Pries(p_network, solution);
+            }
+        }
+        VerifyForkingNetwork(p_network, lambda);
     }
 }
 

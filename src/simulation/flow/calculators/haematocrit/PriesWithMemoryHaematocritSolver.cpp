@@ -243,9 +243,9 @@ void PriesWithMemoryHaematocritSolver<DIM>::Calculate()
         }
 
         iterations++;
-        std::cout<< Reflect() <<": iteration = "<<iterations<<"\t";
-        std::cout<<"residual = "<<residual<<"\t";
-        std::cout<<"max unconserved RBCs = "<<this->CheckSolution()<<"\n";
+        //std::cout<< Reflect() <<": iteration = "<<iterations<<"\t";
+        //std::cout<<"residual = "<<residual<<"\t";
+        //std::cout<<"max unconserved RBCs = "<<this->CheckSolution()<<"\n";
         if(iterations == max_iterations)
         {
             if(mExceptionOnFailedConverge)
