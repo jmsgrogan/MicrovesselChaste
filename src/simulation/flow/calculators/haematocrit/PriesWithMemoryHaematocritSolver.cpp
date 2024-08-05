@@ -274,6 +274,10 @@ void PriesWithMemoryHaematocritSolver<DIM>::CalculateVesselPreferences(std::vect
     // Sweep through looking for left and right turns
     for (unsigned idx=0; idx<updateIndices.size(); idx++)
     {
+        if (updateIndices[idx][0] == 1)
+        {
+            PRINT_3_VARIABLES(updateIndices[idx][0],updateIndices[idx][1],updateIndices[idx][2]);
+        }
         std::shared_ptr<Vessel<DIM> > me = vessels[updateIndices[idx][0]];
         std::shared_ptr<Vessel<DIM> > parent = vessels[updateIndices[idx][1]];
         std::shared_ptr<Vessel<DIM> > competitor = vessels[updateIndices[idx][2]];
@@ -362,7 +366,12 @@ void PriesWithMemoryHaematocritSolver<DIM>::CalculateVesselPreferences(std::vect
         std::shared_ptr<Vessel<DIM> > me = vessels[updateIndices[idx][0]];
         std::shared_ptr<Vessel<DIM> > parent = vessels[updateIndices[idx][1]];
         bool favoured;
-        //On most bifurcationa the parent also had a bifurcation which it is recovering from
+        if (direction_set[updateIndices[idx][1]] == false)
+        {
+            assert( is_a_left[updateIndices[idx][1]] == false);
+            WARNING("About to set favourable branch assuming that parent comes from right turn");
+        }
+        //On most bifurcations the parent also had a bifurcation which it is recovering from
         if (direction_set[updateIndices[idx][1]])
         {
             favoured = is_a_left[updateIndices[idx][1]] ^ is_a_left[updateIndices[idx][0]];
