@@ -362,11 +362,6 @@ void PriesWithMemoryHaematocritSolver<DIM>::CalculateVesselPreferences(std::vect
         std::shared_ptr<Vessel<DIM> > me = vessels[updateIndices[idx][0]];
         std::shared_ptr<Vessel<DIM> > parent = vessels[updateIndices[idx][1]];
         bool favoured;
-        if (direction_set[updateIndices[idx][1]] == false)
-        {
-            assert( is_a_left[updateIndices[idx][1]] == false);
-            WARNING("About to set favourable branch assuming that parent comes from right turn");
-        }
         //On most bifurcations the parent also had a bifurcation which it is recovering from
         if (direction_set[updateIndices[idx][1]])
         {
@@ -393,6 +388,20 @@ void PriesWithMemoryHaematocritSolver<DIM>::CalculateVesselPreferences(std::vect
         {
             WARNING("Set distance to previous bifurcation does not match actual distance");
         }
+        if (direction_set[updateIndices[idx][1]] == false)
+        {
+            assert( is_a_left[updateIndices[idx][1]] == false);
+            /* The parent is not directly downstream of a bifurcation, so the memory rule makes
+             * no sense.  There should be no favoured direction.  We can ensure that this happens
+             * by pretending that that parent vessel is longer than CFL recovery length.
+             * Making the length 200 times longer than the radius ensures the memory effect
+             * is indistiguishable from Pries to 6 significant figures.
+             */
+
+            me->SetDistToPrevBif(200.0*parent->GetRadius());
+            //WARNING("About to set favourable branch assuming that parent comes from right turn");
+        }
+
     }
 }
 
